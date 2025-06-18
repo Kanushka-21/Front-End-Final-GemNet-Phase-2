@@ -10,9 +10,9 @@ import HomePage from '@/pages/HomePage';
 import MarketplacePage from '@/pages/MarketplacePage';
 
 // Dashboard Pages
-import AdminDashboard from '@/pages/dashboard/AdminDashboard';
-import SellerDashboard from '@/pages/dashboard/SellerDashboard';
-import BuyerDashboard from '@/pages/dashboard/BuyerDashboard';
+import AdminDashboard from '@/pages/dashboard/AdminDashboard.simplified';
+import SellerDashboard from '@/pages/dashboard/SellerDashboard.simplified';
+import BuyerDashboard from '@/pages/dashboard/BuyerDashboard.simplified';
 
 // Layout
 import Layout from '@/components/layout/Layout';
@@ -80,22 +80,23 @@ const AppRoutes: React.FC = () => {
                 <RegisterPage />
               </PublicRoute>
             }
-          />          {/* Protected Routes */}
+          />          {/* Protected Routes - Dashboard Redirect */}
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <Navigate to="/buyer/dashboard" replace />
               </ProtectedRoute>
             }
           />
           
-          {/* Buyer Protected Routes */}
-          <Route
+          {/* Buyer Protected Routes */}          <Route
             path="/buyer/dashboard"
             element={
               <ProtectedRoute>
-                <BuyerDashboard />
+                <DashboardLayout>
+                  <BuyerDashboard />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
@@ -120,12 +121,13 @@ const AppRoutes: React.FC = () => {
                 </DashboardLayout>
               </ProtectedRoute>
             }
-          />          {/* Seller Protected Routes */}
-          <Route
+          />          {/* Seller Protected Routes */}          <Route
             path="/seller/dashboard"
             element={
               <ProtectedRoute>
-                <SellerDashboard />
+                <DashboardLayout>
+                  <SellerDashboard />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
@@ -158,12 +160,13 @@ const AppRoutes: React.FC = () => {
                 </DashboardLayout>
               </ProtectedRoute>
             }
-          />          {/* Admin Protected Routes */}
-          <Route
+          />          {/* Admin Protected Routes */}          <Route
             path="/admin/dashboard"
             element={
               <ProtectedRoute>
-                <AdminDashboard />
+                <DashboardLayout>
+                  <AdminDashboard />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />

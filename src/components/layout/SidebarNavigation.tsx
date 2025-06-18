@@ -29,12 +29,26 @@ interface SidebarNavigationProps {
 
 const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ collapsed }) => {
   const { user } = useAuth();
+  
   // Generate role-based navigation items
   const getNavItems = (): NavItem[] => {
+    // Get dashboard path based on role
+    const getDashboardPath = () => {
+      switch (user?.role) {
+        case 'admin':
+          return '/admin/dashboard';
+        case 'seller':
+          return '/seller/dashboard';
+        case 'buyer':
+        default:
+          return '/buyer/dashboard';
+      }
+    };
+
     // Common items for all roles
     const baseItems: NavItem[] = [
       { 
-        path: '/dashboard', 
+        path: getDashboardPath(), 
         label: 'Dashboard', 
         icon: <Home className="w-5 h-5" />,
         description: 'Main dashboard'
