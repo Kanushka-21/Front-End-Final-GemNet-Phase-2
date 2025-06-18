@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Home,
-  Search,
-  Package,
-  ShoppingBag,
-  Users,
-  Calendar,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -19,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks';
 import Button from '@/components/ui/Button';
+import SidebarNavigation from './SidebarNavigation';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -38,44 +32,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     { id: 2, text: 'New gemstone listing available', time: '2 hours ago', read: false },
     { id: 3, text: 'Meeting confirmed for tomorrow', time: '1 day ago', read: true }
   ];
-
-  // Role-based menu items
-  const menuItems = React.useMemo(() => {
-    const baseItems = [
-      { path: '/dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> }
-    ];
-    
-    const buyerItems = [
-      { path: '/marketplace', label: 'Browse Gemstones', icon: <Search className="w-5 h-5" /> },
-      { path: '/my-bids', label: 'My Bids', icon: <Package className="w-5 h-5" /> },
-      { path: '/meetings', label: 'My Meetings', icon: <Calendar className="w-5 h-5" /> }
-    ];
-    
-    const sellerItems = [
-      { path: '/seller/dashboard', label: 'Seller Dashboard', icon: <ShoppingBag className="w-5 h-5" /> },
-      { path: '/seller/add-listing', label: 'Add New Listing', icon: <Package className="w-5 h-5" /> },
-      { path: '/seller/my-listings', label: 'My Listings', icon: <Package className="w-5 h-5" /> },
-      { path: '/seller/my-store', label: 'My Store', icon: <ShoppingBag className="w-5 h-5" /> },
-      { path: '/meetings', label: 'Meetings', icon: <Calendar className="w-5 h-5" /> }
-    ];
-    
-    const adminItems = [
-      { path: '/admin/dashboard', label: 'Admin Dashboard', icon: <Shield className="w-5 h-5" /> },
-      { path: '/admin/users', label: 'User Management', icon: <Users className="w-5 h-5" /> },
-      { path: '/admin/transactions', label: 'Transactions', icon: <ShoppingBag className="w-5 h-5" /> },
-      { path: '/admin/meetings', label: 'Meeting Management', icon: <Calendar className="w-5 h-5" /> },
-      { path: '/admin/settings', label: 'System Settings', icon: <Settings className="w-5 h-5" /> }
-    ];
-    
-    switch (user?.role) {
-      case 'admin':
-        return [...baseItems, ...adminItems];
-      case 'seller':
-        return [...baseItems, ...sellerItems];
-      default: // buyer or any other role
-        return [...baseItems, ...buyerItems];
-    }
-  }, [user?.role]);
+  // The menu items are now managed by SidebarNavigation component
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -113,27 +70,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             >
               <Menu className="w-5 h-5" />
             </button>
+          </div>          {/* Navigation */}
+          <div className="flex-1">
+            <SidebarNavigation collapsed={!isSidebarOpen} />
           </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-2 py-4 space-y-1">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex items-center px-3 py-3 rounded-lg transition-colors ${
-                    isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-secondary-600 hover:bg-secondary-100'
-                  } ${!isSidebarOpen && 'justify-center'}`
-                }
-              >
-                <div className={`${isSidebarOpen ? 'mr-3' : ''}`}>{item.icon}</div>
-                {isSidebarOpen && <span>{item.label}</span>}
-              </NavLink>
-            ))}
-          </nav>
 
           {/* Logout Button */}
           <div className="border-t border-secondary-200 p-4">

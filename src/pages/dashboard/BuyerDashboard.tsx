@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Statistic, Badge, Table, Button, Tag, Modal, Form, Input, Rate, message, Timeline, Tabs } from 'antd';
 import { ShoppingOutlined, CalendarOutlined, EyeOutlined, HeartOutlined, TrophyOutlined, StarOutlined, ClockCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
-import DashboardLayout from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/hooks';
 import { Bid, Meeting, DetailedGemstone } from '@/types';
 import { api } from '@/services/api';
@@ -252,9 +251,7 @@ const BuyerDashboard: React.FC = () => {
       color: 'red'
     }
   ];
-
   return (
-    <DashboardLayout>
       <div className="p-6 space-y-6">        {/* Welcome Header */}
         <div className="mb-8 bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl shadow-sm">
           <div className="flex justify-between items-center">
@@ -520,9 +517,7 @@ const BuyerDashboard: React.FC = () => {
               </Form.Item>
             </Form>
           )}
-        </Modal>
-      </div>
-    </DashboardLayout>
+        </Modal>      </div>
   );
 };
 
