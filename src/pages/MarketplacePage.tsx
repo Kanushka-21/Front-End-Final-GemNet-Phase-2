@@ -7,8 +7,6 @@ import {
   Input, 
   Select, 
   Button, 
-  Badge, 
-  Rate, 
   Tag, 
   Typography, 
   Space, 
@@ -18,7 +16,6 @@ import {
   Drawer,
   Modal,
   InputNumber,
-  Divider,
   Affix
 } from 'antd';
 import { 
@@ -26,30 +23,28 @@ import {
   FilterOutlined, 
   EyeOutlined, 
   HeartOutlined,
-  ShoppingCartOutlined,
   SortAscendingOutlined,
   AppstoreOutlined,
   BarsOutlined,
   CloseOutlined
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+
 import { DetailedGemstone } from '@/types';
 
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 const { Meta } = Card;
 const { Option } = Select;
 
 const MarketplacePage: React.FC = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGemstone, setSelectedGemstone] = useState<DetailedGemstone | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [bidAmount, setBidAmount] = useState<number>(0);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);  const [bidAmount, setBidAmount] = useState<number>(0);
+  const [drawerWidth, setDrawerWidth] = useState(320);
   
   // Filter states
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
@@ -57,6 +52,20 @@ const MarketplacePage: React.FC = () => {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [certifiedOnly, setCertifiedOnly] = useState(false);
   const [sortBy, setSortBy] = useState('price_asc');
+  
+  // Handle responsive drawer width
+  useEffect(() => {
+    const handleResize = () => {
+      setDrawerWidth(window.innerWidth > 576 ? 320 : window.innerWidth * 0.8);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
   const itemsPerPage = 12;
   
@@ -106,10 +115,9 @@ const MarketplacePage: React.FC = () => {
   
   // Filter and sort gemstones
   const filteredGemstones = React.useMemo(() => {
-    let filtered = gemstones.filter(gem => {
-      const matchesSearch = gem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    let filtered = gemstones.filter(gem => {      const matchesSearch = gem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            gem.color.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           gem.species.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (gem.species?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
                            gem.variety.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesPrice = gem.price >= priceRange[0] && gem.price <= priceRange[1];
@@ -137,7 +145,7 @@ const MarketplacePage: React.FC = () => {
   }, [gemstones, searchTerm, priceRange, selectedTypes, selectedColors, certifiedOnly, sortBy]);
   
   // Pagination
-  const pageCount = Math.ceil(filteredGemstones.length / itemsPerPage);
+  // Calculate total pages for pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedGemstones = filteredGemstones.slice(startIndex, startIndex + itemsPerPage);
   
@@ -146,13 +154,12 @@ const MarketplacePage: React.FC = () => {
       <Title level={4}>Filters</Title>
       
       <div style={{ marginBottom: 24 }}>
-        <Text strong>Price Range</Text>
-        <Slider
+        <Text strong>Price Range</Text>        <Slider
           range
           min={0}
           max={50000}
           value={priceRange}
-          onChange={setPriceRange}
+          onChange={(value) => setPriceRange(value as [number, number])}
           tooltip={{ formatter: (value) => `$${value?.toLocaleString()}` }}
           style={{ marginTop: 16 }}
         />
@@ -203,18 +210,21 @@ const MarketplacePage: React.FC = () => {
         Clear All Filters
       </Button>
     </div>
-  );
-
-  const GemstoneCard = ({ gemstone }: { gemstone: DetailedGemstone }) => (
+  );  const GemstoneCard = ({ gemstone }: { gemstone: DetailedGemstone }) => (
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
+      className="gemstone-card-motion-wrapper"
     >      <Card
         hoverable
         className="gemstone-card"
-        style={{ height: '100%', borderRadius: 12 }}
-        cover={
-          <div style={{ position: 'relative', height: 240, overflow: 'hidden' }}>
+        style={{ 
+          height: '100%', 
+          borderRadius: 12,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          border: '1px solid #f0f0f0'
+        }}cover={
+          <div style={{ position: 'relative', height: 220, overflow: 'hidden', borderRadius: '8px 8px 0 0' }}>
             <img 
               alt={gemstone.name} 
               src={gemstone.image}
@@ -225,81 +235,100 @@ const MarketplacePage: React.FC = () => {
                 transition: 'transform 0.3s ease'
               }}
             />
-            {gemstone.certified && (
-              <Badge.Ribbon text="Certified" color="blue" />
-            )}
-            <div style={{ 
-              position: 'absolute', 
-              top: 10, 
-              left: 10,
-              background: 'rgba(0,0,0,0.7)',
-              color: 'white',
-              padding: '4px 8px',
-              borderRadius: 4,
-              fontSize: 12
-            }}>
-              <EyeOutlined style={{ marginRight: 4 }} />
-              {Math.floor(Math.random() * 200) + 50}
-            </div>
             <Button
               icon={<HeartOutlined />}
               shape="circle"
-              size="small"
+              size="middle"
               style={{
                 position: 'absolute',
                 top: 10,
                 right: 10,
-                background: 'rgba(255,255,255,0.9)'
+                background: 'rgba(255,255,255,0.9)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
               }}
             />
           </div>
         }
-        actions={[          <div style={{ padding: '0 16px 16px 16px' }}>
+        actions={[          <div style={{ padding: '0 12px 12px 12px' }}>
             <Button 
               type="primary" 
               block
-              size="middle"
+              icon={<EyeOutlined />}
+              size="large"
               onClick={() => handleViewDetails(gemstone)}
               className="view-details-btn"
               style={{ 
-                height: '36px',
-                fontSize: '14px',
+                height: '40px',
+                fontSize: '15px',
                 borderRadius: '4px',
                 width: '100%',
-                margin: 0
+                margin: 0,
+                background: '#2871FA',
+                fontWeight: 500,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               View Details
             </Button>
           </div>
         ]}
-      >
-        <Meta
+      >        <Meta
           title={
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text strong style={{ color: '#1890ff' }}>{gemstone.name}</Text>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+              <Text strong style={{ color: '#333', fontSize: 18, fontWeight: 600 }}>{gemstone.name}</Text>
               <Tag color={gemstone.color.toLowerCase()}>{gemstone.color}</Tag>
             </div>
           }
           description={
             <div>
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                {gemstone.weight} Carat • {gemstone.variety} • {gemstone.shape}
+              <Text style={{ fontSize: 14, display: 'block', color: '#666', marginBottom: 12 }}>
+                Exquisite {gemstone.color} {gemstone.variety} with exceptional clarity and vibrant color.
               </Text>
-              <div style={{ marginTop: 8, marginBottom: 8 }}>
-                <Text strong style={{ fontSize: 18, color: '#1890ff' }}>
+              
+              <Text type="secondary" style={{ fontSize: 14, display: 'block', marginBottom: 4 }}>
+                Current Bid
+              </Text>
+              <div style={{ marginBottom: 12 }}>
+                <Text strong style={{ fontSize: 22, color: '#2871FA', fontWeight: 600 }}>
                   ${gemstone.price.toLocaleString()}
                 </Text>
-                <Text type="secondary" style={{ marginLeft: 8, fontSize: 12 }}>
-                  Current Bid
-                </Text>
               </div>
+              
+              <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                <Tag color="#e6f7ff" style={{ color: '#1890ff', border: 'none', fontWeight: 500, borderRadius: 12 }}>
+                  {gemstone.weight} Carat
+                </Tag>
+                <Tag color="#f9f0ff" style={{ color: '#722ed1', border: 'none', fontWeight: 500, borderRadius: 12 }}>
+                  {gemstone.variety}
+                </Tag>
+                {gemstone.certified && 
+                  <Tag color="#f6ffed" style={{ color: '#52c41a', border: 'none', fontWeight: 500, borderRadius: 12 }}>
+                    Certified
+                  </Tag>
+                }
+              </div>
+              
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Rate disabled defaultValue={5} style={{ fontSize: 12 }} />
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  {Math.floor(Math.random() * 20) + 1} bids
+                <Space>
+                  <EyeOutlined style={{ color: '#999' }} />
+                  <Text type="secondary" style={{ fontSize: 14 }}>
+                    {Math.floor(Math.random() * 200) + 50} views
+                  </Text>
+                </Space>
+                <Text type="secondary" style={{ fontSize: 14 }}>
+                  {Math.floor(Math.random() * 20)} | Bids: {Math.floor(Math.random() * 5)}
                 </Text>
               </div>
+              
+              {Math.random() > 0.5 && 
+                <div style={{ marginTop: 8, padding: '4px 8px', background: '#fff2e8', borderRadius: 4 }}>
+                  <Text type="warning" style={{ fontSize: 13 }}>
+                    Ends {new Date(Date.now() + Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                  </Text>
+                </div>
+              }
             </div>
           }
         />
@@ -309,16 +338,14 @@ const MarketplacePage: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      {/* Header */}
-      <Affix offsetTop={0}>
+      {/* Header */}      <Affix offsetTop={0}>
         <div style={{ 
           background: '#fff', 
           padding: '16px 24px',
           borderBottom: '1px solid #f0f0f0',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          <Row gutter={[16, 16]} align="middle">
-            <Col xs={24} sm={12} md={8}>
+        }}>          <Row gutter={[16, 16]} align="middle" className="marketplace-header">
+            <Col xs={24} sm={24} md={12} lg={10} xl={8}>
               <Input
                 size="large"
                 placeholder="Search gemstones..."
@@ -326,15 +353,17 @@ const MarketplacePage: React.FC = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 allowClear
+                className="search-input"
               />
-            </Col>
-            <Col xs={12} sm={6} md={4}>
+            </Col>            <Col xs={14} sm={16} md={8} lg={6} xl={4}>
               <Select
                 size="large"
                 value={sortBy}
                 onChange={setSortBy}
                 style={{ width: '100%' }}
                 suffixIcon={<SortAscendingOutlined />}
+                className="sort-select"
+                dropdownMatchSelectWidth={false}
               >
                 <Option value="price_asc">Price: Low to High</Option>
                 <Option value="price_desc">Price: High to Low</Option>
@@ -344,16 +373,16 @@ const MarketplacePage: React.FC = () => {
                 <Option value="name_desc">Name: Z to A</Option>
               </Select>
             </Col>
-            <Col xs={12} sm={6} md={4}>
-              <Space>
+            <Col xs={10} sm={8} md={4} lg={4} xl={3}>
+              <Space wrap size="small">
                 <Button
                   icon={<FilterOutlined />}
                   onClick={() => setIsFilterDrawerOpen(true)}
-                  style={{ display: 'block' }}
+                  className="filter-button"
                 >
                   Filters
                 </Button>
-                <Button.Group>
+                <Button.Group className="view-mode-buttons">
                   <Button 
                     icon={<AppstoreOutlined />}
                     type={viewMode === 'grid' ? 'primary' : 'default'}
@@ -369,24 +398,8 @@ const MarketplacePage: React.FC = () => {
             </Col>
           </Row>
         </div>
-      </Affix>
-
-      <Layout>
-        {/* Desktop Sidebar */}
-        <Sider 
-          width={280} 
-          style={{ 
-            background: '#fff',
-            height: 'calc(100vh - 80px)',
-            overflow: 'auto',
-            display: 'none'
-          }}
-          className="desktop-only"
-        >
-          <FilterPanel />
-        </Sider>
-
-        <Content style={{ padding: '24px' }}>
+      </Affix>      <Layout style={{ width: '100%' }}>
+        <Content style={{ padding: '24px', width: '100%' }} className="marketplace-content">
           {/* Results Summary */}
           <div style={{ marginBottom: 24 }}>
             <Title level={3}>Gemstone Marketplace</Title>
@@ -397,14 +410,42 @@ const MarketplacePage: React.FC = () => {
 
           {/* Gemstones Grid */}
           {paginatedGemstones.length > 0 ? (
-            <>
-              <Row gutter={[16, 16]}>
+            <>              <Row gutter={[16, 24]}>
                 {paginatedGemstones.map((gemstone) => (
-                  <Col xs={24} sm={12} md={8} lg={6} key={gemstone.id}>
+                  <Col 
+                    xs={24} 
+                    sm={12} 
+                    md={8} 
+                    lg={6} 
+                    key={gemstone.id}                    style={{ flex: 'none' }}
+                    className="gemstone-card-container"
+                  >
                     <GemstoneCard gemstone={gemstone} />
                   </Col>
                 ))}
               </Row>
+              
+              <style>{`
+                @media (min-width: 1200px) {
+                  .gemstone-card-container {
+                    flex: 0 0 20% !important;
+                    max-width: 20% !important;
+                  }
+                }
+                
+                @media (max-width: 768px) {
+                  .gemstone-card-container {
+                    padding: 0 8px;
+                  }
+                }
+                
+                @media (max-width: 576px) {
+                  .view-details-btn {
+                    height: 44px !important;
+                    font-size: 16px !important;
+                  }
+                }
+              `}</style>
 
               {/* Pagination */}
               <div style={{ textAlign: 'center', marginTop: 40 }}>
@@ -432,13 +473,12 @@ const MarketplacePage: React.FC = () => {
         </Content>
       </Layout>
 
-      {/* Mobile Filter Drawer */}
-      <Drawer
+      {/* Mobile Filter Drawer */}      <Drawer
         title="Filters"
         placement="left"
         onClose={() => setIsFilterDrawerOpen(false)}
         open={isFilterDrawerOpen}
-        width={320}
+        width={drawerWidth}
       >
         <FilterPanel />
       </Drawer>      {/* Gemstone Detail Modal */}
@@ -512,7 +552,7 @@ const MarketplacePage: React.FC = () => {
 
                     <div className="description-section">
                       <div className="section-title">Description</div>
-                      <p>Golden {selectedGemstone.color.toLowerCase()} {selectedGemstone.species.toLowerCase()} with exceptional brilliance and excellent clarity. A rare find in this size.</p>
+                      <p>Golden {selectedGemstone.color.toLowerCase()} {selectedGemstone.species?.toLowerCase() || selectedGemstone.variety.toLowerCase()} with exceptional brilliance and excellent clarity. A rare find in this size.</p>
                     </div>
                     
                     <div className="bid-section">
@@ -536,7 +576,7 @@ const MarketplacePage: React.FC = () => {
                             min={selectedGemstone.price + 100}
                             style={{ width: '100%', height: '42px' }}
                             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                            parser={(value) => parseFloat(value!.replace(/\$\s?|(,*)/g, ''))}
                           />
                           <Button 
                             type="primary" 
@@ -562,15 +602,66 @@ const MarketplacePage: React.FC = () => {
                   </Space>
                 </div>
               </Col>
-            </Row>
-          </div>
+            </Row>          </div>
         )}
       </Modal>
-
+      
       <style>{`
-        @media (min-width: 768px) {
-          .desktop-only {
-            display: block !important;
+        @media (min-width: 1200px) {
+          .gemstone-card-container {
+            flex: 0 0 20% !important;
+            max-width: 20% !important;
+          }
+        }
+        
+        @media (max-width: 992px) {
+          .marketplace-header .ant-row {
+            margin-bottom: 0 !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .gemstone-card-container {
+            padding: 0 8px;
+          }
+          
+          .filter-button {
+            margin-right: 8px;
+          }
+        }
+          @media (max-width: 576px) {
+          .view-details-btn {
+            height: 44px !important;
+            font-size: 16px !important;
+          }
+          
+          .gemstone-card-container {
+            padding: 0 4px !important;
+            margin-bottom: 16px;
+          }
+          
+          .gemstone-card .ant-card-meta-title {
+            font-size: 16px !important;
+          }
+          
+          .gemstone-card .ant-card-meta-description {
+            font-size: 13px !important;
+          }
+          
+          .gemstone-card-motion-wrapper {
+            width: 100%;
+          }
+          
+          .search-input, .sort-select {
+            margin-bottom: 8px;
+          }
+          
+          .ant-pagination-item {
+            margin: 0 2px !important;
+          }
+          
+          .gemstone-card .ant-space {
+            flex-wrap: wrap;
           }
         }
       `}</style>

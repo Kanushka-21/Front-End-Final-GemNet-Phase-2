@@ -230,9 +230,15 @@ export interface DetailedGemstone {
   shape: string;
   clarity?: string;
   cut?: string;
-  dimensions?: string;
+  dimensions?: {
+    length: number;
+    width: number;
+    height: number;
+  };
   description?: string;
-  certificate?: string | Certificate;
+  certificate?: Certificate;
+  certified?: boolean;
+  species?: string;
   transparency?: 'transparent' | 'translucent' | 'opaque';
   origin?: string;
   treatment?: string;
