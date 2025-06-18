@@ -428,78 +428,256 @@ const extendedAPI = {
 
   // Seller Dashboard APIs
   getSellerListings: async (): Promise<ApiResponse<DetailedGemstone[]>> => {
-    const response = await api.get('/api/seller/listings');
-    return response.data;
-  },
-
-  getSellerMeetings: async (): Promise<ApiResponse<any[]>> => {
-    const response = await api.get('/api/seller/meetings');
-    return response.data;
+    try {
+      const response = await api.get('/seller/listings');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching seller listings:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
   getSellerStats: async (): Promise<ApiResponse<any>> => {
-    const response = await api.get('/api/seller/stats');
-    return response.data;
+    try {
+      const response = await api.get('/seller/stats');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching seller stats:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
-  createListing: async (formData: FormData): Promise<ApiResponse<any>> => {
-    const response = await api.post('/api/gemstones', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+  createListing: async (formData: FormData): Promise<ApiResponse> => {
+    try {
+      const response = await api.post('/seller/listings', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating listing:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
-  deleteListing: async (listingId: string): Promise<ApiResponse<void>> => {
-    const response = await api.delete(`/api/gemstones/${listingId}`);
-    return response.data;
+  updateListing: async (listingId: string, formData: FormData): Promise<ApiResponse> => {
+    try {
+      const response = await api.put(`/seller/listings/${listingId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating listing:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  deleteListing: async (listingId: string): Promise<ApiResponse> => {
+    try {
+      const response = await api.delete(`/seller/listings/${listingId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting listing:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  getSellerPendingConfirmations: async (): Promise<ApiResponse<any[]>> => {
+    try {
+      const response = await api.get('/seller/pending-confirmations');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching pending confirmations:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  confirmBuyer: async (listingId: string, buyerId: string): Promise<ApiResponse> => {
+    try {
+      const response = await api.post(`/seller/listings/${listingId}/confirm-buyer`, { buyerId });
+      return response.data;
+    } catch (error) {
+      console.error('Error confirming buyer:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  updateSellerStore: async (formData: FormData): Promise<ApiResponse> => {
+    try {
+      const response = await api.put('/seller/store', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating store:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
   // Admin Dashboard APIs
   getUsers: async (): Promise<ApiResponse<any[]>> => {
-    const response = await api.get('/api/admin/users');
-    return response.data;
+    try {
+      const response = await api.get('/admin/users');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
   getTransactions: async (): Promise<ApiResponse<any[]>> => {
-    const response = await api.get('/api/admin/transactions');
-    return response.data;
-  },
-
-  getAllMeetings: async (): Promise<ApiResponse<any[]>> => {
-    const response = await api.get('/api/admin/meetings');
-    return response.data;
-  },
-
-  getAdvertisements: async (): Promise<ApiResponse<any[]>> => {
-    const response = await api.get('/api/admin/advertisements');
-    return response.data;
-  },
-
-  getPendingVerifications: async (): Promise<ApiResponse<any[]>> => {
-    const response = await api.get('/api/admin/verifications/pending');
-    return response.data;
+    try {
+      const response = await api.get('/admin/transactions');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
   getAdminStats: async (): Promise<ApiResponse<any>> => {
-    const response = await api.get('/api/admin/stats');
-    return response.data;
+    try {
+      const response = await api.get('/admin/stats');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching admin stats:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
-  updateUserStatus: async (userId: string, action: string): Promise<ApiResponse<void>> => {
-    const response = await api.post(`/api/admin/users/${userId}/${action}`);
-    return response.data;
+  getPendingVerifications: async (): Promise<ApiResponse<any[]>> => {
+    try {
+      const response = await api.get('/admin/verifications/pending');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching pending verifications:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
-  updateAdStatus: async (adId: string, action: string): Promise<ApiResponse<void>> => {
-    const response = await api.post(`/api/admin/advertisements/${adId}/${action}`);
-    return response.data;
+  updateVerificationStatus: async (userId: string, approved: boolean): Promise<ApiResponse> => {
+    try {
+      const response = await api.post(`/admin/verifications/${userId}`, { approved });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating verification status:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
-  updateVerificationStatus: async (userId: string, approved: boolean): Promise<ApiResponse<void>> => {
-    const response = await api.post(`/api/admin/verifications/${userId}`, { approved });
-    return response.data;
+  updateUserStatus: async (userId: string, action: string): Promise<ApiResponse> => {
+    try {
+      const response = await api.post(`/admin/users/${userId}/${action}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  getMeetings: async (): Promise<ApiResponse<any[]>> => {
+    try {
+      const response = await api.get('/admin/meetings');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching meetings:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  scheduleMeeting: async (meetingData: MeetingData): Promise<ApiResponse> => {
+    try {
+      const response = await api.post('/admin/meetings', meetingData);
+      return response.data;
+    } catch (error) {
+      console.error('Error scheduling meeting:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  updateMeetingStatus: async (meetingId: string, status: string): Promise<ApiResponse> => {
+    try {
+      const response = await api.put(`/admin/meetings/${meetingId}`, { status });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating meeting status:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  getCommissionSettings: async (): Promise<ApiResponse<any[]>> => {
+    try {
+      const response = await api.get('/admin/commission-settings');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching commission settings:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  createCommissionSetting: async (data: any): Promise<ApiResponse> => {
+    try {
+      const response = await api.post('/admin/commission-settings', data);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating commission setting:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  updateCommissionSetting: async (id: string, data: any): Promise<ApiResponse> => {
+    try {
+      const response = await api.put(`/admin/commission-settings/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating commission setting:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  getSystemAlerts: async (): Promise<ApiResponse<any[]>> => {
+    try {
+      const response = await api.get('/admin/system-alerts');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching system alerts:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  dismissSystemAlert: async (alertId: string): Promise<ApiResponse> => {
+    try {
+      const response = await api.put(`/admin/system-alerts/${alertId}/dismiss`);
+      return response.data;
+    } catch (error) {
+      console.error('Error dismissing system alert:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  getAdvertisements: async (): Promise<ApiResponse<any[]>> => {
+    try {
+      const response = await api.get('/admin/advertisements');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching advertisements:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
+  },
+
+  updateAdStatus: async (adId: string, action: string): Promise<ApiResponse> => {
+    try {
+      const response = await api.put(`/admin/advertisements/${adId}/${action}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating advertisement status:', error);
+      return { success: false, message: apiUtils.formatErrorMessage(error) };
+    }
   },
 
   // Machine Learning Price Prediction

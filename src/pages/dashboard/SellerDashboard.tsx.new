@@ -63,109 +63,23 @@ const SellerDashboard: React.FC = () => {
   useEffect(() => {
     fetchDashboardData();
   }, []);
-    const fetchDashboardData = async () => {
+  
+  const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      // Mock data
-      const mockListings: DetailedGemstone[] = [
-        {
-          id: '1',
-          name: 'Blue Sapphire',
-          variety: 'Sapphire',
-          color: 'Blue',
-          shape: 'Oval',
-          weight: 3.5,
-          clarity: 'VS',
-          price: 2500,
-          description: 'A beautiful blue sapphire from Sri Lanka',
-          image: 'https://images.unsplash.com/photo-1575457180622-9028b098cc15?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
-          certificate: 'GIA-12345',
-          origin: 'Sri Lanka',
-          treatment: 'Heat Treated',
-          dimensions: '10mm x 8mm x 5mm',
-          sellerId: 'seller123',
-          createdAt: '2025-05-15T10:30:00Z',
-          updatedAt: '2025-06-01T15:20:00Z'
-        },
-        {
-          id: '2',
-          name: 'Vivid Red Ruby',
-          variety: 'Ruby',
-          color: 'Red',
-          shape: 'Cushion',
-          weight: 2.1,
-          clarity: 'VVS',
-          price: 3200,
-          description: 'Premium quality ruby with excellent color',
-          image: 'https://images.unsplash.com/photo-1609941232788-34e5f9e2e3e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
-          certificate: 'GIL-45678',
-          origin: 'Myanmar',
-          treatment: 'None',
-          dimensions: '8mm x 8mm x 5mm',
-          sellerId: 'seller123',
-          createdAt: '2025-05-20T11:15:00Z',
-          updatedAt: '2025-06-05T09:45:00Z'
-        },
-        {
-          id: '3',
-          name: 'Colombian Emerald',
-          variety: 'Emerald',
-          color: 'Green',
-          shape: 'Emerald',
-          weight: 1.8,
-          clarity: 'SI',
-          price: 1800,
-          description: 'Classic emerald with rich green color',
-          image: 'https://images.unsplash.com/photo-1568386322135-425981590268?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
-          certificate: 'GIC-98765',
-          origin: 'Colombia',
-          treatment: 'Oil',
-          dimensions: '7mm x 5mm x 4mm',
-          sellerId: 'seller123',
-          createdAt: '2025-06-01T14:20:00Z',
-          updatedAt: '2025-06-10T16:30:00Z'
-        }
-      ];
-      
-      const mockStats: SellerStats = {
-        totalListings: 3,
-        activeBids: 5,
-        totalSales: 7,
-        revenue: 15800,
-        upcomingMeetings: 2
-      };
-      
-      const mockPendingConfirmations = [
-        {
-          id: 'conf1',
-          buyerId: 'buyer123',
-          buyerName: 'John Doe',
-          gemstoneId: '1',
-          gemstoneName: 'Blue Sapphire',
-          date: '2025-06-20',
-          time: '10:00 AM',
-          status: 'pending'
-        },
-        {
-          id: 'conf2',
-          buyerId: 'buyer456',
-          buyerName: 'Emily Brown',
-          gemstoneId: '2',
-          gemstoneName: 'Vivid Red Ruby',
-          date: '2025-06-22',
-          time: '2:00 PM',
-          status: 'pending'
-        }
-      ];
-      
-      // Simulate API response delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setListings(mockListings);
-      setStats(mockStats);
-      setPendingConfirmations(mockPendingConfirmations);
-      
-      message.success('Dashboard data loaded successfully');
+      const [
+        listingsResponse, 
+        statsResponse, 
+        pendingConfirmationsResponse
+      ] = await Promise.all([
+        api.getSellerListings(),
+        api.getSellerStats(),
+        api.getSellerPendingConfirmations()
+      ]);
+
+      setListings(listingsResponse.data || []);
+      setStats(statsResponse.data || stats);
+      setPendingConfirmations(pendingConfirmationsResponse.data || []);
     } catch (error) {
       console.error('Error fetching seller dashboard data:', error);
       message.error('Failed to load dashboard data');

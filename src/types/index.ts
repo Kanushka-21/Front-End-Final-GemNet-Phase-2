@@ -224,20 +224,21 @@ export interface DetailedGemstone {
   name: string;
   price: number;
   image: string;
-  certified: boolean;
   weight: number;
   color: string;
-  species: string;
   variety: string;
   shape: string;
-  cut: string;
-  dimensions: {
-    length: number;
-    width: number;
-    height: number;
-  };
-  transparency: 'transparent' | 'translucent' | 'opaque';
-  certificate?: Certificate;
+  clarity?: string;
+  cut?: string;
+  dimensions?: string;
+  description?: string;
+  certificate?: string | Certificate;
+  transparency?: 'transparent' | 'translucent' | 'opaque';
+  origin?: string;
+  treatment?: string;
+  sellerId?: string;
+  createdAt?: string;
+  updatedAt?: string;
   refractiveIndex?: {
     min: number;
     max: number;
@@ -275,48 +276,47 @@ export interface Bid {
   status: 'active' | 'won' | 'lost' | 'withdrawn';
 }
 
+// Meeting Types
 export interface Meeting {
   id: string;
   buyerId: string;
   sellerId: string;
   gemstoneId: string;
-  scheduledDateTime: string;
+  scheduledDate: string;
+  scheduledTime: string;
   location: string;
-  status: 'scheduled' | 'completed' | 'cancelled';
-  notes?: string;
+  status: 'scheduled' | 'completed' | 'canceled';
+  notes: string;
 }
 
 export interface MeetingData {
   buyerId: string;
   sellerId: string;
   gemstoneId: string;
-  proposedDateTime: string;
+  scheduledDate: string;
+  scheduledTime: string;
   location: string;
-  notes?: string;
+  notes: string;
 }
 
+// Gemstone Price Prediction
 export interface PriceAttributes {
-  species: string;
   variety: string;
   weight: number;
   color: string;
-  clarity?: string;
+  clarity: string;
   cut: string;
-  certified: boolean;
+  origin?: string;
 }
 
 export interface PricePrediction {
-  estimatedPrice: number;
-  priceRange: {
-    min: number;
-    max: number;
+  price: number;
+  confidenceInterval?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  factors?: {
+    [key: string]: number;
   };
-  confidence: number;
-  factors: {
-    label: string;
-    impact: number;
-    description: string;
-  }[];
 }
 
 export interface GemstoneListingForm {

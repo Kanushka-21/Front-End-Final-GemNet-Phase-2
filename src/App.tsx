@@ -9,6 +9,11 @@ import DashboardPage from '@/pages/DashboardPage';
 import HomePage from '@/pages/HomePage';
 import MarketplacePage from '@/pages/MarketplacePage';
 
+// Dashboard Pages
+import AdminDashboard from '@/pages/dashboard/AdminDashboard';
+import SellerDashboard from '@/pages/dashboard/SellerDashboard';
+import BuyerDashboard from '@/pages/dashboard/BuyerDashboard';
+
 // Layout
 import Layout from '@/components/layout/Layout';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -75,11 +80,22 @@ const AppRoutes: React.FC = () => {
                 <RegisterPage />
               </PublicRoute>
             }
-          />          {/* Protected Routes */}          <Route
+          />          {/* Protected Routes */}
+          <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Buyer Protected Routes */}
+          <Route
+            path="/buyer/dashboard"
+            element={
+              <ProtectedRoute>
+                <BuyerDashboard />
               </ProtectedRoute>
             }
           />
@@ -104,16 +120,12 @@ const AppRoutes: React.FC = () => {
                 </DashboardLayout>
               </ProtectedRoute>
             }
-          />
-
-          {/* Seller Protected Routes */}
+          />          {/* Seller Protected Routes */}
           <Route
             path="/seller/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardLayout>
-                  <div>Seller Dashboard Page - Coming Soon</div>
-                </DashboardLayout>
+                <SellerDashboard />
               </ProtectedRoute>
             }
           />
@@ -146,16 +158,12 @@ const AppRoutes: React.FC = () => {
                 </DashboardLayout>
               </ProtectedRoute>
             }
-          />
-
-          {/* Admin Protected Routes */}
+          />          {/* Admin Protected Routes */}
           <Route
             path="/admin/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardLayout>
-                  <div>Admin Dashboard Page - Coming Soon</div>
-                </DashboardLayout>
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />
