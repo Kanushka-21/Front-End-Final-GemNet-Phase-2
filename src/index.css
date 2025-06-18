@@ -1,3 +1,5 @@
+@import 'antd/dist/reset.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -57,15 +59,429 @@
   .verification-error {
     @apply bg-red-50 border-red-200 text-red-800;
   }
+    /* Dashboard styling */
+  .dashboard-tabs .ant-tabs-nav {
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard-tabs .ant-tabs-tab {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom: none;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+  }
+  
+  .dashboard-tabs .ant-tabs-tab-active {
+    background-color: rgba(239, 246, 255, 1);
+    color: rgba(29, 78, 216, 1);
+    font-weight: 500;
+  }
+  
+  .dashboard-tabs .ant-tabs-tab-btn {
+    font-size: 1rem;
+  }
+  
+  .custom-table .ant-table-thead > tr > th {
+    background-color: rgba(248, 250, 252, 1);
+    color: rgba(51, 65, 85, 1);
+    font-weight: 500;
+  }
+  
+  .pagination-modern .ant-pagination-item-active {
+    border-color: rgba(37, 99, 235, 1);
+    background-color: rgba(239, 246, 255, 1);
+  }
+  
+  .pagination-modern .ant-pagination-item-active a {
+    color: rgba(29, 78, 216, 1);
+  }
+  
+  /* Gemstone Detail Modal Styles */
+  .gemstone-detail-modal .ant-modal-content {
+    @apply rounded-lg overflow-hidden p-0;
+  }
+  
+  .gemstone-detail-modal .ant-modal-close {
+    @apply top-4 right-4;
+  }
+  
+  .gemstone-modal-content {
+    @apply flex flex-col;
+  }
+  
+  .gemstone-image-col {
+    @apply p-0 relative;
+  }
+  
+  .gemstone-image-container {
+    @apply w-full h-full relative;
+  }
+  
+  .gemstone-detail-image {
+    @apply w-full h-full object-cover;
+  }
+  
+  .gemstone-stats {
+    @apply flex justify-between p-2 text-xs text-gray-600 bg-gray-100 border-t;
+  }
+  
+  .gemstone-details-col {
+    @apply p-0 bg-white;
+  }
+  
+  .details-content {
+    @apply p-6;
+  }
+  
+  .gemstone-tabs {
+    @apply flex border-b mb-6;
+  }
+  
+  .gemstone-tabs .tab {
+    @apply p-2 cursor-pointer mr-4 relative;
+  }
+  
+  .gemstone-tabs .tab.active {
+    @apply text-blue-600 font-medium;
+  }
+  
+  .gemstone-tabs .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #1890ff;
+  }
+  
+  .gemstone-main-details .gemstone-title {
+    @apply m-0 mb-4 font-semibold text-gray-800;
+  }
+  
+  .gemstone-properties {
+    @apply mb-6;
+  }
+  
+  .detail-row {
+    @apply flex border-b py-3;
+  }
+  
+  .detail-row:last-child {
+    @apply border-b-0;
+  }
+  
+  .detail-label {
+    @apply w-24 font-medium text-gray-600;
+  }
+  
+  .detail-value {
+    @apply flex-1 text-gray-800;
+  }
+  
+  .description-section {
+    @apply mb-6;
+  }
+  
+  .section-title {
+    @apply font-semibold mb-2 text-gray-800;
+  }
+  
+  .current-auction-info {
+    @apply flex mb-6;
+  }
+  
+  .current-auction-info > div {
+    @apply flex-1;
+  }
+  
+  .info-label {
+    @apply text-sm text-gray-600 mb-1;
+  }
+  
+  .current-price {
+    @apply text-2xl font-semibold text-blue-600;
+  }
+  
+  .auction-time {
+    @apply text-2xl font-semibold;
+  }
+  
+  .place-bid {
+    @apply mb-4;
+  }
+  
+  .bid-inputs {
+    @apply flex gap-2 my-2;
+  }
+  
+  .bid-inputs .ant-input-number {
+    @apply flex-1;
+  }
+  
+  .place-bid-button {
+    @apply min-w-[100px];
+  }
+  
+  .min-bid {
+    @apply text-xs text-gray-600;
+  }
+  
+  .bid-notice {
+    @apply bg-orange-50 border border-orange-200 rounded p-3 mt-4;
+  }
+  
+  .notice-title {
+    @apply font-semibold text-orange-600 mb-1;
+  }
+  
+  .notice-text {
+    @apply text-xs text-orange-700;
+  }
+  
+  /* Gemstone Card Styling */
+  .gemstone-card {
+    @apply shadow-md transition-all duration-300 ease-in-out;
+  }
+  
+  .gemstone-card:hover {
+    @apply shadow-lg;
+  }
+  
+  .gemstone-card .ant-card-body {
+    @apply p-4;
+  }
+  
+  /* View Details Button Styling */
+  .view-details-btn {
+    height: 36px !important;
+    font-size: 14px !important;
+    border-radius: 4px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .view-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Gemstone Detail Modal */
+  .gemstone-detail-modal .ant-modal-content {
+    @apply rounded-lg overflow-hidden p-0;
+  }
+  
+  .gemstone-detail-modal .ant-modal-body {
+    @apply p-0;
+  }
+  
+  .gemstone-detail-modal .ant-modal-close {
+    @apply top-4 right-4;
+  }
+  
+  /* Enhanced modal responsiveness */
+  .gemstone-detail-modal {
+    width: 90% !important;
+    max-width: 900px !important;
+  }
+
+  @media (max-width: 768px) {
+    .gemstone-detail-modal {
+      width: 95% !important;
+    }
+    
+    .gemstone-image-col {
+      height: 300px !important;
+    }
+    
+    .gemstone-detail-image {
+      height: 100% !important;
+      object-fit: cover !important;
+    }
+    
+    .details-content {
+      padding: 16px !important;
+    }
+  }
+  
+  /* Make all gemstone cards consistent in size */
+  .ant-card.gemstone-card {
+    height: 100% !important;
+  }
+
+  .gemstone-card .ant-card-cover {
+    height: 240px !important;
+    overflow: hidden !important;
+  }
+
+  .gemstone-card .ant-card-cover img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  .gemstone-card:hover .ant-card-cover img {
+    transform: scale(1.05);
+  }
+  
+  /* Media queries for responsive cards */
+  @media screen and (max-width: 768px) {
+    .gemstone-card .ant-card-body {
+      @apply p-3;
+    }
+    
+    .gemstone-detail-modal .ant-modal-content {
+      @apply m-0 mx-2;
+    }
+    
+    .gemstone-detail-modal .details-content {
+      @apply p-4;
+    }
+    
+    .details-content .current-price,
+    .details-content .auction-time {
+      @apply text-3xl;
+    }
+    
+    .detail-row {
+      @apply py-2;
+    }
+    
+    .detail-label {
+      @apply w-20;
+    }
+  }
+  
+  /* Tab Styling inside modal */
+  .gemstone-tabs {
+    @apply flex border-b mb-6;
+  }
+  
+  .gemstone-tabs .tab {
+    @apply p-2 cursor-pointer mr-4 relative;
+  }
+  
+  .gemstone-tabs .tab.active {
+    @apply text-blue-600 font-medium;
+  }
+  
+  .gemstone-tabs .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #1890ff;
+  }
+  
+  /* Gemstone detail rows */
+  .detail-row {
+    @apply flex border-b py-3;
+  }
+  
+  .detail-row:last-child {
+    @apply border-b-0;
+  }
+  
+  .detail-label {
+    @apply w-24 font-medium text-gray-600;
+  }
+  
+  .detail-value {
+    @apply flex-1 text-gray-800;
+  }
+  
+  .gemstone-stats {
+    @apply flex justify-between p-2 text-xs text-gray-600 bg-gray-100 border-t;
+  }
+  
+  .description-section {
+    @apply mb-6;
+  }
+  
+  .section-title {
+    @apply font-semibold mb-2 text-gray-800;
+  }
+  
+  .current-auction-info {
+    @apply flex mb-6;
+  }
+  
+  .current-auction-info > div {
+    @apply flex-1;
+  }
+  
+  .info-label {
+    @apply text-sm text-gray-600 mb-1;
+  }
+  
+  .current-price {
+    @apply text-2xl font-semibold text-blue-600;
+  }
+  
+  .auction-time {
+    @apply text-2xl font-semibold;
+  }
+  
+  .place-bid {
+    @apply mb-4;
+  }
+  
+  .bid-inputs {
+    @apply flex gap-2 my-2;
+  }
+  
+  .bid-inputs .ant-input-number {
+    @apply flex-1;
+  }
+  
+  .place-bid-button {
+    @apply min-w-[100px];
+  }
+  
+  .min-bid {
+    @apply text-xs text-gray-600;
+  }
+  
+  .bid-notice {
+    @apply bg-orange-50 border border-orange-200 rounded p-3 mt-4;
+  }
+  
+  .notice-title {
+    @apply font-semibold text-orange-600 mb-1;
+  }
+  
+  .notice-text {
+    @apply text-xs text-orange-700;
+  }
+  
+  /* View Details Button */
+  .view-details-btn {
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(24, 144, 255, 0.2);
+  }
+
+  .view-details-btn:hover {
+    box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+  }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, var(--primary-600), var(--accent-600));
+    background-clip: text;
+    color: transparent;
   }
   
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary-600 to-accent-600;
+    background-image: linear-gradient(to right, var(--primary-600), var(--accent-600));
   }
   
   .animate-bounce-slow {
@@ -79,15 +495,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-secondary-100;
+  background-color: rgba(241, 245, 249, 1);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-secondary-300 rounded-full;
+  background-color: rgba(203, 213, 225, 1);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary-400;
+  background-color: rgba(148, 163, 184, 1);
 }
 
 /* Loading spinner */
@@ -113,4 +530,41 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Marketplace responsive fixes */
+@media (max-width: 576px) {
+  .ant-card-cover img {
+    height: 200px !important;
+    object-fit: cover;
+  }
+
+  .ant-card-body {
+    padding: 16px 12px;
+  }
+  
+  .gemstone-detail-modal .ant-modal-body {
+    padding: 0;
+  }
+
+  .gemstone-image-col {
+    min-height: 250px;
+  }
+  
+  .gemstone-stats {
+    flex-direction: row;
+    padding: 8px;
+  }
+  
+  .current-auction-info {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 991px) {
+  .ant-card-cover img {
+    height: 220px !important;
+    object-fit: cover;
+  }
 }
