@@ -10,10 +10,11 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   disabled = false,
   loading = false,
+  fullWidth = false,
   className,
   ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed touch-action-manipulation';
   
   const variants = {
     primary: 'bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white shadow-sm hover:shadow-md focus:ring-primary-500',
@@ -22,10 +23,12 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const sizes = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
+    sm: 'px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm min-h-[36px]',
+    md: 'px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base min-h-[40px] sm:min-h-[44px]',
+    lg: 'px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg min-h-[48px] sm:min-h-[52px]',
   };
+
+  const widthClass = fullWidth ? 'w-full' : '';
 
   return (
     <button
@@ -36,13 +39,14 @@ const Button: React.FC<ButtonProps> = ({
         baseClasses,
         variants[variant],
         sizes[size],
+        widthClass,
         className
       )}
       {...props}
     >
       {loading && (
         <svg
-          className="animate-spin -ml-1 mr-3 h-5 w-5"
+          className="animate-spin -ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -62,7 +66,7 @@ const Button: React.FC<ButtonProps> = ({
           ></path>
         </svg>
       )}
-      {children}
+      <span className="whitespace-nowrap">{children}</span>
     </button>
   );
 };

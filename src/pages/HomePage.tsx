@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { 
   Layout, Row, Col, Card, Button, Badge, Rate, Tag, Typography, 
-  Space, Modal, Input, InputNumber, Statistic, Avatar, Carousel
+  Space, Modal, Input, InputNumber, Statistic, Avatar, Carousel, Drawer
 } from 'antd';
 import { 
   EyeOutlined, HeartOutlined, CheckCircleOutlined, UserOutlined, 
   ShoppingCartOutlined, SearchOutlined, LoginOutlined, UserAddOutlined,
   GlobalOutlined, TeamOutlined, ShopOutlined, DollarOutlined,
   StarFilled, ClockCircleOutlined, SafetyOutlined, TrophyOutlined,
-  CloseOutlined
+  CloseOutlined, MenuOutlined
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,7 @@ const HomePage: React.FC = () => {
   const [selectedGemstone, setSelectedGemstone] = useState<DetailedGemstone | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bidAmount, setBidAmount] = useState<number>(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Mock featured gemstones data
   const featuredGemstones: DetailedGemstone[] = [
@@ -145,10 +146,14 @@ const HomePage: React.FC = () => {
     setBidAmount(0);
   };
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
     <Layout className="min-h-screen bg-gray-50">
       {/* Modern Header */}
-      <Header className="bg-white shadow-sm border-b border-gray-100 px-6 lg:px-12">
+      <Header className="bg-white shadow-sm border-b border-gray-100 px-4 lg:px-12 h-auto py-2 md:py-0">
         <div className="flex justify-between items-center h-full max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -158,7 +163,7 @@ const HomePage: React.FC = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
               <ShopOutlined className="text-white text-xl" />
             </div>
-            <Title level={3} className="!mb-0 !text-gray-800 font-bold">
+            <Title level={3} className="!mb-0 !text-gray-800 font-bold text-lg md:text-xl">
               GemNet
             </Title>
           </motion.div>
@@ -175,9 +180,57 @@ const HomePage: React.FC = () => {
             </Button>
           </Space>
 
-          <Space>
+          <div className="flex items-center">
+            <div className="hidden md:flex items-center space-x-3">
+              <Button 
+                icon={<LoginOutlined />} 
+                className="border-blue-500 text-blue-500 hover:bg-blue-50"
+                onClick={() => navigate('/login')}
+              >
+                Sign In
+              </Button>
+              <Button 
+                type="primary" 
+                icon={<UserAddOutlined />}
+                className="bg-blue-500 hover:bg-blue-600 border-none shadow-lg"
+                onClick={() => navigate('/register')}
+              >
+                Get Started
+              </Button>
+            </div>
+            <Button 
+              icon={<MenuOutlined />} 
+              className="flex md:hidden ml-4 border-blue-500 text-blue-500"
+              onClick={() => setMobileMenuOpen(true)}
+            />
+          </div>
+        </div>
+      </Header>
+
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        title="Menu"
+        placement="right"
+        closable={true}
+        onClose={() => setMobileMenuOpen(false)}
+        open={mobileMenuOpen}
+        width={280}
+      >
+        <div className="flex flex-col space-y-6">
+          <Button type="text" block className="text-left h-auto py-3 text-gray-600 hover:text-blue-500 font-medium text-lg">
+            Browse Gems
+          </Button>
+          <Button type="text" block className="text-left h-auto py-3 text-gray-600 hover:text-blue-500 font-medium text-lg">
+            How It Works
+          </Button>
+          <Button type="text" block className="text-left h-auto py-3 text-gray-600 hover:text-blue-500 font-medium text-lg">
+            About
+          </Button>
+          <div className="border-t border-gray-200 pt-6 flex flex-col space-y-4">
             <Button 
               icon={<LoginOutlined />} 
+              size="large"
+              block
               className="border-blue-500 text-blue-500 hover:bg-blue-50"
               onClick={() => navigate('/login')}
             >
@@ -186,40 +239,42 @@ const HomePage: React.FC = () => {
             <Button 
               type="primary" 
               icon={<UserAddOutlined />}
-              className="bg-blue-500 hover:bg-blue-600 border-none shadow-lg"
+              size="large"
+              block
+              className="bg-blue-500 hover:bg-blue-600 border-none"
               onClick={() => navigate('/register')}
             >
               Get Started
             </Button>
-          </Space>
+          </div>
         </div>
-      </Header>
+      </Drawer>
 
       <Content>
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative max-w-7xl mx-auto px-6 lg:px-12 py-20 lg:py-32">
-            <Row gutter={[48, 48]} align="middle">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 md:py-20 lg:py-32">
+            <Row gutter={[24, 32]} align="middle">
               <Col xs={24} lg={12}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
-                  className="space-y-6"
+                  className="space-y-4 md:space-y-6 text-center md:text-left"
                 >
-                  <Title level={1} className="!text-white !text-4xl lg:!text-6xl !font-bold !leading-tight">
+                  <Title level={1} className="!text-white !text-3xl sm:!text-4xl lg:!text-6xl !font-bold !leading-tight">
                     Discover Authentic
                     <span className="block text-yellow-400">Sri Lankan Gems</span>
                   </Title>
-                  <Paragraph className="!text-blue-100 !text-lg lg:!text-xl !leading-relaxed">
+                  <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed">
                     Join the most trusted digital marketplace for authentic gemstones. 
                     Connect with verified sellers and discover rare gems with confidence.
                   </Paragraph>
-                  <Space size="large" className="flex-col sm:flex-row">
+                  <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center md:justify-start">
                     <Button 
                       size="large" 
-                      className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12"
+                      className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12 w-full sm:w-auto"
                       onClick={() => navigate('/marketplace')}
                     >
                       Explore Marketplace
@@ -227,7 +282,7 @@ const HomePage: React.FC = () => {
                     <Button 
                       size="large" 
                       ghost 
-                      className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 h-12"
+                      className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 h-12 w-full sm:w-auto"
                     >
                       Learn More
                     </Button>
@@ -239,7 +294,7 @@ const HomePage: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="relative"
+                  className="relative mx-auto max-w-sm md:max-w-none"
                 >
                   <div className="relative z-10">
                     <img 
@@ -248,8 +303,8 @@ const HomePage: React.FC = () => {
                       className="w-full h-auto rounded-2xl shadow-2xl"
                     />
                   </div>
-                  <div className="absolute -top-4 -right-4 w-32 h-32 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
-                  <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white rounded-full opacity-20 animate-pulse delay-1000"></div>
+                  <div className="absolute -top-4 -right-4 w-24 md:w-32 h-24 md:h-32 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
+                  <div className="absolute -bottom-6 -left-6 w-16 md:w-24 h-16 md:h-24 bg-white rounded-full opacity-20 animate-pulse delay-1000"></div>
                 </motion.div>
               </Col>
             </Row>
@@ -257,9 +312,9 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Statistics Section */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <Row gutter={[32, 32]}>
+        <section className="py-10 md:py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <Row gutter={[16, 16]} align="middle" justify="center">
               {statistics.map((stat, index) => (
                 <Col xs={12} sm={6} key={index}>
                   <motion.div
@@ -268,19 +323,22 @@ const HomePage: React.FC = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <div className="flex flex-col items-center space-y-3">
-                        <div className="text-3xl">{stat.icon}</div>
+                    <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                      <div className="flex flex-col items-center space-y-2 md:space-y-3">
+                        <div className="text-2xl md:text-3xl">{stat.icon}</div>
                         <Statistic 
                           value={stat.value} 
                           className="!mb-0"
                           valueStyle={{ 
-                            fontSize: '2rem', 
+                            fontSize: '1.25rem', 
                             fontWeight: 'bold',
-                            color: '#1f2937'
+                            color: '#1f2937',
+                            '@media (min-width: 768px)': {
+                              fontSize: '2rem',
+                            }
                           }}
                         />
-                        <Text className="text-gray-600 font-medium">{stat.title}</Text>
+                        <Text className="text-gray-600 font-medium text-xs md:text-sm">{stat.title}</Text>
                       </div>
                     </Card>
                   </motion.div>
@@ -291,24 +349,24 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Featured Gemstones */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <section className="py-12 md:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-12"
+              className="text-center mb-8 md:mb-12"
             >
-              <Title level={2} className="!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-4">
+              <Title level={2} className="!text-2xl sm:!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-3 md:!mb-4">
                 Featured Gemstones
               </Title>
-              <Paragraph className="!text-lg !text-gray-600 max-w-2xl mx-auto">
+              <Paragraph className="!text-base md:!text-lg !text-gray-600 max-w-2xl mx-auto">
                 Discover our handpicked collection of premium gemstones from verified sellers
               </Paragraph>
             </motion.div>
 
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 24]}>
               {featuredGemstones.map((gemstone, index) => (
                 <Col xs={24} sm={12} lg={6} key={gemstone.id}>
                   <motion.div
@@ -317,8 +375,9 @@ const HomePage: React.FC = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ y: -8 }}
-                  >                    <Card
-                      className="gemstone-card overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 group"
+                  >
+                    <Card
+                      className="gemstone-card overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 group h-full"
                       cover={
                         <div className="relative overflow-hidden">
                           <img
@@ -341,7 +400,8 @@ const HomePage: React.FC = () => {
                             />
                           </div>
                         </div>
-                      }                      actions={[
+                      }
+                      actions={[
                         <div style={{ padding: '0 16px 16px 16px' }}>
                           <Button 
                             type="primary" 
@@ -356,18 +416,18 @@ const HomePage: React.FC = () => {
                       ]}
                     >
                       <div className="space-y-3">
-                        <Title level={4} className="!mb-2 !text-gray-800">
+                        <Title level={4} className="!mb-2 !text-gray-800 !text-base md:!text-lg">
                           {gemstone.name}
                         </Title>
                         
-                        <Text className="text-gray-600 block">
+                        <Text className="text-gray-600 block text-sm md:text-base">
                           Exquisite {gemstone.color} {gemstone.variety} with exceptional clarity and vibrant color.
                         </Text>
 
                         <div className="flex justify-between items-center">
                           <div>
-                            <Text className="text-gray-500 text-sm block">Current Bid</Text>
-                            <Title level={3} className="!mb-0 !text-blue-600 !font-bold">
+                            <Text className="text-gray-500 text-xs md:text-sm block">Current Bid</Text>
+                            <Title level={3} className="!mb-0 !text-blue-600 !font-bold !text-lg md:!text-xl">
                               ${gemstone.price.toLocaleString()}
                             </Title>
                           </div>
@@ -379,15 +439,15 @@ const HomePage: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                          <Space>
+                        <div className="flex flex-wrap justify-between items-center pt-2 border-t border-gray-100">
+                          <Space wrap size={[4, 8]}>
                             <Tag color="blue">{gemstone.weight} Carat</Tag>
                             <Tag color="purple">{gemstone.variety}</Tag>
                             {gemstone.certified && <Tag color="green">Certified</Tag>}
                           </Space>
                         </div>
 
-                        <div className="flex justify-between items-center text-sm text-gray-500">
+                        <div className="flex justify-between items-center text-xs md:text-sm text-gray-500">
                           <span><EyeOutlined className="mr-1" />193 views</span>
                           <span><HeartOutlined className="mr-1" />20 | Bids: 0</span>
                         </div>
@@ -398,11 +458,11 @@ const HomePage: React.FC = () => {
               ))}
             </Row>
 
-            <div className="text-center mt-12">
+            <div className="text-center mt-8 md:mt-12">
               <Button 
                 size="large" 
                 type="primary"
-                className="bg-blue-500 border-blue-500 hover:bg-blue-600 px-8 h-12 font-semibold"
+                className="bg-blue-500 border-blue-500 hover:bg-blue-600 px-6 md:px-8 h-10 md:h-12 font-semibold"
                 onClick={() => navigate('/marketplace')}
               >
                 View All Gemstones
@@ -412,25 +472,25 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Why Choose GemNet */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <section className="py-12 md:py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 md:mb-16"
             >
-              <Title level={2} className="!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-4">
+              <Title level={2} className="!text-2xl sm:!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-3 md:!mb-4">
                 Why Choose GemNet
               </Title>
-              <Paragraph className="!text-lg !text-gray-600 max-w-2xl mx-auto">
+              <Paragraph className="!text-base md:!text-lg !text-gray-600 max-w-2xl mx-auto">
                 GemNet provides a secure, transparent marketplace for authentic gemstones
               </Paragraph>
             </motion.div>
 
-            <Row gutter={[32, 32]}>
-              <Col xs={24} md={12} lg={6}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} lg={6}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -438,12 +498,12 @@ const HomePage: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card className="h-full text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div className="flex flex-col items-center space-y-4 p-6">
-                      <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                        <CheckCircleOutlined className="text-blue-500 text-2xl" />
+                    <div className="flex flex-col items-center space-y-2 md:space-y-4 p-3 md:p-6">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                        <CheckCircleOutlined className="text-blue-500 text-xl md:text-2xl" />
                       </div>
-                      <Title level={4} className="!mb-2">Verified Authentication</Title>
-                      <Text className="text-gray-600 text-center">
+                      <Title level={4} className="!mb-1 md:!mb-2 !text-base md:!text-lg">Verified Authentication</Title>
+                      <Text className="text-gray-600 text-center text-sm md:text-base">
                         Every gemstone undergoes rigorous authentication by certified gemologists
                       </Text>
                     </div>
@@ -451,7 +511,7 @@ const HomePage: React.FC = () => {
                 </motion.div>
               </Col>
 
-              <Col xs={24} md={12} lg={6}>
+              <Col xs={24} sm={12} lg={6}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -459,12 +519,12 @@ const HomePage: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card className="h-full text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div className="flex flex-col items-center space-y-4 p-6">
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                        <GlobalOutlined className="text-green-500 text-2xl" />
+                    <div className="flex flex-col items-center space-y-2 md:space-y-4 p-3 md:p-6">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-green-100 rounded-full flex items-center justify-center">
+                        <GlobalOutlined className="text-green-500 text-xl md:text-2xl" />
                       </div>
-                      <Title level={4} className="!mb-2">Global Marketplace</Title>
-                      <Text className="text-gray-600 text-center">
+                      <Title level={4} className="!mb-1 md:!mb-2 !text-base md:!text-lg">Global Marketplace</Title>
+                      <Text className="text-gray-600 text-center text-sm md:text-base">
                         Connect with buyers and sellers from over 45 countries worldwide
                       </Text>
                     </div>
@@ -472,7 +532,7 @@ const HomePage: React.FC = () => {
                 </motion.div>
               </Col>
 
-              <Col xs={24} md={12} lg={6}>
+              <Col xs={24} sm={12} lg={6}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -480,12 +540,12 @@ const HomePage: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card className="h-full text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div className="flex flex-col items-center space-y-4 p-6">
-                      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
-                        <ShopOutlined className="text-purple-500 text-2xl" />
+                    <div className="flex flex-col items-center space-y-2 md:space-y-4 p-3 md:p-6">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                        <ShopOutlined className="text-purple-500 text-xl md:text-2xl" />
                       </div>
-                      <Title level={4} className="!mb-2">Premium Selection</Title>
-                      <Text className="text-gray-600 text-center">
+                      <Title level={4} className="!mb-1 md:!mb-2 !text-base md:!text-lg">Premium Selection</Title>
+                      <Text className="text-gray-600 text-center text-sm md:text-base">
                         Access to the finest gemstones sourced directly from mines and collectors
                       </Text>
                     </div>
@@ -493,7 +553,7 @@ const HomePage: React.FC = () => {
                 </motion.div>
               </Col>
 
-              <Col xs={24} md={12} lg={6}>
+              <Col xs={24} sm={12} lg={6}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -501,12 +561,12 @@ const HomePage: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card className="h-full text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-blue-100">
-                    <div className="flex flex-col items-center space-y-4 p-6">
-                      <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
-                        <SafetyOutlined className="text-white text-2xl" />
+                    <div className="flex flex-col items-center space-y-2 md:space-y-4 p-3 md:p-6">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-500 rounded-full flex items-center justify-center">
+                        <SafetyOutlined className="text-white text-xl md:text-2xl" />
                       </div>
-                      <Title level={4} className="!mb-2">Secure Transactions</Title>
-                      <Text className="text-gray-600 text-center">
+                      <Title level={4} className="!mb-1 md:!mb-2 !text-base md:!text-lg">Secure Transactions</Title>
+                      <Text className="text-gray-600 text-center text-sm md:text-base">
                         Escrow services and payment protection for all marketplace transactions
                       </Text>
                     </div>
@@ -518,44 +578,44 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* How GemNet Works */}
-        <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white relative overflow-hidden">
+        <section className="py-12 md:py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 md:mb-16"
             >
-              <Title level={2} className="!text-white !text-3xl lg:!text-4xl !font-bold !mb-4">
+              <Title level={2} className="!text-white !text-2xl sm:!text-3xl lg:!text-4xl !font-bold !mb-3 md:!mb-4">
                 How GemNet Works
               </Title>
-              <Paragraph className="!text-blue-100 !text-lg max-w-2xl mx-auto">
+              <Paragraph className="!text-blue-100 !text-base md:!text-lg max-w-2xl mx-auto">
                 Simple, secure, and transparent gemstone trading
               </Paragraph>
             </motion.div>
 
-            <Row gutter={[48, 48]} align="middle">
-              <Col xs={24} lg={8}>
+            <Row gutter={[24, 32]} align="middle">
+              <Col xs={24} md={8}>
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                   viewport={{ once: true }}
-                  className="text-center lg:text-left"
+                  className="text-center md:text-left"
                 >
-                  <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
-                    <UserAddOutlined className="text-blue-800 text-2xl" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto md:mx-0 mb-4 md:mb-6">
+                    <UserAddOutlined className="text-blue-800 text-xl md:text-2xl" />
                   </div>
-                  <Title level={3} className="!text-white !mb-4">Join the Network</Title>
-                  <Paragraph className="!text-blue-100 !text-lg">
+                  <Title level={3} className="!text-white !mb-2 md:!mb-4 !text-lg md:!text-xl">Join the Network</Title>
+                  <Paragraph className="!text-blue-100 !text-sm md:!text-lg">
                     Create an account as a buyer or seller and verify your identity
                   </Paragraph>
                 </motion.div>
               </Col>
 
-              <Col xs={24} lg={8}>
+              <Col xs={24} md={8}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -563,39 +623,39 @@ const HomePage: React.FC = () => {
                   viewport={{ once: true }}
                   className="text-center"
                 >
-                  <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <SearchOutlined className="text-blue-800 text-2xl" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                    <SearchOutlined className="text-blue-800 text-xl md:text-2xl" />
                   </div>
-                  <Title level={3} className="!text-white !mb-4">Browse or List Gems</Title>
-                  <Paragraph className="!text-blue-100 !text-lg">
+                  <Title level={3} className="!text-white !mb-2 md:!mb-4 !text-lg md:!text-xl">Browse or List Gems</Title>
+                  <Paragraph className="!text-blue-100 !text-sm md:!text-lg">
                     Explore verified gemstones or list your own for certification
                   </Paragraph>
                 </motion.div>
               </Col>
 
-              <Col xs={24} lg={8}>
+              <Col xs={24} md={8}>
                 <motion.div
                   initial={{ opacity: 0, x: 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
                   viewport={{ once: true }}
-                  className="text-center lg:text-right"
+                  className="text-center md:text-right"
                 >
-                  <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
-                    <SafetyOutlined className="text-blue-800 text-2xl" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto md:ml-auto md:mr-0 mb-4 md:mb-6">
+                    <SafetyOutlined className="text-blue-800 text-xl md:text-2xl" />
                   </div>
-                  <Title level={3} className="!text-white !mb-4">Secure Transactions</Title>
-                  <Paragraph className="!text-blue-100 !text-lg">
+                  <Title level={3} className="!text-white !mb-2 md:!mb-4 !text-lg md:!text-xl">Secure Transactions</Title>
+                  <Paragraph className="!text-blue-100 !text-sm md:!text-lg">
                     Complete purchases through our secure escrow system
                   </Paragraph>
                 </motion.div>
               </Col>
             </Row>
 
-            <div className="text-center mt-12">
+            <div className="text-center mt-8 md:mt-12">
               <Button 
                 size="large"
-                className="bg-yellow-500 border-yellow-500 text-blue-800 hover:bg-yellow-400 font-semibold px-8 h-12"
+                className="bg-yellow-500 border-yellow-500 text-blue-800 hover:bg-yellow-400 font-semibold px-6 md:px-8 h-10 md:h-12"
                 onClick={() => navigate('/register')}
               >
                 Learn More
@@ -605,26 +665,26 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Testimonials */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <section className="py-12 md:py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 md:mb-16"
             >
-              <Title level={2} className="!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-4">
+              <Title level={2} className="!text-2xl sm:!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-3 md:!mb-4">
                 What Our Members Say
               </Title>
-              <Paragraph className="!text-lg !text-gray-600 max-w-2xl mx-auto">
+              <Paragraph className="!text-base md:!text-lg !text-gray-600 max-w-2xl mx-auto">
                 Join thousands of satisfied members in our growing gemstone community
               </Paragraph>
             </motion.div>
 
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 24]}>
               {testimonials.map((testimonial, index) => (
-                <Col xs={24} md={8} key={index}>
+                <Col xs={24} sm={12} md={8} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -632,14 +692,14 @@ const HomePage: React.FC = () => {
                     viewport={{ once: true }}
                   >
                     <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <div className="flex flex-col items-center text-center space-y-4">
-                        <Avatar size={64} src={testimonial.avatar} />
+                      <div className="flex flex-col items-center text-center space-y-3 md:space-y-4">
+                        <Avatar size={48} md-size={64} src={testimonial.avatar} />
                         <div>
-                          <Title level={4} className="!mb-1">{testimonial.name}</Title>
-                          <Text className="text-gray-500">{testimonial.role}</Text>
+                          <Title level={4} className="!mb-0 md:!mb-1 !text-base md:!text-lg">{testimonial.name}</Title>
+                          <Text className="text-gray-500 text-sm">{testimonial.role}</Text>
                         </div>
-                        <Rate disabled defaultValue={testimonial.rating} className="text-yellow-500" />
-                        <Paragraph className="!text-gray-600 italic">
+                        <Rate disabled defaultValue={testimonial.rating} className="text-yellow-500 text-sm md:text-base" />
+                        <Paragraph className="!text-gray-600 italic text-sm md:text-base">
                           "{testimonial.comment}"
                         </Paragraph>
                       </div>
@@ -652,26 +712,26 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white relative overflow-hidden">
+        <section className="py-12 md:py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative max-w-4xl mx-auto px-6 lg:px-12 text-center">
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-12 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="space-y-8"
+              className="space-y-4 md:space-y-8"
             >
-              <Title level={2} className="!text-white !text-3xl lg:!text-5xl !font-bold">
+              <Title level={2} className="!text-white !text-2xl sm:!text-3xl lg:!text-5xl !font-bold">
                 Ready to Join GemNet?
               </Title>
-              <Paragraph className="!text-blue-100 !text-lg lg:!text-xl max-w-2xl mx-auto">
+              <Paragraph className="!text-blue-100 !text-base md:!text-lg lg:!text-xl max-w-2xl mx-auto">
                 Start buying and selling authentic gemstones in a secure digital marketplace
               </Paragraph>
-              <Space size="large" className="flex-col sm:flex-row">
+              <Space size="middle" className="flex flex-col sm:flex-row justify-center">
                 <Button 
                   size="large"
-                  className="bg-yellow-500 border-yellow-500 text-blue-800 hover:bg-yellow-400 font-semibold px-8 h-12"
+                  className="bg-yellow-500 border-yellow-500 text-blue-800 hover:bg-yellow-400 font-semibold px-6 md:px-8 h-10 md:h-12 w-full sm:w-auto"
                   onClick={() => navigate('/register')}
                 >
                   Create Account
@@ -679,7 +739,7 @@ const HomePage: React.FC = () => {
                 <Button 
                   size="large"
                   ghost
-                  className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 h-12"
+                  className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-6 md:px-8 h-10 md:h-12 w-full sm:w-auto"
                   onClick={() => navigate('/marketplace')}
                 >
                   Learn More
@@ -698,113 +758,115 @@ const HomePage: React.FC = () => {
           setBidAmount(0);
         }}
         footer={null}
-        width={900}
+        width="95%"
+        style={{ maxWidth: 900 }}
         className="gemstone-detail-modal"
         closeIcon={<CloseOutlined style={{ color: '#333' }} />}
       >
         {selectedGemstone && (
           <div className="gemstone-modal-content">
-            <Row gutter={0}>
+            <Row gutter={[16, 24]}>
               <Col xs={24} md={10} className="gemstone-image-col">
                 <div className="gemstone-image-container">
                   <img 
                     src={selectedGemstone.image} 
                     alt={selectedGemstone.name}
-                    className="gemstone-detail-image"
+                    className="gemstone-detail-image w-full h-auto rounded-lg"
                   />
                 </div>
-                <div className="gemstone-stats">
+                <div className="gemstone-stats flex justify-between text-sm text-gray-500 mt-2">
                   <span><EyeOutlined /> 86 views</span>
                   <span>4 bids</span> 
-                  <span>9 in watchlists</span>
+                  <span>9 watchlists</span>
                 </div>
               </Col>
 
-              <Col xs={24} md={14} className="gemstone-details-col">                <div className="details-content">
-                  <Space direction="vertical" size={24} style={{ width: '100%', padding: '6px' }}>
-                    <div className="gemstone-tabs">
-                      <div className="tab active">Details</div>
-                      <div className="tab">Certificate</div>
-                      <div className="tab">Bid History</div>
-                      <div className="tab">Similar Gems</div>
+              <Col xs={24} md={14} className="gemstone-details-col">
+                <div className="details-content">
+                  <Space direction="vertical" size={16} md-size={24} style={{ width: '100%', padding: '4px' }}>
+                    <div className="gemstone-tabs flex overflow-x-auto pb-2">
+                      <div className="tab active whitespace-nowrap px-3 py-2 mr-2 text-sm">Details</div>
+                      <div className="tab whitespace-nowrap px-3 py-2 mr-2 text-sm">Certificate</div>
+                      <div className="tab whitespace-nowrap px-3 py-2 mr-2 text-sm">Bid History</div>
+                      <div className="tab whitespace-nowrap px-3 py-2 text-sm">Similar Gems</div>
                     </div>
                     
                     <div className="gemstone-main-details">
-                      <Title level={2} className="gemstone-title">{selectedGemstone.name}</Title>
+                      <Title level={2} className="gemstone-title !text-xl md:!text-2xl !mb-3">{selectedGemstone.name}</Title>
                       
-                      <div className="gemstone-properties">
+                      <div className="gemstone-properties grid grid-cols-2 gap-2 text-sm md:text-base">
                         <div className="detail-row">
-                          <div className="detail-label">Type</div>
+                          <div className="detail-label font-medium">Type</div>
                           <div className="detail-value">{selectedGemstone.species}</div>
                         </div>
                         <div className="detail-row">
-                          <div className="detail-label">Color</div>
+                          <div className="detail-label font-medium">Color</div>
                           <div className="detail-value">{selectedGemstone.color}</div>
                         </div>
                         <div className="detail-row">
-                          <div className="detail-label">Carat</div>
+                          <div className="detail-label font-medium">Carat</div>
                           <div className="detail-value">{selectedGemstone.weight}</div>
                         </div>
                         <div className="detail-row">
-                          <div className="detail-label">Cut</div>
+                          <div className="detail-label font-medium">Cut</div>
                           <div className="detail-value">{selectedGemstone.cut}</div>
                         </div>
                         <div className="detail-row">
-                          <div className="detail-label">Origin</div>
+                          <div className="detail-label font-medium">Origin</div>
                           <div className="detail-value">Balangoda, Sri Lanka</div>
                         </div>
                         <div className="detail-row">
-                          <div className="detail-label">Certified</div>
+                          <div className="detail-label font-medium">Certified</div>
                           <div className="detail-value">{selectedGemstone.certified ? 'Yes' : 'No'}</div>
                         </div>
                       </div>
                     </div>
 
                     <div className="description-section">
-                      <div className="section-title">Description</div>
-                      <p>Golden {selectedGemstone.color.toLowerCase()} {selectedGemstone.species.toLowerCase()} with exceptional brilliance and excellent clarity. A rare find in this size.</p>
+                      <div className="section-title font-medium text-sm md:text-base">Description</div>
+                      <p className="text-sm md:text-base">Golden {selectedGemstone.color.toLowerCase()} {selectedGemstone.species.toLowerCase()} with exceptional brilliance and excellent clarity. A rare find in this size.</p>
                     </div>
                     
                     <div className="bid-section">
-                      <div className="current-auction-info">
+                      <div className="current-auction-info flex justify-between mb-4">
                         <div>
-                          <div className="info-label">Current Bid</div>
-                          <div className="current-price">${selectedGemstone.price.toLocaleString()}</div>
+                          <div className="info-label text-xs md:text-sm text-gray-500">Current Bid</div>
+                          <div className="current-price text-lg md:text-xl font-bold text-blue-600">${selectedGemstone.price.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="info-label">Auction Ends In</div>
-                          <div className="auction-time">0 days</div>
+                          <div className="info-label text-xs md:text-sm text-gray-500">Auction Ends In</div>
+                          <div className="auction-time text-sm md:text-base font-medium">1 day</div>
                         </div>
                       </div>
                       
                       <div className="place-bid">
-                        <div className="section-title">Place Your Bid</div>
-                        <div className="bid-inputs">
+                        <div className="section-title text-sm md:text-base font-medium mb-2">Place Your Bid</div>
+                        <div className="bid-inputs flex flex-col sm:flex-row gap-2">
                           <InputNumber
                             value={bidAmount}
                             onChange={(value) => setBidAmount(value || 0)}
                             min={selectedGemstone.price + 100}
-                            style={{ width: '100%', height: '42px' }}
+                            style={{ width: '100%', height: '40px' }}
                             formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                             parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                           />
                           <Button 
                             type="primary" 
-                            className="place-bid-button"
+                            className="place-bid-button h-10"
                             onClick={handlePlaceBid}
                             disabled={bidAmount <= selectedGemstone.price}
                           >
                             Place Bid
                           </Button>
                         </div>
-                        <div className="min-bid">Minimum bid: ${(selectedGemstone.price + 100).toLocaleString()}</div>
+                        <div className="min-bid text-xs md:text-sm text-gray-500 mt-2">Minimum bid: ${(selectedGemstone.price + 100).toLocaleString()}</div>
                       </div>
                       
-                      <div className="bid-notice">
-                        <div className="notice-title">
+                      <div className="bid-notice mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <div className="notice-title text-sm font-medium mb-1">
                           <span>⚠️</span> Important Notice
                         </div>
-                        <div className="notice-text">
+                        <div className="notice-text text-xs md:text-sm text-gray-700">
                           By placing a bid, you agree to our terms and conditions. If you win the bid but 
                           fail to complete the purchase, your account may be restricted from future bidding.
                         </div>

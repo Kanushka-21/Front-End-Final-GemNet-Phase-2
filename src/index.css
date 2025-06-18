@@ -12,6 +12,7 @@
   body {
     @apply bg-secondary-50 text-secondary-900 font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -470,6 +471,148 @@
 
   .view-details-btn:hover {
     box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+  }
+  
+  /* Mobile responsiveness improvements */
+  .mobile-menu-button {
+    @apply md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500;
+  }
+  
+  /* Responsive grids and layouts */
+  .responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  
+  @media (max-width: 640px) {
+    .ant-modal {
+      max-width: 95% !important;
+      margin: 0 auto;
+    }
+    
+    .ant-modal-content {
+      padding: 16px !important;
+    }
+    
+    .ant-card-body {
+      padding: 16px;
+    }
+    
+    .ant-space {
+      gap: 8px !important;
+    }
+    
+    .ant-btn {
+      padding: 4px 12px;
+      height: 36px;
+      font-size: 14px;
+    }
+    
+    .ant-typography h1 {
+      font-size: 24px !important;
+    }
+    
+    .ant-typography h2 {
+      font-size: 20px !important;
+    }
+    
+    .ant-typography h3 {
+      font-size: 18px !important;
+    }
+    
+    .ant-typography h4 {
+      font-size: 16px !important;
+    }
+    
+    .ant-typography p {
+      font-size: 14px !important;
+    }
+  }
+  
+  /* Improved touch targets for mobile */
+  @media (max-width: 640px) {
+    .ant-btn, 
+    .ant-input, 
+    .ant-select-selector, 
+    .ant-checkbox + span,
+    .ant-radio + span {
+      min-height: 44px;
+    }
+    
+    .ant-tabs-tab {
+      padding: 8px 12px !important;
+    }
+    
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+  }
+  
+  /* Fix horizontal scroll issues */
+  .horizontal-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 8px;
+  }
+  
+  .horizontal-scroll-container::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .horizontal-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  
+  /* Stack buttons on mobile */
+  @media (max-width: 640px) {
+    .stack-on-mobile {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .stack-on-mobile > * {
+      width: 100%;
+      margin-right: 0 !important;
+      margin-bottom: 8px;
+    }
+    
+    .stack-on-mobile > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  /* Gemstone modal improvements for mobile */
+  @media (max-width: 640px) {
+    .gemstone-tabs {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .gemstone-tabs .tab {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    
+    .gemstone-properties {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 8px;
+    }
+    
+    .bid-inputs {
+      flex-direction: column;
+    }
+    
+    .bid-inputs > * {
+      width: 100%;
+    }
   }
 }
 

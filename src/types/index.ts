@@ -207,60 +207,46 @@ export interface Theme {
   };
 }
 
-// Gemstone-related Types
+// Gemstone Types
+export interface Gemstone {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  certified: boolean;
+}
+
+export interface Dimension {
+  length: number;
+  width: number;
+  height: number;
+}
+
 export interface Certificate {
   issuingAuthority: string;
   reportNumber: string;
   date: string;
 }
 
+export interface DetailedGemstone extends Gemstone {
+  weight: number;
+  color: string;
+  species: string;
+  variety: string;
+  shape: string;
+  cut: string;
+  dimensions: Dimension;
+  transparency: string;
+  certificate?: Certificate;
+}
+
+// Gemstone Card Props
 export interface GemstoneCardProps {
   gemstone: DetailedGemstone;
   onViewDetails: (id: string) => void;
 }
 
-export interface DetailedGemstone {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  weight: number;
-  color: string;
-  variety: string;
-  shape: string;
-  clarity?: string;
-  cut?: string;
-  dimensions?: {
-    length: number;
-    width: number;
-    height: number;
-  };
-  description?: string;
-  certificate?: Certificate;
-  certified?: boolean;
-  species?: string;
-  transparency?: 'transparent' | 'translucent' | 'opaque';
-  origin?: string;
-  treatment?: string;
-  sellerId?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  refractiveIndex?: {
-    min: number;
-    max: number;
-  };
-  polariscopeTest?: string;
-  pleochroism?: 'strong' | 'moderate' | 'weak' | 'none';
-  fluorescence?: {
-    longWaveUV: 'strong' | 'moderate' | 'weak' | 'inert';
-    shortWaveUV: 'strong' | 'moderate' | 'weak' | 'inert';
-  };
-  specificGravity?: number;
-  microscopeExamination?: string;
-  absorptionSpectrum?: string;
-  additionalComments?: string;
-}
-
+// Gemstone Filters
 export interface GemstoneFilters {
   species?: string[];
   variety?: string[];
@@ -273,6 +259,7 @@ export interface GemstoneFilters {
   transparency?: ('transparent' | 'translucent' | 'opaque')[];
 }
 
+// Bid Types
 export interface Bid {
   id: string;
   userId: string;
@@ -325,6 +312,7 @@ export interface PricePrediction {
   };
 }
 
+// Gemstone Listing Form
 export interface GemstoneListingForm {
   // Basic Information
   gemstoneType: 'certified' | 'non-certified';
