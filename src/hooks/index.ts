@@ -10,79 +10,10 @@ import {
 } from '@/types';
 import { toast } from 'react-hot-toast';
 
-// Authentication Hook
-export const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<AuthenticationResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const storedUser = localStorage.getItem('userData');
-
-    if (token && storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        logout();
-      }
-    }
-    setLoading(false);
-  }, []);
-
-  const login = async (credentials: LoginRequest): Promise<boolean> => {
-    try {
-      setLoading(true);
-      const response = await authAPI.login(credentials);
-      
-      if (response.success && response.data) {
-        const { token, ...userData } = response.data;
-        
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('userData', JSON.stringify(userData));
-        
-        setUser(userData);
-        setIsAuthenticated(true);
-        
-        toast.success('Login successful!');
-        return true;
-      } else {
-        toast.error(response.message || 'Login failed');
-        return false;
-      }
-    } catch (error) {
-      const errorMessage = apiUtils.formatErrorMessage(error);
-      toast.error(errorMessage);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    localStorage.removeItem('registrationProgress');
-    
-    setUser(null);
-    setIsAuthenticated(false);
-    
-    navigate('/login');
-    toast.success('Logged out successfully');
-  };
-
-  return {
-    isAuthenticated,
-    user,
-    loading,
-    login,
-    logout,
-  };
-};
+// Authentication Hook is now in contexts/AuthContext.tsx
+// This is just a re-export to maintain backward compatibility
+import { useAuth as authHook } from '@/contexts/AuthContext';
+export const useAuth = authHook;
 
 // Registration Hook
 export const useRegistration = () => {

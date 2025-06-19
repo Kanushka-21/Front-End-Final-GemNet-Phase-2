@@ -1,3 +1,5 @@
+@import 'antd/dist/reset.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +12,7 @@
   body {
     @apply bg-secondary-50 text-secondary-900 font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -57,15 +60,537 @@
   .verification-error {
     @apply bg-red-50 border-red-200 text-red-800;
   }
+  /* Dashboard styling */
+  .dashboard-tabs .ant-tabs-nav {
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard-tabs .ant-tabs-tab {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom: none;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+  }
+  
+  .dashboard-tabs .ant-tabs-tab-active {
+    background-color: rgba(239, 246, 255, 1);
+    color: rgba(29, 78, 216, 1);
+    font-weight: 500;
+  }
+  
+  .dashboard-tabs .ant-tabs-tab-btn {
+    font-size: 1rem;
+  }
+  
+  .custom-table .ant-table-thead > tr > th {
+    background-color: rgba(248, 250, 252, 1);
+    color: rgba(51, 65, 85, 1);
+    font-weight: 500;
+  }
+  
+  .pagination-modern .ant-pagination-item-active {
+    border-color: rgba(37, 99, 235, 1);
+    background-color: rgba(239, 246, 255, 1);
+  }
+  
+  .pagination-modern .ant-pagination-item-active a {
+    color: rgba(29, 78, 216, 1);
+  }
+  
+  /* New Premium Dashboard Styles */
+  .custom-tabs .ant-tabs-nav:before {
+    border-bottom: none !important;
+  }
+  
+  .custom-tabs .ant-tabs-tab {
+    margin: 0 !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+  }
+  
+  .custom-tabs .ant-tabs-tab-active {
+    background-color: #fff !important;
+    font-weight: 600 !important;
+  }
+  
+  .custom-tabs .ant-tabs-card-bar .ant-tabs-tab-active {
+    border-bottom-color: #fff !important;
+  }
+  
+  .custom-tabs .ant-tabs-content {
+    padding: 16px !important;
+    margin-top: -1px !important;
+  }
+  
+  /* Mobile Responsive Fixes */
+  @media (max-width: 640px) {
+    .custom-tabs .ant-tabs-tab {
+      padding: 8px 12px !important;
+      margin: 0 2px !important;
+    }
+    
+    .custom-tabs .ant-tabs-nav-list {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+    }
+    
+    .ant-card-body {
+      padding: 12px !important;
+    }
+    
+    /* Improve table display on small screens */
+    .ant-table-content {
+      overflow-x: auto !important;
+    }
+  }
+  
+  /* Gemstone Detail Modal Styles */
+  .gemstone-detail-modal .ant-modal-content {
+    @apply rounded-lg overflow-hidden p-0;
+  }
+  
+  .gemstone-detail-modal .ant-modal-close {
+    @apply top-4 right-4;
+  }
+  
+  .gemstone-modal-content {
+    @apply flex flex-col;
+  }
+  
+  .gemstone-image-col {
+    @apply p-0 relative;
+  }
+  
+  .gemstone-image-container {
+    @apply w-full h-full relative;
+  }
+  
+  .gemstone-detail-image {
+    @apply w-full h-full object-cover;
+  }
+  
+  .gemstone-stats {
+    @apply flex justify-between p-2 text-xs text-gray-600 bg-gray-100 border-t;
+  }
+  
+  .gemstone-details-col {
+    @apply p-0 bg-white;
+  }
+  
+  .details-content {
+    @apply p-6;
+  }
+  
+  .gemstone-tabs {
+    @apply flex border-b mb-6;
+  }
+  
+  .gemstone-tabs .tab {
+    @apply p-2 cursor-pointer mr-4 relative;
+  }
+  
+  .gemstone-tabs .tab.active {
+    @apply text-blue-600 font-medium;
+  }
+  
+  .gemstone-tabs .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #1890ff;
+  }
+  
+  .gemstone-main-details .gemstone-title {
+    @apply m-0 mb-4 font-semibold text-gray-800;
+  }
+  
+  .gemstone-properties {
+    @apply mb-6;
+  }
+  
+  .detail-row {
+    @apply flex border-b py-3;
+  }
+  
+  .detail-row:last-child {
+    @apply border-b-0;
+  }
+  
+  .detail-label {
+    @apply w-24 font-medium text-gray-600;
+  }
+  
+  .detail-value {
+    @apply flex-1 text-gray-800;
+  }
+  
+  .description-section {
+    @apply mb-6;
+  }
+  
+  .section-title {
+    @apply font-semibold mb-2 text-gray-800;
+  }
+  
+  .current-auction-info {
+    @apply flex mb-6;
+  }
+  
+  .current-auction-info > div {
+    @apply flex-1;
+  }
+  
+  .info-label {
+    @apply text-sm text-gray-600 mb-1;
+  }
+  
+  .current-price {
+    @apply text-2xl font-semibold text-blue-600;
+  }
+  
+  .auction-time {
+    @apply text-2xl font-semibold;
+  }
+  
+  .place-bid {
+    @apply mb-4;
+  }
+  
+  .bid-inputs {
+    @apply flex gap-2 my-2;
+  }
+  
+  .bid-inputs .ant-input-number {
+    @apply flex-1;
+  }
+  
+  .place-bid-button {
+    @apply min-w-[100px];
+  }
+  
+  .min-bid {
+    @apply text-xs text-gray-600;
+  }
+  
+  .bid-notice {
+    @apply bg-orange-50 border border-orange-200 rounded p-3 mt-4;
+  }
+  
+  .notice-title {
+    @apply font-semibold text-orange-600 mb-1;
+  }
+  
+  .notice-text {
+    @apply text-xs text-orange-700;
+  }
+  
+  /* Gemstone Card Styling */
+  .gemstone-card {
+    @apply shadow-md transition-all duration-300 ease-in-out;
+  }
+  
+  .gemstone-card:hover {
+    @apply shadow-lg;
+  }
+  
+  .gemstone-card .ant-card-body {
+    @apply p-4;
+  }
+  
+  /* View Details Button Styling */
+  .view-details-btn {
+    height: 36px !important;
+    font-size: 14px !important;
+    border-radius: 4px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .view-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Gemstone Detail Modal */
+  .gemstone-detail-modal .ant-modal-content {
+    @apply rounded-lg overflow-hidden p-0;
+  }
+  
+  .gemstone-detail-modal .ant-modal-body {
+    @apply p-0;
+  }
+  
+  .gemstone-detail-modal .ant-modal-close {
+    @apply top-4 right-4;
+  }
+  
+  /* Enhanced modal responsiveness */
+  .gemstone-detail-modal {
+    width: 90% !important;
+    max-width: 900px !important;
+  }
+
+  @media (max-width: 768px) {
+    .gemstone-detail-modal {
+      width: 95% !important;
+    }
+    
+    .gemstone-image-col {
+      height: 300px !important;
+    }
+    
+    .gemstone-detail-image {
+      height: 100% !important;
+      object-fit: cover !important;
+    }
+    
+    .details-content {
+      padding: 16px !important;
+    }
+  }
+  
+  /* Make all gemstone cards consistent in size */
+  .ant-card.gemstone-card {
+    height: 100% !important;
+  }
+
+  .gemstone-card .ant-card-cover {
+    height: 240px !important;
+    overflow: hidden !important;
+  }
+
+  .gemstone-card .ant-card-cover img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease !important;
+  }
+
+  .gemstone-card:hover .ant-card-cover img {
+    transform: scale(1.05);
+  }
+  
+  /* Media queries for responsive cards */
+  @media screen and (max-width: 768px) {
+    .gemstone-card .ant-card-body {
+      @apply p-3;
+    }
+    
+    .gemstone-detail-modal .ant-modal-content {
+      @apply m-0 mx-2;
+    }
+    
+    .gemstone-detail-modal .details-content {
+      @apply p-4;
+    }
+    
+    .details-content .current-price,
+    .details-content .auction-time {
+      @apply text-3xl;
+    }
+    
+    .detail-row {
+      @apply py-2;
+    }
+    
+    .detail-label {
+      @apply w-20;
+    }
+  }
+  
+  /* Tab Styling inside modal */
+  .gemstone-tabs {
+    @apply flex border-b mb-6;
+  }
+  
+  .gemstone-tabs .tab {
+    @apply p-2 cursor-pointer mr-4 relative;
+  }
+  
+  .gemstone-tabs .tab.active {
+    @apply text-blue-600 font-medium;
+  }
+  
+  .gemstone-tabs .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #1890ff;
+  }
+  
+  /* Gemstone detail rows */
+  .detail-row {
+    @apply flex border-b py-3;
+  }
+  
+  .detail-row:last-child {
+    @apply border-b-0;
+  }
+  
+  .detail-label {
+    @apply w-24 font-medium text-gray-600;
+  }
+  
+  .detail-value {
+    @apply flex-1 text-gray-800;
+  }
+  
+  .gemstone-stats {
+    @apply flex justify-between p-2 text-xs text-gray-600 bg-gray-100 border-t;
+  }
+  
+  .description-section {
+    @apply mb-6;
+  }
+  
+  .section-title {
+    @apply font-semibold mb-2 text-gray-800;
+  }
+  
+  .current-auction-info {
+    @apply flex mb-6;
+  }
+  
+  .current-auction-info > div {
+    @apply flex-1;
+  }
+  
+  .info-label {
+    @apply text-sm text-gray-600 mb-1;
+  }
+  
+  .current-price {
+    @apply text-2xl font-semibold text-blue-600;
+  }
+  
+  .auction-time {
+    @apply text-2xl font-semibold;
+  }
+  
+  .place-bid {
+    @apply mb-4;
+  }
+  
+  .bid-inputs {
+    @apply flex gap-2 my-2;
+  }
+  
+  .bid-inputs .ant-input-number {
+    @apply flex-1;
+  }
+  
+  .place-bid-button {
+    @apply min-w-[100px];
+  }
+  
+  .min-bid {
+    @apply text-xs text-gray-600;
+  }
+  
+  .bid-notice {
+    @apply bg-orange-50 border border-orange-200 rounded p-3 mt-4;
+  }
+  
+  .notice-title {
+    @apply font-semibold text-orange-600 mb-1;
+  }
+  
+  .notice-text {
+    @apply text-xs text-orange-700;
+  }
+  
+  /* Premium Dashboard Styles */
+  .dashboard-stats-card {
+    @apply bg-white rounded-xl shadow-sm border border-secondary-200 p-6 transition-all duration-300 hover:shadow-md relative overflow-hidden;
+  }
+  
+  .dashboard-stats-card::before {
+    content: '';
+    @apply absolute -top-10 -right-10 w-24 h-24 bg-gradient-to-br from-primary-100 to-transparent rounded-full opacity-70;
+  }
+  
+  .dashboard-stats-card.premium {
+    @apply bg-gradient-to-br from-white to-secondary-50;
+  }
+  
+  /* Responsive Tables */
+  .responsive-table-container {
+    @apply w-full overflow-x-auto rounded-lg;
+  }
+  
+  .responsive-table {
+    @apply min-w-full divide-y divide-secondary-200;
+  }
+  
+  /* Responsive Dashboard Grid */
+  .dashboard-grid {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  
+  /* Premium Tabs */
+  .premium-tabs {
+    @apply flex flex-wrap border-b border-secondary-200 mb-6 overflow-x-auto;
+  }
+  
+  .premium-tab {
+    @apply px-4 py-3 text-secondary-600 font-medium text-sm cursor-pointer whitespace-nowrap;
+  }
+  
+  .premium-tab.active {
+    @apply text-primary-600 border-b-2 border-primary-600 font-semibold;
+  }
+  
+  .premium-tab:hover:not(.active) {
+    @apply text-secondary-800 bg-secondary-50;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .dashboard-welcome {
+      @apply px-4 py-6;
+    }
+    
+    .dashboard-stats-grid {
+      @apply grid-cols-1 gap-3;
+    }
+    
+    .premium-tabs {
+      @apply pb-1;
+    }
+    
+    .premium-tab {
+      @apply px-3 py-2;
+    }
+    
+    .responsive-table th,
+    .responsive-table td {
+      padding: 0.625rem 0.75rem;
+      font-size: 0.875rem;
+    }
+  }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, var(--primary-600), var(--accent-600));
+    background-clip: text;
+    color: transparent;
   }
   
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary-600 to-accent-600;
+    background-image: linear-gradient(to right, var(--primary-600), var(--accent-600));
   }
   
   .animate-bounce-slow {
@@ -79,15 +604,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-secondary-100;
+  background-color: rgba(241, 245, 249, 1);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-secondary-300 rounded-full;
+  background-color: rgba(203, 213, 225, 1);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary-400;
+  background-color: rgba(148, 163, 184, 1);
 }
 
 /* Loading spinner */
@@ -113,4 +639,64 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Marketplace responsive fixes */
+@media (max-width: 576px) {
+  .ant-card-cover img {
+    height: 200px !important;
+    object-fit: cover;
+  }
+
+  .ant-card-body {
+    padding: 16px 12px;
+  }
+  
+  .gemstone-detail-modal .ant-modal-body {
+    padding: 0;
+  }
+
+  .gemstone-image-col {
+    min-height: 250px;
+  }
+  
+  .gemstone-stats {
+    flex-direction: row;
+    padding: 8px;
+  }
+  
+  .current-auction-info {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 991px) {
+  .ant-card-cover img {
+    height: 220px !important;
+    object-fit: cover;
+  }
+}
+
+/* Global container styles for consistent layout */
+.container-fluid {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1200px) {
+  .container-fluid {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }

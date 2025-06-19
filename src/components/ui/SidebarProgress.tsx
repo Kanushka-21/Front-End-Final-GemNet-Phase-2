@@ -25,44 +25,41 @@ const SidebarProgress: React.FC<SidebarProgressProps> = ({
     }
   };
 
-  return (
-    <div className="w-72 bg-white border-r-2 border-primary-200 h-screen p-4 flex flex-col shadow-lg">
+  return (    <div className="h-full bg-white p-4 flex flex-col">
       {/* Header with Logo - Compact */}
       <div className="mb-6">
         <div className="flex items-center space-x-3 mb-3">
           {/* GemNet Logo */}
-          <div className="bg-gradient-to-br from-primary-600 to-primary-700 p-2.5 rounded-xl shadow-md">
+          <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2.5 rounded-xl shadow-sm">
             <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold text-gray-900">
               GemNet
             </h1>
-            <p className="text-xs text-secondary-600 font-medium">Registration</p>
+            <p className="text-sm text-gray-600 font-medium">Registration</p>
           </div>
         </div>
-        <p className="text-secondary-600 text-xs mb-4">Elevate your digital identity experience</p>
+        <p className="text-gray-600 text-sm mb-4">Complete your account setup</p>
         
         {/* Progress indicator - Compact */}
-        <div className="bg-gradient-to-r from-primary-50 to-primary-100 rounded-lg p-3 shadow-sm border border-primary-200">
+        <div className="bg-gray-50 rounded-lg p-3 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-secondary-600">Step {currentStep} of {totalSteps}</span>
-            <span className="text-xs font-bold text-primary-600">{Math.round(progress)}% Complete</span>
+            <span className="text-sm text-gray-600">Step {currentStep} of {totalSteps}</span>
+            <span className="text-sm font-bold text-primary-600">{Math.round(progress)}% Complete</span>
           </div>
-          <div className="w-full bg-white rounded-full h-2 shadow-inner">
+          <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-500 shadow-sm"
+              className="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
-      </div>
-
-      {/* Setup Process - Compact */}
+      </div>      {/* Setup Process - Compact */}
       <div className="flex-1 min-h-0">
-        <h2 className="text-xs font-bold text-secondary-700 mb-4 uppercase tracking-wide border-b border-secondary-200 pb-2">
+        <h2 className="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wide border-b border-gray-200 pb-2">
           SETUP PROCESS
         </h2>
         
@@ -75,30 +72,27 @@ const SidebarProgress: React.FC<SidebarProgressProps> = ({
             const StepIcon = getStepIcon(index);
 
             return (
-              <div key={index} className="relative">
-                {/* Connection line - Properly Aligned */}
+              <div key={index} className="relative">                  {/* Connection line - Properly Aligned */}
                 {index < steps.length - 1 && (
-                  <div className="absolute left-5 top-12 w-0.5 h-6 bg-secondary-300" />
+                  <div className="absolute left-5 top-12 w-0.5 h-6 bg-gray-300" />
                 )}
-                
-                <div
+                  <div
                   className={cn(
                     'flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 border relative',
                     {
-                      'bg-gradient-to-r from-primary-50 to-primary-100 border-primary-300 shadow-md ring-1 ring-primary-200': isCurrent,
-                      'bg-green-50 border-green-200 shadow-sm': isCompleted,
-                      'hover:bg-secondary-50 border-transparent': isPending,
+                      'bg-primary-50 border-primary-200 shadow-sm': isCurrent,
+                      'bg-green-50 border-green-200': isCompleted,
+                      'hover:bg-gray-50 border-transparent': isPending,
                     }
                   )}
                 >
-                  {/* Step Icon - Smaller */}
-                  <div
+                  {/* Step Icon - Smaller */}                  <div
                     className={cn(
-                      'flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 shadow-sm z-10 bg-white',
+                      'flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 shadow-sm z-10',
                       {
                         'bg-primary-600 text-white ring-2 ring-primary-200': isCurrent,
                         'bg-green-500 text-white': isCompleted,
-                        'bg-secondary-300 text-secondary-600': isPending,
+                        'bg-gray-200 text-gray-500': isPending,
                       }
                     )}
                   >
@@ -110,14 +104,13 @@ const SidebarProgress: React.FC<SidebarProgressProps> = ({
                   </div>
                   
                   {/* Step Content - Compact */}
-                  <div className="flex-1 min-w-0">
-                    <h3
+                  <div className="flex-1 min-w-0">                    <h3
                       className={cn(
-                        'font-semibold text-sm transition-colors duration-300',
+                        'font-semibold text-base transition-colors duration-300',
                         {
-                          'text-primary-800': isCurrent,
-                          'text-green-800': isCompleted,
-                          'text-secondary-600': isPending,
+                          'text-primary-700': isCurrent,
+                          'text-green-600': isCompleted,
+                          'text-gray-500': isPending,
                         }
                       )}
                     >
@@ -163,13 +156,12 @@ const SidebarProgress: React.FC<SidebarProgressProps> = ({
         </div>
       </div>
 
-      {/* Cancel Button - Compact */}
-      {onCancel && (
+      {/* Cancel Button - Compact */}      {onCancel && (
         <button
           onClick={onCancel}
-          className="mt-3 w-full flex items-center justify-center space-x-2 py-2 px-3 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-300 shadow-sm text-xs font-medium"
+          className="mt-3 w-full flex items-center justify-center space-x-2 py-2.5 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 shadow-sm text-sm font-medium"
         >
-          <X className="w-3 h-3" />
+          <X className="w-4 h-4" />
           <span>Cancel Registration</span>
         </button>
       )}

@@ -1,17 +1,25 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 // Pages
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
+import HomePage from '@/pages/HomePage';
+import MarketplacePage from '@/pages/MarketplacePage';
+
+// Dashboard Pages
+import AdminDashboard from '@/pages/dashboard/AdminDashboard.responsive';
+import SellerDashboard from '@/pages/dashboard/SellerDashboard.new';
+import BuyerDashboard from '@/pages/dashboard/BuyerDashboard.simplified';
 
 // Layout
 import Layout from '@/components/layout/Layout';
+import DashboardLayout from '@/components/layout/DashboardLayout.new';
 
-// Hooks
-import { useAuth } from '@/hooks';
+// Auth Context
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -51,11 +59,11 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 
-const App: React.FC = () => {
+// AppRoutes component to separate routes from auth provider
+const AppRoutes: React.FC = () => {
   return (
-    <Router>
-      <div className="min-h-screen bg-secondary-50">
-        <Routes>
+    <div className="min-h-screen bg-secondary-50">
+      <Routes>
           {/* Public Routes */}
           <Route
             path="/login"
@@ -72,22 +80,138 @@ const App: React.FC = () => {
                 <RegisterPage />
               </PublicRoute>
             }
-          />
-
-          {/* Protected Routes */}
+          />          {/* Protected Routes - Dashboard Redirect */}
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <DashboardPage />
-                </Layout>
+                <Navigate to="/buyer/dashboard" replace />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Buyer Protected Routes */}          <Route
+            path="/buyer/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <BuyerDashboard />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
 
-          {/* Default Route */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Buyer Protected Routes */}
+          <Route
+            path="/my-bids"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>My Bids Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/meetings"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>My Meetings Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />          {/* Seller Protected Routes */}          <Route
+            path="/seller/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <SellerDashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/add-listing"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>Add Listing Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/my-listings"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>My Listings Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller/my-store"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>My Store Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />          {/* Admin Protected Routes */}          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <AdminDashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>User Management Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/transactions"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>Transactions Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/meetings"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <div>Meeting Management Page - Coming Soon</div>
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />{/* New Routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/marketplace"
+            element={
+              <Layout>
+                <MarketplacePage />
+              </Layout>
+            }
+          />
+          
+          {/* Default Route - Changed to Home */}
+          <Route path="/old-home" element={<Navigate to="/" replace />} />
           
           {/* 404 Route */}
           <Route
@@ -106,39 +230,25 @@ const App: React.FC = () => {
                 </div>
               </div>
             }
-          />
-        </Routes>
-
-        {/* Toast Notifications */}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#fff',
-              color: '#1e293b',
-              border: '1px solid #e2e8f0',
-              borderRadius: '0.75rem',
-              padding: '1rem',
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-            },
-            success: {
-              iconTheme: {
-                primary: '#10b981',
-                secondary: '#fff',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#ef4444',
-                secondary: '#fff',
-              },
-            },
-          }}
-        />
+          />        </Routes>
       </div>
+  );
+};
+
+// Main App component
+const App: React.FC = () => {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 5000,
+        }}
+      />
     </Router>
   );
 };

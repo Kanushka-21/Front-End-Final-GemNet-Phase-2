@@ -30,6 +30,7 @@ export interface AuthenticationResponse {
   lastName: string;
   isVerified: boolean;
   verificationStatus: string;
+  role: 'buyer' | 'seller' | 'admin';
 }
 
 // Registration Steps
@@ -157,6 +158,7 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   className?: string;
+  fullWidth?: boolean;
 }
 
 export interface InputProps {
@@ -204,4 +206,170 @@ export interface Theme {
     lg: string;
     xl: string;
   };
+}
+
+// Gemstone Types
+export interface Gemstone {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  certified: boolean;
+  weight: number;
+  color: string;
+  species?: string;
+  variety?: string;
+  shape?: string;
+  cut?: string;
+  clarity?: string;
+  dimensions?: {
+    length: number;
+    width: number;
+    height: number;
+  };
+  transparency?: string;
+  certificate?: Certificate;
+  predictedPriceRange?: GemPriceRange;
+  description?: string;
+  seller?: {
+    name: string;
+    rating: number;
+  };
+}
+
+export interface Dimension {
+  length: number;
+  width: number;
+  height: number;
+}
+
+export interface Certificate {
+  issuingAuthority: string;
+  reportNumber: string;
+  date: string;
+}
+
+export interface DetailedGemstone extends Gemstone {
+  species: string;
+  variety: string;
+  shape: string;
+  cut: string;
+  clarity: string;
+  transparency: string;
+  specifications: {
+    species: string;
+    variety: string;
+    transparency: string;
+    treatment?: string;
+    refractiveIndex?: string;
+    specificGravity?: string;
+  };
+}
+
+// Gemstone Price Prediction
+export interface PriceAttributes {
+  variety: string;
+  weight: number;
+  color: string;
+  clarity: string;
+  cut: string;
+  origin?: string;
+}
+
+export interface PricePrediction {
+  price: number;
+  confidenceInterval?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  factors?: {
+    [key: string]: number;
+  };
+}
+
+export interface GemPriceRange {
+  min: number;
+  max: number;
+}
+
+// Gemstone Card Props
+export interface GemstoneCardProps {
+  gemstone: Gemstone;
+  onViewDetails?: (id: string) => void;
+}
+
+export interface DetailedGemstone extends GemstoneCardProps['gemstone'] {
+  species: string;
+  variety: string;
+  shape: string;
+  cut: string;
+  clarity: string;
+  transparency: string;
+  specifications: {
+    species: string;
+    variety: string;
+    transparency: string;
+    treatment?: string;
+    refractiveIndex?: string;
+    specificGravity?: string;
+  };
+  certification?: {
+    authority: string;
+    number: string;
+    date: string;
+    link?: string;
+  };
+}
+
+// Gemstone Listing Form
+export interface GemstoneListingForm {
+  // Basic Information
+  gemstoneType: 'certified' | 'non-certified';
+  images: File[];
+  certificate?: File;
+  
+  // Certificate Details (conditional)
+  issuingAuthority?: string;
+  reportNumber?: string;
+  certificateDate?: Date;
+  
+  // Gemstone Identification
+  species: string;
+  variety: string;
+  
+  // Physical Attributes
+  weight: number;
+  dimensions: {
+    length: number;
+    width: number;
+    height: number;
+  };
+  color: string;
+  transparency: 'transparent' | 'translucent' | 'opaque';
+  cut: string;
+  shape: string;
+  
+  // Optical Properties
+  refractiveIndex: {
+    min: number;
+    max: number;
+  };
+  polariscopeTest: string;
+  pleochroism: 'strong' | 'moderate' | 'weak' | 'none';
+  
+  // Fluorescence
+  fluorescence: {
+    longWaveUV: 'strong' | 'moderate' | 'weak' | 'inert';
+    shortWaveUV: 'strong' | 'moderate' | 'weak' | 'inert';
+  };
+  
+  // Additional Properties
+  specificGravity?: number;
+  microscopeExamination?: string;
+  absorptionSpectrum?: string;
+  additionalComments?: string;
+  
+  // Pricing & Listing
+  listingType: 'fixed' | 'auction';
+  startingPrice: number;
+  listingDuration: 7 | 14 | 30;
 }
