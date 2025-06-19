@@ -30,10 +30,11 @@ import {
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { DetailedGemstone } from '@/types';
+import GemstoneCard from '@/components/ui/GemstoneCard';
+import GemstoneDetailModal from '@/components/home/GemstoneDetailModal';
 
 const { Content } = AntLayout;
 const { Title, Text, Paragraph } = Typography;
-const { Meta } = Card;
 const { Option } = Select;
 
 const MarketplacePage: React.FC = () => {
@@ -45,6 +46,8 @@ const MarketplacePage: React.FC = () => {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [drawerWidth, setDrawerWidth] = useState(320);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [pendingBidAmount, setPendingBidAmount] = useState<number>(0);
   
   // Filter states
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
@@ -74,45 +77,75 @@ const MarketplacePage: React.FC = () => {
   
   useEffect(() => {
     // Simulate loading gemstones from an API
-    const mockGemstones: DetailedGemstone[] = Array(24).fill(null).map((_, i) => ({
-      id: `${i + 1}`,
-      name: ['Blue Sapphire', 'Ruby', 'Emerald', 'Star Sapphire', 'Yellow Sapphire', 'Padparadscha'][i % 6],
-      price: Math.floor(Math.random() * 20000) + 1000,
-      image: `https://images.unsplash.com/photo-${1500000000 + i * 1000}?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`,
-      certified: i % 3 === 0,
-      weight: parseFloat((Math.random() * 5 + 0.5).toFixed(2)),
-      color: ['Blue', 'Red', 'Green', 'Pink', 'Yellow', 'Purple', 'Orange'][i % 7],
-      species: ['Corundum', 'Beryl', 'Quartz', 'Topaz'][i % 4],
-      variety: ['Sapphire', 'Ruby', 'Emerald', 'Aquamarine', 'Topaz'][i % 5],
-      shape: ['Oval', 'Round', 'Cushion', 'Emerald Cut', 'Pear'][i % 5],
-      cut: ['Brilliant', 'Step Cut', 'Mixed', 'Cabochon'][i % 4],
-      dimensions: {
-        length: parseFloat((Math.random() * 5 + 5).toFixed(1)),
-        width: parseFloat((Math.random() * 4 + 4).toFixed(1)),
-        height: parseFloat((Math.random() * 3 + 3).toFixed(1))
-      },
-      transparency: ['transparent', 'translucent'][i % 2] as 'transparent' | 'translucent',
-      certificate: i % 3 === 0 ? {
-        issuingAuthority: ['GIA', 'GRS', 'SSEF', 'Gubelin'][i % 4],
-        reportNumber: `${['GIA', 'GRS', 'SSEF', 'GUB'][i % 4]}${Math.floor(Math.random() * 10000000)}`,
-        date: `2024-0${(i % 9) + 1}-${(i % 28) + 1}`
-      } : undefined
-    }));
+    const mockGemstones: DetailedGemstone[] = Array(24).fill(null).map((_, i) => {
+      const basePrice = Math.floor(Math.random() * 20000) + 1000;
+      return {
+        id: `${i + 1}`,
+        name: ['Blue Sapphire', 'Ruby', 'Emerald', 'Star Sapphire', 'Yellow Sapphire', 'Padparadscha'][i % 6],
+        price: basePrice,
+        predictedPriceRange: {
+          min: Math.floor(basePrice * 0.9),
+          max: Math.floor(basePrice * 1.2)
+        },
+        image: `https://images.unsplash.com/photo-${1500000000 + i * 1000}?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`,
+        certified: i % 3 === 0,
+        weight: parseFloat((Math.random() * 5 + 0.5).toFixed(2)),
+        color: ['Blue', 'Red', 'Green', 'Pink', 'Yellow', 'Purple', 'Orange'][i % 7],
+        species: ['Corundum', 'Beryl', 'Quartz', 'Topaz'][i % 4],
+        variety: ['Sapphire', 'Ruby', 'Emerald', 'Aquamarine', 'Topaz'][i % 5],
+        shape: ['Oval', 'Round', 'Cushion', 'Emerald Cut', 'Pear'][i % 5],
+        cut: ['Brilliant', 'Step Cut', 'Mixed', 'Cabochon'][i % 4],
+        clarity: ['VS', 'VVS', 'SI', 'I'][i % 4],
+        dimensions: {
+          length: parseFloat((Math.random() * 5 + 5).toFixed(1)),
+          width: parseFloat((Math.random() * 4 + 4).toFixed(1)),
+          height: parseFloat((Math.random() * 3 + 3).toFixed(1))
+        },
+        transparency: ['transparent', 'translucent'][i % 2] as 'transparent' | 'translucent',
+        certificate: i % 3 === 0 ? {
+          issuingAuthority: ['GIA', 'GRS', 'SSEF', 'Gubelin'][i % 4],
+          reportNumber: `${['GIA', 'GRS', 'SSEF', 'GUB'][i % 4]}${Math.floor(Math.random() * 10000000)}`,
+          date: `2024-0${(i % 9) + 1}-${(i % 28) + 1}`
+        } : undefined
+      };
+    });
     
     setGemstones(mockGemstones);
   }, []);
   
-  const handleViewDetails = (gemstone: DetailedGemstone) => {
-    setSelectedGemstone(gemstone);
-    setIsModalOpen(true);
-    setBidAmount(gemstone.price + 100);
+  const handleViewDetails = (gemstoneId: string) => {
+    console.log('View details clicked for gemstone:', gemstoneId);
+    const gemstone = gemstones.find(g => g.id === gemstoneId);
+    if (gemstone) {
+      console.log('Setting selected gemstone:', gemstone);
+      setSelectedGemstone(gemstone);
+      setIsModalOpen(true);
+      setBidAmount(gemstone.price);
+    }
   };
-  
-  const handlePlaceBid = () => {
-    console.log(`Bid placed for ${selectedGemstone?.name}: $${bidAmount}`);
+
+  const handlePlaceBid = (amount: number) => {
+    console.log('Placing bid:', amount);
+    setPendingBidAmount(amount);
+    setIsTermsModalOpen(true);
+  };
+
+  const handleConfirmBid = () => {
+    console.log('Confirming bid:', pendingBidAmount);
+    setIsTermsModalOpen(false);
     setIsModalOpen(false);
   };
-  
+
+  // Format helper function
+  const formatLKR = (price: number) => {
+    return new Intl.NumberFormat('si-LK', {
+      style: 'currency',
+      currency: 'LKR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
   // Filter and sort gemstones
   const filteredGemstones = React.useMemo(() => {
     let filtered = gemstones.filter(gem => {
@@ -214,137 +247,7 @@ const MarketplacePage: React.FC = () => {
     </div>
   );
   
-  // Gemstone Card Component
-  const GemstoneCard = ({ gemstone }: { gemstone: DetailedGemstone }) => (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2 }}
-      className="gemstone-card-motion-wrapper"
-    >
-      <Card
-        hoverable
-        className="gemstone-card"
-        style={{ 
-          height: '100%', 
-          borderRadius: 12,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-          border: '1px solid #f0f0f0'
-        }}
-        cover={
-          <div style={{ position: 'relative', height: 220, overflow: 'hidden', borderRadius: '8px 8px 0 0' }}>
-            <img 
-              alt={gemstone.name} 
-              src={gemstone.image}
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover',
-                transition: 'transform 0.3s ease'
-              }}
-            />
-            <Button
-              icon={<HeartOutlined />}
-              shape="circle"
-              size="middle"
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                background: 'rgba(255,255,255,0.9)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-              }}
-            />
-          </div>
-        }
-        actions={[
-          <div key="viewDetails" style={{ padding: '0 12px 12px 12px' }}>
-            <Button 
-              type="primary" 
-              block
-              icon={<EyeOutlined />}
-              size="large"
-              onClick={() => handleViewDetails(gemstone)}
-              className="view-details-btn"
-              style={{ 
-                height: '40px',
-                fontSize: '15px',
-                borderRadius: '4px',
-                width: '100%',
-                margin: 0,
-                background: '#2871FA',
-                fontWeight: 500,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              View Details
-            </Button>
-          </div>
-        ]}
-      >
-        <Meta
-          title={
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-              <Text strong style={{ color: '#333', fontSize: 18, fontWeight: 600 }}>{gemstone.name}</Text>
-              <Tag color={gemstone.color.toLowerCase()}>{gemstone.color}</Tag>
-            </div>
-          }
-          description={
-            <div>
-              <Text style={{ fontSize: 14, display: 'block', color: '#666', marginBottom: 12 }}>
-                Exquisite {gemstone.color} {gemstone.variety} with exceptional clarity and vibrant color.
-              </Text>
-              
-              <Text type="secondary" style={{ fontSize: 14, display: 'block', marginBottom: 4 }}>
-                Current Bid
-              </Text>
-              <div style={{ marginBottom: 12 }}>
-                <Text strong style={{ fontSize: 22, color: '#2871FA', fontWeight: 600 }}>
-                  ${gemstone.price.toLocaleString()}
-                </Text>
-              </div>
-              
-              <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                <Tag color="#e6f7ff" style={{ color: '#1890ff', border: 'none', fontWeight: 500, borderRadius: 12 }}>
-                  {gemstone.weight} Carat
-                </Tag>
-                <Tag color="#f9f0ff" style={{ color: '#722ed1', border: 'none', fontWeight: 500, borderRadius: 12 }}>
-                  {gemstone.variety}
-                </Tag>
-                {gemstone.certified && 
-                  <Tag color="#f6ffed" style={{ color: '#52c41a', border: 'none', fontWeight: 500, borderRadius: 12 }}>
-                    Certified
-                  </Tag>
-                }
-              </div>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Space>
-                  <EyeOutlined style={{ color: '#999' }} />
-                  <Text type="secondary" style={{ fontSize: 14 }}>
-                    {Math.floor(Math.random() * 200) + 50} views
-                  </Text>
-                </Space>
-                <Text type="secondary" style={{ fontSize: 14 }}>
-                  {Math.floor(Math.random() * 20)} | Bids: {Math.floor(Math.random() * 5)}
-                </Text>
-              </div>
-              
-              {Math.random() > 0.5 && 
-                <div style={{ marginTop: 8, padding: '4px 8px', background: '#fff2e8', borderRadius: 4 }}>
-                  <Text type="warning" style={{ fontSize: 13 }}>
-                    Ends {new Date(Date.now() + Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                  </Text>
-                </div>
-              }
-            </div>
-          }
-        />
-      </Card>
-    </motion.div>
-  );
-    return (
+  return (
     <AntLayout className="min-h-screen bg-gray-50">
       <Content>        {/* Search & Filters Bar */}
         <Affix offsetTop={0}>
@@ -427,76 +330,21 @@ const MarketplacePage: React.FC = () => {
             {/* Gemstones Grid */}
             {paginatedGemstones.length > 0 ? (
               <>
-                <Row gutter={[16, 24]}>
-                  {paginatedGemstones.map((gemstone) => (                  <Col 
-                      xs={24} 
-                      sm={12} 
-                      md={8} 
-                      lg={6}
-                      xl={4}
-                      xxl={4}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {paginatedGemstones.map((gemstone) => (
+                    <GemstoneCard
                       key={gemstone.id}
-                      className="gemstone-card-container"
-                    >
-                      <GemstoneCard gemstone={gemstone} />
-                    </Col>
+                      gemstone={gemstone}
+                      onViewDetails={handleViewDetails}
+                    />
                   ))}
-                </Row>
-                
-                <style>
-                  {`                    /* Responsive grid system for gemstone cards */
-                    @media (min-width: 1800px) {
-                      .gemstone-card-container {
-                        flex: 0 0 14.28% !important;
-                        max-width: 14.28% !important;
-                      }
-                    }
-                    
-                    @media (min-width: 1600px) and (max-width: 1799px) {
-                      .gemstone-card-container {
-                        flex: 0 0 16.666% !important;
-                        max-width: 16.666% !important;
-                      }
-                    }
-                    
-                    @media (min-width: 1400px) and (max-width: 1599px) {
-                      .gemstone-card-container {
-                        flex: 0 0 20% !important;
-                        max-width: 20% !important;
-                      }
-                    }
-                    
-                    @media (min-width: 1200px) and (max-width: 1399px) {
-                      .gemstone-card-container {
-                        flex: 0 0 20% !important;
-                        max-width: 20% !important;
-                      }
-                    }
-                    
-                    @media (max-width: 768px) {
-                      .gemstone-card-container {
-                        padding: 0 8px;
-                      }
-                    }
-                    
-                    @media (max-width: 576px) {
-                      .view-details-btn {
-                        height: 44px !important;
-                        font-size: 16px !important;
-                      }
-                    }
+                </div>
 
-                    .marketplace-header {
-                      max-width: 100%;
-                    }
-
-                    /* Add these styles for consistency with dashboard */
-                    .py-8 {
-                      padding-top: 2rem;
-                      padding-bottom: 2rem;
-                    }
-                  `}
-                </style>
+                {/* Debug info */}
+                <div style={{ display: 'none' }}>
+                  Modal open: {String(isModalOpen)}, 
+                  Selected gemstone: {selectedGemstone?.name || 'none'}
+                </div>
                 
                 {/* Pagination */}
                 <div className="flex justify-center mt-10">
@@ -548,130 +396,56 @@ const MarketplacePage: React.FC = () => {
       </Drawer>
       
       {/* Gemstone Detail Modal */}
+      {selectedGemstone && (
+        <GemstoneDetailModal
+          isOpen={isModalOpen}
+          gemstone={selectedGemstone}
+          onClose={() => {
+            console.log('Closing detail modal');
+            setIsModalOpen(false);
+            setSelectedGemstone(null);
+          }}
+          onPlaceBid={handlePlaceBid}
+        />
+      )}
+
+      {/* Terms and Conditions Modal */}
       <Modal
-        title={null}
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        width={900}
-        className="gemstone-detail-modal"
-        closeIcon={<CloseOutlined style={{ color: '#333' }} />}
+        title="Terms and Conditions"
+        open={isTermsModalOpen}
+        onCancel={() => setIsTermsModalOpen(false)}
+        footer={[
+          <Button
+            key="cancel"
+            type="default"
+            onClick={() => setIsTermsModalOpen(false)}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleConfirmBid}
+          >
+            I Agree & Place Bid
+          </Button>
+        ]}
       >
-        {selectedGemstone && (
-          <div className="gemstone-modal-content">
-            <Row gutter={0}>
-              <Col xs={24} md={10} className="gemstone-image-col">
-                <div className="gemstone-image-container">
-                  <img 
-                    src={selectedGemstone.image} 
-                    alt={selectedGemstone.name}
-                    className="gemstone-detail-image"
-                  />
-                </div>
-                <div className="gemstone-stats">
-                  <span><EyeOutlined /> 86 views</span>
-                  <span>4 bids</span> 
-                  <span>9 in watchlists</span>
-                </div>
-              </Col>
-
-              <Col xs={24} md={14} className="gemstone-details-col">
-                <div className="details-content">
-                  <Space direction="vertical" size={24} style={{ width: '100%' }}>
-                    <div className="gemstone-tabs">
-                      <div className="tab active">Details</div>
-                      <div className="tab">Certificate</div>
-                      <div className="tab">Bid History</div>
-                      <div className="tab">Similar Gems</div>
-                    </div>
-                    
-                    <div className="gemstone-main-details">
-                      <Title level={2} className="gemstone-title">{selectedGemstone.name}</Title>
-                      
-                      <div className="gemstone-properties">
-                        <div className="detail-row">
-                          <div className="detail-label">Type</div>
-                          <div className="detail-value">{selectedGemstone.species}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label">Color</div>
-                          <div className="detail-value">{selectedGemstone.color}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label">Carat</div>
-                          <div className="detail-value">{selectedGemstone.weight}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label">Cut</div>
-                          <div className="detail-value">{selectedGemstone.cut}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label">Origin</div>
-                          <div className="detail-value">Balangoda, Sri Lanka</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label">Certified</div>
-                          <div className="detail-value">{selectedGemstone.certified ? 'Yes' : 'No'}</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="description-section">
-                      <div className="section-title">Description</div>
-                      <p>Golden {selectedGemstone.color.toLowerCase()} {selectedGemstone.species?.toLowerCase() || selectedGemstone.variety.toLowerCase()} with exceptional brilliance and excellent clarity. A rare find in this size.</p>
-                    </div>
-                    
-                    <div className="bid-section">
-                      <div className="current-auction-info">
-                        <div>
-                          <div className="info-label">Current Bid</div>
-                          <div className="current-price">${selectedGemstone.price.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="info-label">Auction Ends In</div>
-                          <div className="auction-time">0 days</div>
-                        </div>
-                      </div>
-                      
-                      <div className="place-bid">
-                        <div className="section-title">Place Your Bid</div>
-                        <div className="bid-inputs">
-                          <InputNumber
-                            value={bidAmount}
-                            onChange={(value) => setBidAmount(value || 0)}
-                            min={selectedGemstone.price + 100}
-                            style={{ width: '100%', height: '42px' }}
-                            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={(value) => parseFloat(value!.replace(/\$\s?|(,*)/g, ''))}
-                          />
-                          <Button 
-                            type="primary" 
-                            className="place-bid-button"
-                            onClick={handlePlaceBid}
-                          >
-                            Place Bid
-                          </Button>
-                        </div>
-                        <div className="min-bid">Minimum bid: ${(selectedGemstone.price + 100).toLocaleString()}</div>
-                      </div>
-                      
-                      <div className="bid-notice">
-                        <div className="notice-title">
-                          <span>⚠️</span> Important Notice
-                        </div>
-                        <div className="notice-text">
-                          By placing a bid, you agree to our terms and conditions. If you win the bid but 
-                          fail to complete the purchase, your account may be restricted from future bidding.
-                        </div>
-                      </div>
-                    </div>
-                  </Space>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        )}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Before placing your bid, please agree to the following terms:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Your bid is legally binding and cannot be retracted</li>
+            <li>If you win, you agree to complete the purchase within 48 hours</li>
+            <li>You must verify your identity and payment method before the bid is accepted</li>
+            <li>All transactions are subject to GemNet's marketplace policies</li>
+            <li>Bidding amount: {formatLKR(pendingBidAmount)}</li>
+          </ul>
+          <p className="text-secondary-600 mt-4">
+            By clicking "I Agree & Place Bid", you acknowledge that you have read and agree to these terms.
+          </p>
+        </div>
       </Modal>
+      
         <style>
         {`
           /* Search bar and filters styling */

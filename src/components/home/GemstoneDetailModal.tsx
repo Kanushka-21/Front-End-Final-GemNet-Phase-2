@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Shield, MessageCircle, ThumbsUp, Info } from 'lucide-react';
+import { X, Shield, MessageCircle, TrendingUp, Info } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { DetailedGemstone } from '@/types';
+
+// Helper function to format price in LKR
+const formatLKR = (price: number) => {
+  return new Intl.NumberFormat('si-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 interface GemstoneModalProps {
   isOpen: boolean;
@@ -17,221 +27,232 @@ const GemstoneDetailModal: React.FC<GemstoneModalProps> = ({
   onClose,
   onPlaceBid
 }) => {
-  const [bidAmount, setBidAmount] = useState<string>('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [bidAmount, setBidAmount] = useState<string>('');
+  const [bidError, setBidError] = useState<string>('');
 
-  // Mock data for demonstration
-  const currentHighestBid = gemstone ? gemstone.price * 1.05 : 0;
+  const currentHighestBid = gemstone ? gemstone.price : 0;
+  const minimumBid = currentHighestBid * 1.05; // 5% higher than current price
   
-  // Mock images - in a real app, these would come from the gemstone object
+  // Mock multiple images for demonstration
   const images = gemstone 
     ? [gemstone.image, 
       'https://images.unsplash.com/photo-1583937443566-6fe1a1c6e400?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80']
     : [];
+
+  const validateBid = (amount: number): boolean => {
+    if (amount <= currentHighestBid) {
+      setBidError(`Bid must be higher than current price ${formatLKR(currentHighestBid)}`);
+      return false;
+    }
+    if (amount < minimumBid) {
+      setBidError(`Minimum bid is ${formatLKR(minimumBid)} (5% higher than current price)`);
+      return false;
+    }
+    setBidError('');
+    return true;
+  };
     
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const amount = parseFloat(bidAmount);
-    if (amount > currentHighestBid) {
+    if (validateBid(amount)) {
       onPlaceBid(amount);
     }
   };
 
-  if (!gemstone) return null;
+  if (!gemstone || !isOpen) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="bg-white rounded-xl w-full max-w-6xl max-h-[90vh] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col lg:flex-row h-full">
-              {/* Left: Image Gallery */}
-              <div className="lg:w-1/2 bg-secondary-100 p-4">
-                <div className="relative h-64 sm:h-96 rounded-lg overflow-hidden">
-                  <motion.img
-                    key={currentImageIndex}
+    <div className={`fixed inset-0 z-50 ${isOpen ? 'block' : 'hidden'}`}>
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-4 sm:inset-8 bg-white rounded-lg overflow-hidden">
+        <div className="h-full flex flex-col">
+          {/* Header */}
+          <div className="p-4 border-b flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-primary-800">{gemstone.name}</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+              {/* Left Column - Images */}
+              <div className="space-y-4">
+                <div className="aspect-square rounded-lg overflow-hidden border">
+                  <img
                     src={images[currentImageIndex]}
                     alt={gemstone.name}
-                    className="w-full h-full object-contain"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    className="w-full h-full object-cover"
                   />
                 </div>
-                
-                <div className="flex justify-center mt-4 space-x-2">
-                  {images.map((image, index) => (
-                    <button 
-                      key={index} 
+                <div className="grid grid-cols-3 gap-2">
+                  {images.map((img, index) => (
+                    <button
+                      key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`w-16 h-16 rounded-md overflow-hidden border-2 ${
-                        currentImageIndex === index 
-                          ? 'border-primary-600' 
-                          : 'border-transparent'
+                      className={`aspect-square rounded-md overflow-hidden border-2 ${
+                        index === currentImageIndex ? 'border-primary-500' : 'border-transparent'
                       }`}
                     >
-                      <img 
-                        src={image} 
-                        alt={`View ${index + 1}`}
-                        className="w-full h-full object-cover" 
-                      />
+                      <img src={img} alt={`${gemstone.name} view ${index + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
               </div>
-              
-              {/* Right: Details & Bidding */}
-              <div className="lg:w-1/2 p-6 overflow-y-auto">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-2xl font-bold text-secondary-900">
-                      {gemstone.name}
-                    </h2>
-                    {gemstone.certified && (
-                      <div className="flex items-center space-x-1 text-primary-600 text-sm mt-1">
-                        <Shield className="w-4 h-4" />
-                        <span>Certified by {gemstone.certificate?.issuingAuthority}</span>
-                      </div>
-                    )}
+
+              {/* Right Column - Details */}
+              <div className="space-y-6">
+                {/* Price Section */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-primary-800">
+                    {formatLKR(gemstone.price)}
                   </div>
-                  
-                  <button 
-                    onClick={onClose}
-                    className="p-2 rounded-full hover:bg-secondary-100"
-                  >
-                    <X className="w-5 h-5 text-secondary-600" />
-                  </button>
-                </div>
-                
-                <div className="mt-6 bg-secondary-50 p-4 rounded-lg">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-secondary-600 text-sm">Current Price</p>
-                      <p className="text-2xl font-bold text-secondary-900">
-                        ${gemstone.price.toLocaleString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-secondary-600 text-sm">Highest Bid</p>
-                      <p className="text-xl font-semibold text-primary-600">
-                        ${currentHighestBid.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Gemstone Details */}
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold text-secondary-900 mb-3">
-                    Details
-                  </h3>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-secondary-50 rounded-lg p-3">
-                      <p className="text-sm text-secondary-600">Species</p>
-                      <p className="font-medium text-secondary-900">{gemstone.species}</p>
-                    </div>
-                    <div className="bg-secondary-50 rounded-lg p-3">
-                      <p className="text-sm text-secondary-600">Variety</p>
-                      <p className="font-medium text-secondary-900">{gemstone.variety}</p>
-                    </div>
-                    <div className="bg-secondary-50 rounded-lg p-3">
-                      <p className="text-sm text-secondary-600">Weight</p>
-                      <p className="font-medium text-secondary-900">{gemstone.weight} carats</p>
-                    </div>
-                    <div className="bg-secondary-50 rounded-lg p-3">
-                      <p className="text-sm text-secondary-600">Color</p>
-                      <p className="font-medium text-secondary-900">{gemstone.color}</p>
-                    </div>
-                    <div className="bg-secondary-50 rounded-lg p-3">
-                      <p className="text-sm text-secondary-600">Shape</p>
-                      <p className="font-medium text-secondary-900">{gemstone.shape}</p>
-                    </div>
-                    <div className="bg-secondary-50 rounded-lg p-3">
-                      <p className="text-sm text-secondary-600">Cut</p>
-                      <p className="font-medium text-secondary-900">{gemstone.cut}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Bidding Form */}
-                <form onSubmit={handleSubmit} className="mt-6">
-                  <h3 className="text-lg font-semibold text-secondary-900 mb-3">
-                    Place a Bid
-                  </h3>
-                  
-                  <div className="flex space-x-2">
-                    <div className="relative flex-1">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary-600">
-                        $
+                  {gemstone.predictedPriceRange && (
+                    <div className="mt-2 flex items-center text-sm text-secondary-600">
+                      <TrendingUp className="w-4 h-4 mr-1" />
+                      <span>Estimated Range: </span>
+                      <span className="font-medium ml-1">
+                        {formatLKR(gemstone.predictedPriceRange.min)} - {formatLKR(gemstone.predictedPriceRange.max)}
                       </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Specifications */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Specifications</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Weight:</span>
+                        <span className="font-medium">{gemstone.weight} carats</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Color:</span>
+                        <span className="font-medium">{gemstone.color}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Species:</span>
+                        <span className="font-medium">{gemstone.species}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Variety:</span>
+                        <span className="font-medium">{gemstone.variety}</span>
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Shape:</span>
+                        <span className="font-medium">{gemstone.shape}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Cut:</span>
+                        <span className="font-medium">{gemstone.cut}</span>
+                      </p>
+                      {gemstone.clarity && (
+                        <p className="flex justify-between">
+                          <span className="text-secondary-600">Clarity:</span>
+                          <span className="font-medium">{gemstone.clarity}</span>
+                        </p>
+                      )}
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Transparency:</span>
+                        <span className="font-medium">{gemstone.transparency}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dimensions */}
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">Dimensions</h3>
+                  <div className="grid grid-cols-3 gap-4 bg-gray-50 p-3 rounded">
+                    <div className="text-center">
+                      <div className="text-sm text-secondary-600">Length</div>
+                      <div className="font-medium">{gemstone.dimensions.length}mm</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-secondary-600">Width</div>
+                      <div className="font-medium">{gemstone.dimensions.width}mm</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm text-secondary-600">Height</div>
+                      <div className="font-medium">{gemstone.dimensions.height}mm</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Certificate Information */}
+                {gemstone.certificate && (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Shield className="w-5 h-5 text-primary-600" />
+                      <h3 className="text-lg font-semibold">Certification</h3>
+                    </div>
+                    <div className="bg-primary-50 p-4 rounded-lg space-y-2">
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Authority:</span>
+                        <span className="font-medium">{gemstone.certificate.issuingAuthority}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Report Number:</span>
+                        <span className="font-medium">{gemstone.certificate.reportNumber}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-secondary-600">Date:</span>
+                        <span className="font-medium">{new Date(gemstone.certificate.date).toLocaleDateString()}</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Bid Section */}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="bidAmount" className="block text-sm font-medium text-secondary-700">
+                      Your Bid (Minimum: {formatLKR(minimumBid)})
+                    </label>
+                    <div className="mt-1">
                       <input
                         type="number"
+                        id="bidAmount"
                         value={bidAmount}
-                        onChange={(e) => setBidAmount(e.target.value)}
-                        min={currentHighestBid + 1}
-                        step="0.01"
-                        className="w-full pl-8 pr-4 py-2.5 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                        placeholder={`Min. bid $${(currentHighestBid + 1).toLocaleString()}`}
+                        onChange={(e) => {
+                          setBidAmount(e.target.value);
+                          if (e.target.value) validateBid(parseFloat(e.target.value));
+                        }}
+                        className="block w-full px-3 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                        min={minimumBid}
+                        step="100"
                         required
                       />
                     </div>
-                    
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      disabled={!bidAmount || parseFloat(bidAmount) <= currentHighestBid}
-                    >
-                      Place Bid
-                    </Button>
+                    {bidError && (
+                      <p className="mt-1 text-sm text-red-600">{bidError}</p>
+                    )}
                   </div>
-                  
-                  <p className="text-xs text-secondary-500 mt-2">
-                    By placing a bid, you agree to our terms and conditions.
-                  </p>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="w-full"
+                    disabled={!!bidError || !bidAmount}
+                  >
+                    Place Bid
+                  </Button>
                 </form>
-                
-                {/* Action Buttons */}
-                <div className="mt-8 flex space-x-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center space-x-1"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Contact Admin</span>
-                  </Button>
-                  
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="flex items-center space-x-1"
-                  >
-                    <Info className="w-4 h-4" />
-                    <span>Request Certificate</span>
-                  </Button>
-                </div>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

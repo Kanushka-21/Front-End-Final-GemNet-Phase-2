@@ -158,6 +158,7 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   className?: string;
+  fullWidth?: boolean;
 }
 
 export interface InputProps {
@@ -214,6 +215,26 @@ export interface Gemstone {
   price: number;
   image: string;
   certified: boolean;
+  weight: number;
+  color: string;
+  species?: string;
+  variety?: string;
+  shape?: string;
+  cut?: string;
+  clarity?: string;
+  dimensions?: {
+    length: number;
+    width: number;
+    height: number;
+  };
+  transparency?: string;
+  certificate?: Certificate;
+  predictedPriceRange?: GemPriceRange;
+  description?: string;
+  seller?: {
+    name: string;
+    rating: number;
+  };
 }
 
 export interface Dimension {
@@ -229,67 +250,20 @@ export interface Certificate {
 }
 
 export interface DetailedGemstone extends Gemstone {
-  weight: number;
-  color: string;
   species: string;
   variety: string;
   shape: string;
   cut: string;
-  dimensions: Dimension;
+  clarity: string;
   transparency: string;
-  certificate?: Certificate;
-}
-
-// Gemstone Card Props
-export interface GemstoneCardProps {
-  gemstone: DetailedGemstone;
-  onViewDetails: (id: string) => void;
-}
-
-// Gemstone Filters
-export interface GemstoneFilters {
-  species?: string[];
-  variety?: string[];
-  priceRange?: { min: number; max: number };
-  weightRange?: { min: number; max: number };
-  certified?: boolean;
-  color?: string[];
-  cut?: string[];
-  shape?: string[];
-  transparency?: ('transparent' | 'translucent' | 'opaque')[];
-}
-
-// Bid Types
-export interface Bid {
-  id: string;
-  userId: string;
-  gemstoneId: string;
-  amount: number;
-  timestamp: string;
-  status: 'active' | 'won' | 'lost' | 'withdrawn';
-}
-
-// Meeting Types
-export interface Meeting {
-  id: string;
-  buyerId: string;
-  sellerId: string;
-  gemstoneId: string;
-  scheduledDate: string;
-  scheduledTime: string;
-  location: string;
-  status: 'scheduled' | 'completed' | 'canceled';
-  notes: string;
-}
-
-export interface MeetingData {
-  buyerId: string;
-  sellerId: string;
-  gemstoneId: string;
-  scheduledDate: string;
-  scheduledTime: string;
-  location: string;
-  notes: string;
+  specifications: {
+    species: string;
+    variety: string;
+    transparency: string;
+    treatment?: string;
+    refractiveIndex?: string;
+    specificGravity?: string;
+  };
 }
 
 // Gemstone Price Prediction
@@ -309,6 +283,40 @@ export interface PricePrediction {
   maxPrice?: number;
   factors?: {
     [key: string]: number;
+  };
+}
+
+export interface GemPriceRange {
+  min: number;
+  max: number;
+}
+
+// Gemstone Card Props
+export interface GemstoneCardProps {
+  gemstone: Gemstone;
+  onViewDetails?: (id: string) => void;
+}
+
+export interface DetailedGemstone extends GemstoneCardProps['gemstone'] {
+  species: string;
+  variety: string;
+  shape: string;
+  cut: string;
+  clarity: string;
+  transparency: string;
+  specifications: {
+    species: string;
+    variety: string;
+    transparency: string;
+    treatment?: string;
+    refractiveIndex?: string;
+    specificGravity?: string;
+  };
+  certification?: {
+    authority: string;
+    number: string;
+    date: string;
+    link?: string;
   };
 }
 

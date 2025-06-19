@@ -1,10 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Gem, Shield } from 'lucide-react';
+import { Gem, Shield, TrendingUp } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { GemstoneCardProps } from '@/types';
 
+// Helper function to format price in LKR
+const formatLKR = (price: number) => {
+  return new Intl.NumberFormat('si-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
 const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) => {
+  const handleViewClick = () => {
+    console.log('View details clicked for gemstone:', gemstone.id);
+    if (onViewDetails) {
+      onViewDetails(gemstone.id);
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -13,7 +30,7 @@ const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) 
       whileHover={{ 
         y: -5,
         boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.15), 0 4px 10px -5px rgba(59, 130, 246, 0.1)',
-        borderColor: '#93c5fd' // border-primary-300
+        borderColor: '#93c5fd'
       }}
       className="bg-white rounded-lg overflow-hidden border border-secondary-200 transition-all duration-300"
     >
@@ -41,10 +58,22 @@ const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) 
         
         <div className="mt-2">
           <p className="text-lg font-bold text-secondary-800">
-            ${gemstone.price.toLocaleString()}
+            {formatLKR(gemstone.price)}
           </p>
+          
+          {gemstone.predictedPriceRange && (
+            <div className="mt-1 flex items-center text-xs text-secondary-600">
+              <TrendingUp className="w-3 h-3 mr-1" />
+              <span>Estimated Range: </span>
+              <span className="font-medium ml-1">
+                {formatLKR(gemstone.predictedPriceRange.min)} - {formatLKR(gemstone.predictedPriceRange.max)}
+              </span>
+            </div>
+          )}
+          
           <p className="text-sm text-secondary-600 mt-1">
             {gemstone.weight} carats · {gemstone.color}
+            {gemstone.clarity && ` · ${gemstone.clarity}`}
           </p>
         </div>
         
@@ -52,8 +81,9 @@ const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) 
           <Button 
             variant="primary"
             size="sm"
+            onClick={handleViewClick}
+            type="button"
             className="w-full"
-            onClick={() => onViewDetails(gemstone.id)}
           >
             View Details
           </Button>
