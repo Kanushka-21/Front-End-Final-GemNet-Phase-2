@@ -60,12 +60,10 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
       <div className="container-fluid px-4 sm:px-6 py-3 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
-              <Shield className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-primary-800">GemNet</h1>
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>                <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
+              <Shield className="w-7 h-7 text-white" />
+            </div><div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>
             </div>
           </div>
         </div>
@@ -87,9 +85,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                 onClick={link.onClick}
                 className="px-3 py-2 rounded-md hover:bg-secondary-100 text-secondary-700 flex items-center gap-2"
                 title={link.label}
-              >
-                {link.icon}
-                <span>{link.label}</span>
+              >                {link.icon}
+                <span className="text-base sm:text-lg">{link.label}</span>
               </button>
             ))}
           </div>
@@ -114,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                   {notificationsOpen && (
                     <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg py-2 z-50 border border-secondary-200">
                       <div className="px-4 py-2 border-b border-secondary-200">
-                        <h3 className="font-semibold text-secondary-900">Notifications</h3>
+                        <h3 className="text-lg font-semibold text-secondary-900">Notifications</h3>
                       </div>
                       <div className="max-h-80 overflow-y-auto">
                         {notifications.map(notification => (
@@ -122,13 +119,12 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                             key={notification.id} 
                             className={`px-4 py-2 hover:bg-secondary-50 ${!notification.read ? 'bg-blue-50' : ''}`}
                           >
-                            <p className="text-sm text-secondary-900">{notification.text}</p>
-                            <p className="text-xs text-secondary-500">{notification.time}</p>
+                            <p className="text-base text-secondary-900">{notification.text}</p>
+                            <p className="text-sm text-secondary-500">{notification.time}</p>
                           </div>
                         ))}
                       </div>
-                      <div className="px-4 py-2 border-t border-secondary-200">
-                        <button className="text-sm text-primary-600 hover:text-primary-800 font-medium">
+                      <div className="px-4 py-2 border-t border-secondary-200">                        <button className="text-base text-primary-600 hover:text-primary-800 font-medium">
                           View all notifications
                         </button>
                       </div>
@@ -144,40 +140,35 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                   >
                     <div className="bg-primary-100 p-1 rounded-full">
                       <User className="w-5 h-5 text-primary-600" />
-                    </div>
-                    <div className="hidden sm:block text-left">
-                      <p className="text-sm font-medium text-secondary-900 line-clamp-1">
+                    </div>                    <div className="hidden sm:block text-left">
+                      <p className="text-base sm:text-lg font-medium text-secondary-900 line-clamp-1">
                         {user?.firstName} {user?.lastName}
                       </p>
-                      <p className="text-xs text-secondary-500 line-clamp-1">{user?.email}</p>
+                      <p className="text-sm text-secondary-500 line-clamp-1">{user?.email}</p>
                     </div>
                   </button>
                   
                   {/* User dropdown */}
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-50 border border-secondary-200">
-                      <div className="px-4 py-2 border-b border-secondary-200 sm:hidden">
-                        <p className="font-medium text-secondary-900">{user?.firstName} {user?.lastName}</p>
-                        <p className="text-xs text-secondary-500">{user?.email}</p>
-                      </div>
-                      <button
+                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-50 border border-secondary-200">                      <div className="px-4 py-2 border-b border-secondary-200 sm:hidden">
+                        <p className="text-base font-medium text-secondary-900">{user?.firstName} {user?.lastName}</p>
+                        <p className="text-sm text-secondary-500">{user?.email}</p>
+                      </div>                      <button
                         onClick={() => navigate('/dashboard')}
-                        className="w-full text-left px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50 flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-base text-secondary-700 hover:bg-secondary-50 flex items-center gap-2"
                       >
                         <ShoppingBag className="w-4 h-4" />
                         Dashboard
-                      </button>
-                      <button
+                      </button>                      <button
                         onClick={() => navigate('/settings')}
-                        className="w-full text-left px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50 flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-base text-secondary-700 hover:bg-secondary-50 flex items-center gap-2"
                       >
                         <Settings className="w-4 h-4" />
                         Settings
                       </button>
-                      <div className="border-t border-secondary-200 my-1"></div>
-                      <button
+                      <div className="border-t border-secondary-200 my-1"></div>                      <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-secondary-50 flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-base text-red-600 hover:bg-secondary-50 flex items-center gap-2"
                       >
                         <LogOut className="w-4 h-4" />
                         Sign out
@@ -188,19 +179,18 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center space-x-2">
-              <Button
+            <div className="flex items-center space-x-2">              <Button
                 variant="outline"
-                size="sm"
+                size="md"
                 onClick={() => navigate('/login')}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 text-base"
               >
                 Sign In
               </Button>              <Button
                 variant="primary"
-                size="sm"
+                size="md"
                 onClick={() => navigate('/register')}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 text-base"
               >
                 Register
               </Button>
@@ -220,7 +210,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
             className="fixed inset-y-0 right-0 w-64 bg-white shadow-xl z-40 flex flex-col md:hidden"
           >
             <div className="p-4 border-b border-secondary-200 flex justify-between items-center">
-              <h2 className="font-bold text-lg text-primary-800">GemNet</h2>
+              <h2 className="font-bold text-2xl text-primary-800">GemNet</h2>
               <button
                 onClick={() => setShowMobileMenu(false)}
                 className="p-2 rounded-full hover:bg-secondary-100"
@@ -240,7 +230,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                     className="w-full py-2 px-3 rounded-md flex items-center space-x-3 hover:bg-secondary-100"
                   >
                     <div className="text-primary-700">{link.icon}</div>
-                    <span className="text-secondary-800">{link.label}</span>
+                    <span className="text-secondary-800 text-lg">{link.label}</span>
                   </button>
                 ))}
               </div>
@@ -252,7 +242,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                   className="w-full py-2 px-3 rounded-md flex items-center space-x-3 text-red-600 hover:bg-red-50"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span>Sign out</span>
+                  <span className="text-lg">Sign out</span>
                 </button>
               </div>
             )}

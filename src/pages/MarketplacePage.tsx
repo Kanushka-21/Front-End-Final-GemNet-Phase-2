@@ -346,70 +346,70 @@ const MarketplacePage: React.FC = () => {
   );
     return (
     <AntLayout className="min-h-screen bg-gray-50">
-      <Content>
-        {/* Search & Filters Bar */}
+      <Content>        {/* Search & Filters Bar */}
         <Affix offsetTop={0}>
           <div style={{ 
             background: '#fff', 
-            padding: '16px 0',
+            padding: '12px 0',
             borderBottom: '1px solid #f0f0f0',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            boxShadow: '0 1px 6px rgba(0,0,0,0.08)',
             width: '100%'
           }}>
-            <div className="container-fluid">              <Row gutter={[16, 16]} align="middle" className="marketplace-header">
-                <Col xs={24} sm={24} md={12} lg={10} xl={8} xxl={6}>
-                  <Input
-                    size="large"
-                    placeholder="Search gemstones..."
-                    prefix={<SearchOutlined />}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    allowClear
-                    className="search-input"
-                  />
-                </Col>
-                <Col xs={14} sm={16} md={8} lg={6} xl={4}>
-                  <Select
-                    size="large"
-                    value={sortBy}
-                    onChange={setSortBy}
-                    style={{ width: '100%' }}
-                    suffixIcon={<SortAscendingOutlined />}
-                    className="sort-select"
-                    dropdownMatchSelectWidth={false}
-                  >
-                    <Option value="price_asc">Price: Low to High</Option>
-                    <Option value="price_desc">Price: High to Low</Option>
-                    <Option value="weight_asc">Weight: Low to High</Option>
-                    <Option value="weight_desc">Weight: High to Low</Option>
-                    <Option value="name_asc">Name: A to Z</Option>
-                    <Option value="name_desc">Name: Z to A</Option>
-                  </Select>
-                </Col>
-                <Col xs={10} sm={8} md={4} lg={4} xl={3}>
-                  <Space wrap size="small">
-                    <Button
-                      icon={<FilterOutlined />}
-                      onClick={() => setIsFilterDrawerOpen(true)}
-                      className="filter-button"
+            <div className="container-fluid">
+              <div className="marketplace-search-container">
+                <Row gutter={[16, 16]} align="middle" className="marketplace-header">
+                  <Col xs={24} sm={24} md={12} lg={10} xl={8} xxl={6}>
+                    <Input
+                      size="large"
+                      placeholder="Search gemstones..."
+                      prefix={<SearchOutlined style={{ color: '#2871FA' }} />}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      allowClear
+                      className="search-input"
+                    />
+                  </Col>
+                  <Col xs={14} sm={16} md={8} lg={6} xl={4}>
+                    <Select
+                      size="large"
+                      value={sortBy}
+                      onChange={setSortBy}
+                      style={{ width: '100%' }}
+                      suffixIcon={<SortAscendingOutlined />}
+                      className="sort-select"
+                      dropdownMatchSelectWidth={false}
                     >
-                      Filters
-                    </Button>
-                    <Button.Group className="view-mode-buttons">
+                      <Option value="price_asc">Price: Low to High</Option>
+                      <Option value="price_desc">Price: High to Low</Option>
+                      <Option value="weight_asc">Weight: Low to High</Option>
+                      <Option value="weight_desc">Weight: High to Low</Option>
+                      <Option value="name_asc">Name: A to Z</Option>
+                      <Option value="name_desc">Name: Z to A</Option>
+                    </Select>
+                  </Col>
+                  <Col xs={10} sm={8} md={4} lg={4} xl={3}>
+                    <div className="marketplace-controls">
+                      <Button
+                        icon={<FilterOutlined />}
+                        onClick={() => setIsFilterDrawerOpen(true)}
+                        className="filter-button"
+                      >
+                        Filters
+                      </Button>
+                      <Button.Group className="view-mode-buttons">
                       <Button 
                         icon={<AppstoreOutlined />}
                         type={viewMode === 'grid' ? 'primary' : 'default'}
                         onClick={() => setViewMode('grid')}
-                      />
-                      <Button 
+                      />                      <Button 
                         icon={<BarsOutlined />}
                         type={viewMode === 'list' ? 'primary' : 'default'}
                         onClick={() => setViewMode('list')}
-                      />
-                    </Button.Group>
-                  </Space>
+                      />                    </Button.Group>
+                    </div>
                 </Col>
               </Row>
+              </div>
             </div>
           </div>
         </Affix>
@@ -524,15 +524,25 @@ const MarketplacePage: React.FC = () => {
           </div>
         </section>
       </Content>
-      
-      {/* Mobile Filter Drawer */}
+        {/* Mobile Filter Drawer */}
       <Drawer
-        title="Filters"
+        title={
+          <div className="drawer-title">
+            <span>Filters</span>
+            <Button 
+              type="text" 
+              icon={<CloseOutlined />} 
+              onClick={() => setIsFilterDrawerOpen(false)}
+              className="close-drawer-button" 
+            />
+          </div>
+        }
         placement="left"
         onClose={() => setIsFilterDrawerOpen(false)}
         open={isFilterDrawerOpen}
         width={drawerWidth}
         className="marketplace-filter-drawer"
+        closeIcon={null}
       >
         <FilterPanel />
       </Drawer>
@@ -662,9 +672,83 @@ const MarketplacePage: React.FC = () => {
           </div>
         )}
       </Modal>
-      
-      <style>
+        <style>
         {`
+          /* Search bar and filters styling */
+          .marketplace-search-container {
+            padding: 8px 0;
+          }
+          
+          .search-input .ant-input {
+            border-radius: 8px;
+            border-color: #e6e8eb;
+          }
+          
+          .search-input .ant-input:hover,
+          .search-input .ant-input:focus {
+            border-color: #2871FA;
+            box-shadow: 0 0 0 2px rgba(40, 113, 250, 0.1);
+          }
+          
+          .sort-select .ant-select-selector {
+            border-radius: 8px !important;
+            border-color: #e6e8eb !important;
+          }
+          
+          .sort-select .ant-select-selector:hover,
+          .sort-select.ant-select-focused .ant-select-selector {
+            border-color: #2871FA !important;
+            box-shadow: 0 0 0 2px rgba(40, 113, 250, 0.1) !important;
+          }
+          
+          .filter-button {
+            border-radius: 8px;
+            margin-right: 8px;
+            border-color: #e6e8eb;
+            display: flex;
+            align-items: center;
+          }
+          
+          .filter-button:hover {
+            border-color: #2871FA;
+            color: #2871FA;
+          }
+          
+          .view-mode-buttons .ant-btn:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+          }
+          
+          .view-mode-buttons .ant-btn:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+          }
+            .marketplace-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+          }
+          
+          /* Drawer styling */
+          .drawer-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-weight: 600;
+            font-size: 18px;
+          }
+          
+          .close-drawer-button {
+            margin-right: -8px;
+            padding: 4px 8px;
+            color: #666;
+          }
+          
+          .marketplace-filter-drawer .ant-drawer-body {
+            padding-top: 0;
+          }
+
           @media (max-width: 992px) {
             .marketplace-header .ant-row {
               margin-bottom: 0 !important;
@@ -674,6 +758,10 @@ const MarketplacePage: React.FC = () => {
           @media (max-width: 768px) {
             .filter-button {
               margin-right: 8px;
+            }
+            
+            .marketplace-controls {
+              justify-content: flex-start;
             }
           }
           
@@ -707,7 +795,7 @@ const MarketplacePage: React.FC = () => {
               flex-wrap: wrap;
             }
           }
-        `}      </style>
+        `}</style>
     </AntLayout>
   );
 };
