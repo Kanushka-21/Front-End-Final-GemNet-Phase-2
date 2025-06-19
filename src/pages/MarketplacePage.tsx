@@ -29,8 +29,6 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
-import Header from '@/components/layout/Header';
-
 import { DetailedGemstone } from '@/types';
 
 const { Content } = AntLayout;
@@ -44,7 +42,8 @@ const MarketplacePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);  const [bidAmount, setBidAmount] = useState<number>(0);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [bidAmount, setBidAmount] = useState<number>(0);
   const [drawerWidth, setDrawerWidth] = useState(320);
   
   // Filter states
@@ -116,7 +115,8 @@ const MarketplacePage: React.FC = () => {
   
   // Filter and sort gemstones
   const filteredGemstones = React.useMemo(() => {
-    let filtered = gemstones.filter(gem => {      const matchesSearch = gem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    let filtered = gemstones.filter(gem => {
+      const matchesSearch = gem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            gem.color.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (gem.species?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
                            gem.variety.toLowerCase().includes(searchTerm.toLowerCase());
@@ -146,16 +146,17 @@ const MarketplacePage: React.FC = () => {
   }, [gemstones, searchTerm, priceRange, selectedTypes, selectedColors, certifiedOnly, sortBy]);
   
   // Pagination
-  // Calculate total pages for pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedGemstones = filteredGemstones.slice(startIndex, startIndex + itemsPerPage);
   
+  // Filter Panel Component
   const FilterPanel = () => (
     <div style={{ padding: '20px 0' }}>
       <Title level={4}>Filters</Title>
       
       <div style={{ marginBottom: 24 }}>
-        <Text strong>Price Range</Text>        <Slider
+        <Text strong>Price Range</Text>
+        <Slider
           range
           min={0}
           max={50000}
@@ -211,12 +212,16 @@ const MarketplacePage: React.FC = () => {
         Clear All Filters
       </Button>
     </div>
-  );  const GemstoneCard = ({ gemstone }: { gemstone: DetailedGemstone }) => (
+  );
+  
+  // Gemstone Card Component
+  const GemstoneCard = ({ gemstone }: { gemstone: DetailedGemstone }) => (
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       className="gemstone-card-motion-wrapper"
-    >      <Card
+    >
+      <Card
         hoverable
         className="gemstone-card"
         style={{ 
@@ -224,7 +229,8 @@ const MarketplacePage: React.FC = () => {
           borderRadius: 12,
           boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
           border: '1px solid #f0f0f0'
-        }}cover={
+        }}
+        cover={
           <div style={{ position: 'relative', height: 220, overflow: 'hidden', borderRadius: '8px 8px 0 0' }}>
             <img 
               alt={gemstone.name} 
@@ -250,7 +256,8 @@ const MarketplacePage: React.FC = () => {
             />
           </div>
         }
-        actions={[          <div style={{ padding: '0 12px 12px 12px' }}>
+        actions={[
+          <div key="viewDetails" style={{ padding: '0 12px 12px 12px' }}>
             <Button 
               type="primary" 
               block
@@ -275,7 +282,8 @@ const MarketplacePage: React.FC = () => {
             </Button>
           </div>
         ]}
-      >        <Meta
+      >
+        <Meta
           title={
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
               <Text strong style={{ color: '#333', fontSize: 18, fontWeight: 600 }}>{gemstone.name}</Text>
@@ -335,152 +343,201 @@ const MarketplacePage: React.FC = () => {
         />
       </Card>
     </motion.div>
-  );  return (
-    <AntLayout style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      {/* Header */}
-      <Header transparent={false} /><Affix offsetTop={0}>
-        <div style={{ 
-          background: '#fff', 
-          padding: '16px 24px',
-          borderBottom: '1px solid #f0f0f0',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>          <Row gutter={[16, 16]} align="middle" className="marketplace-header">
-            <Col xs={24} sm={24} md={12} lg={10} xl={8}>
-              <Input
-                size="large"
-                placeholder="Search gemstones..."
-                prefix={<SearchOutlined />}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                allowClear
-                className="search-input"
-              />
-            </Col>            <Col xs={14} sm={16} md={8} lg={6} xl={4}>
-              <Select
-                size="large"
-                value={sortBy}
-                onChange={setSortBy}
-                style={{ width: '100%' }}
-                suffixIcon={<SortAscendingOutlined />}
-                className="sort-select"
-                dropdownMatchSelectWidth={false}
-              >
-                <Option value="price_asc">Price: Low to High</Option>
-                <Option value="price_desc">Price: High to Low</Option>
-                <Option value="weight_asc">Weight: Low to High</Option>
-                <Option value="weight_desc">Weight: High to Low</Option>
-                <Option value="name_asc">Name: A to Z</Option>
-                <Option value="name_desc">Name: Z to A</Option>
-              </Select>
-            </Col>
-            <Col xs={10} sm={8} md={4} lg={4} xl={3}>
-              <Space wrap size="small">
-                <Button
-                  icon={<FilterOutlined />}
-                  onClick={() => setIsFilterDrawerOpen(true)}
-                  className="filter-button"
-                >
-                  Filters
-                </Button>
-                <Button.Group className="view-mode-buttons">
-                  <Button 
-                    icon={<AppstoreOutlined />}
-                    type={viewMode === 'grid' ? 'primary' : 'default'}
-                    onClick={() => setViewMode('grid')}
+  );
+    return (
+    <AntLayout className="min-h-screen bg-gray-50">
+      <Content>
+        {/* Search & Filters Bar */}
+        <Affix offsetTop={0}>
+          <div style={{ 
+            background: '#fff', 
+            padding: '16px 0',
+            borderBottom: '1px solid #f0f0f0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            width: '100%'
+          }}>
+            <div className="container-fluid">              <Row gutter={[16, 16]} align="middle" className="marketplace-header">
+                <Col xs={24} sm={24} md={12} lg={10} xl={8} xxl={6}>
+                  <Input
+                    size="large"
+                    placeholder="Search gemstones..."
+                    prefix={<SearchOutlined />}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    allowClear
+                    className="search-input"
                   />
-                  <Button 
-                    icon={<BarsOutlined />}
-                    type={viewMode === 'list' ? 'primary' : 'default'}
-                    onClick={() => setViewMode('list')}
-                  />
-                </Button.Group>
-              </Space>
-            </Col>
-          </Row>
-        </div>
-      </Affix>      <AntLayout style={{ width: '100%' }}>
-        <Content style={{ padding: '24px', width: '100%' }} className="marketplace-content">
-          {/* Results Summary */}
-          <div style={{ marginBottom: 24 }}>
-            <Title level={3}>Gemstone Marketplace</Title>
-            <Text type="secondary">
-              Showing {Math.min(filteredGemstones.length, startIndex + 1)}-{Math.min(startIndex + itemsPerPage, filteredGemstones.length)} of {filteredGemstones.length} results
-            </Text>
-          </div>
-
-          {/* Gemstones Grid */}
-          {paginatedGemstones.length > 0 ? (
-            <>              <Row gutter={[16, 24]}>
-                {paginatedGemstones.map((gemstone) => (
-                  <Col 
-                    xs={24} 
-                    sm={12} 
-                    md={8} 
-                    lg={6} 
-                    key={gemstone.id}                    style={{ flex: 'none' }}
-                    className="gemstone-card-container"
+                </Col>
+                <Col xs={14} sm={16} md={8} lg={6} xl={4}>
+                  <Select
+                    size="large"
+                    value={sortBy}
+                    onChange={setSortBy}
+                    style={{ width: '100%' }}
+                    suffixIcon={<SortAscendingOutlined />}
+                    className="sort-select"
+                    dropdownMatchSelectWidth={false}
                   >
-                    <GemstoneCard gemstone={gemstone} />
-                  </Col>
-                ))}
+                    <Option value="price_asc">Price: Low to High</Option>
+                    <Option value="price_desc">Price: High to Low</Option>
+                    <Option value="weight_asc">Weight: Low to High</Option>
+                    <Option value="weight_desc">Weight: High to Low</Option>
+                    <Option value="name_asc">Name: A to Z</Option>
+                    <Option value="name_desc">Name: Z to A</Option>
+                  </Select>
+                </Col>
+                <Col xs={10} sm={8} md={4} lg={4} xl={3}>
+                  <Space wrap size="small">
+                    <Button
+                      icon={<FilterOutlined />}
+                      onClick={() => setIsFilterDrawerOpen(true)}
+                      className="filter-button"
+                    >
+                      Filters
+                    </Button>
+                    <Button.Group className="view-mode-buttons">
+                      <Button 
+                        icon={<AppstoreOutlined />}
+                        type={viewMode === 'grid' ? 'primary' : 'default'}
+                        onClick={() => setViewMode('grid')}
+                      />
+                      <Button 
+                        icon={<BarsOutlined />}
+                        type={viewMode === 'list' ? 'primary' : 'default'}
+                        onClick={() => setViewMode('list')}
+                      />
+                    </Button.Group>
+                  </Space>
+                </Col>
               </Row>
-              
-              <style>{`
-                @media (min-width: 1200px) {
-                  .gemstone-card-container {
-                    flex: 0 0 20% !important;
-                    max-width: 20% !important;
-                  }
-                }
-                
-                @media (max-width: 768px) {
-                  .gemstone-card-container {
-                    padding: 0 8px;
-                  }
-                }
-                
-                @media (max-width: 576px) {
-                  .view-details-btn {
-                    height: 44px !important;
-                    font-size: 16px !important;
-                  }
-                }
-              `}</style>
+            </div>
+          </div>
+        </Affix>
 
-              {/* Pagination */}
-              <div style={{ textAlign: 'center', marginTop: 40 }}>
-                <Pagination
-                  current={currentPage}
-                  total={filteredGemstones.length}
-                  pageSize={itemsPerPage}
-                  onChange={setCurrentPage}
-                  showSizeChanger
-                  showQuickJumper
-                  showTotal={(total, range) => 
-                    `${range[0]}-${range[1]} of ${total} items`
-                  }
-                />
+        {/* Main Content */}        <section className="py-8">
+          <div className="container-fluid px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-16">
+            {/* Results Summary */}
+            <div className="mb-6">
+              <Title level={3} className="!mb-1">Gemstone Marketplace</Title>
+              <Text type="secondary">
+                Showing {Math.min(filteredGemstones.length, startIndex + 1)}-{Math.min(startIndex + itemsPerPage, filteredGemstones.length)} of {filteredGemstones.length} results
+              </Text>
+            </div>
+            
+            {/* Gemstones Grid */}
+            {paginatedGemstones.length > 0 ? (
+              <>
+                <Row gutter={[16, 24]}>
+                  {paginatedGemstones.map((gemstone) => (                  <Col 
+                      xs={24} 
+                      sm={12} 
+                      md={8} 
+                      lg={6}
+                      xl={4}
+                      xxl={4}
+                      key={gemstone.id}
+                      className="gemstone-card-container"
+                    >
+                      <GemstoneCard gemstone={gemstone} />
+                    </Col>
+                  ))}
+                </Row>
+                
+                <style>
+                  {`                    /* Responsive grid system for gemstone cards */
+                    @media (min-width: 1800px) {
+                      .gemstone-card-container {
+                        flex: 0 0 14.28% !important;
+                        max-width: 14.28% !important;
+                      }
+                    }
+                    
+                    @media (min-width: 1600px) and (max-width: 1799px) {
+                      .gemstone-card-container {
+                        flex: 0 0 16.666% !important;
+                        max-width: 16.666% !important;
+                      }
+                    }
+                    
+                    @media (min-width: 1400px) and (max-width: 1599px) {
+                      .gemstone-card-container {
+                        flex: 0 0 20% !important;
+                        max-width: 20% !important;
+                      }
+                    }
+                    
+                    @media (min-width: 1200px) and (max-width: 1399px) {
+                      .gemstone-card-container {
+                        flex: 0 0 20% !important;
+                        max-width: 20% !important;
+                      }
+                    }
+                    
+                    @media (max-width: 768px) {
+                      .gemstone-card-container {
+                        padding: 0 8px;
+                      }
+                    }
+                    
+                    @media (max-width: 576px) {
+                      .view-details-btn {
+                        height: 44px !important;
+                        font-size: 16px !important;
+                      }
+                    }
+
+                    .marketplace-header {
+                      max-width: 100%;
+                    }
+
+                    /* Add these styles for consistency with dashboard */
+                    .py-8 {
+                      padding-top: 2rem;
+                      padding-bottom: 2rem;
+                    }
+                  `}
+                </style>
+                
+                {/* Pagination */}
+                <div className="flex justify-center mt-10">
+                  <Pagination
+                    current={currentPage}
+                    total={filteredGemstones.length}
+                    pageSize={itemsPerPage}
+                    onChange={setCurrentPage}
+                    showSizeChanger
+                    showQuickJumper
+                    showTotal={(total, range) => 
+                      `${range[0]}-${range[1]} of ${total} items`
+                    }
+                  />
+                </div>
+              </>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                <Title level={3} type="secondary">No gemstones found</Title>
+                <Paragraph type="secondary">
+                  Try adjusting your search criteria or filters
+                </Paragraph>
               </div>
-            </>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '60px 0' }}>
-              <Title level={3} type="secondary">No gemstones found</Title>
-              <Paragraph type="secondary">
-                Try adjusting your search criteria or filters
-              </Paragraph>
-            </div>          )}
-        </Content>
-      </AntLayout>
-
-      {/* Mobile Filter Drawer */}<Drawer
+            )}
+          </div>
+        </section>
+      </Content>
+      
+      {/* Mobile Filter Drawer */}
+      <Drawer
         title="Filters"
         placement="left"
         onClose={() => setIsFilterDrawerOpen(false)}
         open={isFilterDrawerOpen}
         width={drawerWidth}
+        className="marketplace-filter-drawer"
       >
         <FilterPanel />
-      </Drawer>      {/* Gemstone Detail Modal */}
+      </Drawer>
+      
+      {/* Gemstone Detail Modal */}
       <Modal
         title={null}
         open={isModalOpen}
@@ -601,68 +658,56 @@ const MarketplacePage: React.FC = () => {
                   </Space>
                 </div>
               </Col>
-            </Row>          </div>
+            </Row>
+          </div>
         )}
       </Modal>
       
-      <style>{`
-        @media (min-width: 1200px) {
-          .gemstone-card-container {
-            flex: 0 0 20% !important;
-            max-width: 20% !important;
-          }
-        }
-        
-        @media (max-width: 992px) {
-          .marketplace-header .ant-row {
-            margin-bottom: 0 !important;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .gemstone-card-container {
-            padding: 0 8px;
+      <style>
+        {`
+          @media (max-width: 992px) {
+            .marketplace-header .ant-row {
+              margin-bottom: 0 !important;
+            }
           }
           
-          .filter-button {
-            margin-right: 8px;
+          @media (max-width: 768px) {
+            .filter-button {
+              margin-right: 8px;
+            }
           }
-        }
+          
           @media (max-width: 576px) {
-          .view-details-btn {
-            height: 44px !important;
-            font-size: 16px !important;
+            .gemstone-card-container {
+              padding: 0 4px !important;
+              margin-bottom: 16px;
+            }
+            
+            .gemstone-card .ant-card-meta-title {
+              font-size: 16px !important;
+            }
+            
+            .gemstone-card .ant-card-meta-description {
+              font-size: 13px !important;
+            }
+            
+            .gemstone-card-motion-wrapper {
+              width: 100%;
+            }
+            
+            .search-input, .sort-select {
+              margin-bottom: 8px;
+            }
+            
+            .ant-pagination-item {
+              margin: 0 2px !important;
+            }
+            
+            .gemstone-card .ant-space {
+              flex-wrap: wrap;
+            }
           }
-          
-          .gemstone-card-container {
-            padding: 0 4px !important;
-            margin-bottom: 16px;
-          }
-          
-          .gemstone-card .ant-card-meta-title {
-            font-size: 16px !important;
-          }
-          
-          .gemstone-card .ant-card-meta-description {
-            font-size: 13px !important;
-          }
-          
-          .gemstone-card-motion-wrapper {
-            width: 100%;
-          }
-          
-          .search-input, .sort-select {
-            margin-bottom: 8px;
-          }
-          
-          .ant-pagination-item {
-            margin: 0 2px !important;
-          }
-          
-          .gemstone-card .ant-space {
-            flex-wrap: wrap;          }
-        }
-      `}</style>
+        `}      </style>
     </AntLayout>
   );
 };

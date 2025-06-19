@@ -55,10 +55,9 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
       onClick: () => navigate('/dashboard') 
     }
   ];
-  
-  return (
+    return (
     <header className={`${transparent ? 'bg-transparent' : 'bg-white'} shadow-md border-b border-secondary-200 sticky top-0 z-30`}>
-      <div className="container mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div className="container-fluid px-4 sm:px-6 py-3 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
           <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
@@ -197,9 +196,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
                 className="flex items-center space-x-2"
               >
                 Sign In
-              </Button>
-              <Button
-                variant="filled"
+              </Button>              <Button
+                variant="primary"
                 size="sm"
                 onClick={() => navigate('/register')}
                 className="flex items-center space-x-2"
