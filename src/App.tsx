@@ -10,13 +10,13 @@ import HomePage from '@/pages/HomePage';
 import MarketplacePage from '@/pages/MarketplacePage';
 
 // Dashboard Pages
-import AdminDashboard from '@/pages/dashboard/AdminDashboard.simplified';
-import SellerDashboard from '@/pages/dashboard/SellerDashboard.simplified';
+import AdminDashboard from '@/pages/dashboard/AdminDashboard.responsive';
+import SellerDashboard from '@/pages/dashboard/SellerDashboard.new';
 import BuyerDashboard from '@/pages/dashboard/BuyerDashboard.simplified';
 
 // Layout
 import Layout from '@/components/layout/Layout';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import DashboardLayout from '@/components/layout/DashboardLayout.new';
 
 // Auth Context
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';

@@ -60,7 +60,7 @@
   .verification-error {
     @apply bg-red-50 border-red-200 text-red-800;
   }
-    /* Dashboard styling */
+  /* Dashboard styling */
   .dashboard-tabs .ant-tabs-nav {
     margin-bottom: 1rem;
   }
@@ -96,6 +96,56 @@
   
   .pagination-modern .ant-pagination-item-active a {
     color: rgba(29, 78, 216, 1);
+  }
+  
+  /* New Premium Dashboard Styles */
+  .custom-tabs .ant-tabs-nav:before {
+    border-bottom: none !important;
+  }
+  
+  .custom-tabs .ant-tabs-tab {
+    margin: 0 !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+  }
+  
+  .custom-tabs .ant-tabs-tab-active {
+    background-color: #fff !important;
+    font-weight: 600 !important;
+  }
+  
+  .custom-tabs .ant-tabs-card-bar .ant-tabs-tab-active {
+    border-bottom-color: #fff !important;
+  }
+  
+  .custom-tabs .ant-tabs-content {
+    padding: 16px !important;
+    margin-top: -1px !important;
+  }
+  
+  /* Mobile Responsive Fixes */
+  @media (max-width: 640px) {
+    .custom-tabs .ant-tabs-tab {
+      padding: 8px 12px !important;
+      margin: 0 2px !important;
+    }
+    
+    .custom-tabs .ant-tabs-nav-list {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+    }
+    
+    .ant-card-body {
+      padding: 12px !important;
+    }
+    
+    /* Improve table display on small screens */
+    .ant-table-content {
+      overflow-x: auto !important;
+    }
   }
   
   /* Gemstone Detail Modal Styles */
@@ -460,158 +510,74 @@
     @apply text-xs text-orange-700;
   }
   
-  /* View Details Button */
-  .view-details-btn {
-    width: 100% !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(24, 144, 255, 0.2);
-  }
-
-  .view-details-btn:hover {
-    box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+  /* Premium Dashboard Styles */
+  .dashboard-stats-card {
+    @apply bg-white rounded-xl shadow-sm border border-secondary-200 p-6 transition-all duration-300 hover:shadow-md relative overflow-hidden;
   }
   
-  /* Mobile responsiveness improvements */
-  .mobile-menu-button {
-    @apply md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500;
+  .dashboard-stats-card::before {
+    content: '';
+    @apply absolute -top-10 -right-10 w-24 h-24 bg-gradient-to-br from-primary-100 to-transparent rounded-full opacity-70;
   }
   
-  /* Responsive grids and layouts */
-  .responsive-grid {
-    display: grid;
+  .dashboard-stats-card.premium {
+    @apply bg-gradient-to-br from-white to-secondary-50;
+  }
+  
+  /* Responsive Tables */
+  .responsive-table-container {
+    @apply w-full overflow-x-auto rounded-lg;
+  }
+  
+  .responsive-table {
+    @apply min-w-full divide-y divide-secondary-200;
+  }
+  
+  /* Responsive Dashboard Grid */
+  .dashboard-grid {
+    @apply grid gap-6;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
   }
   
+  /* Premium Tabs */
+  .premium-tabs {
+    @apply flex flex-wrap border-b border-secondary-200 mb-6 overflow-x-auto;
+  }
+  
+  .premium-tab {
+    @apply px-4 py-3 text-secondary-600 font-medium text-sm cursor-pointer whitespace-nowrap;
+  }
+  
+  .premium-tab.active {
+    @apply text-primary-600 border-b-2 border-primary-600 font-semibold;
+  }
+  
+  .premium-tab:hover:not(.active) {
+    @apply text-secondary-800 bg-secondary-50;
+  }
+  
+  /* Mobile optimizations */
   @media (max-width: 640px) {
-    .ant-modal {
-      max-width: 95% !important;
-      margin: 0 auto;
+    .dashboard-welcome {
+      @apply px-4 py-6;
     }
     
-    .ant-modal-content {
-      padding: 16px !important;
+    .dashboard-stats-grid {
+      @apply grid-cols-1 gap-3;
     }
     
-    .ant-card-body {
-      padding: 16px;
+    .premium-tabs {
+      @apply pb-1;
     }
     
-    .ant-space {
-      gap: 8px !important;
+    .premium-tab {
+      @apply px-3 py-2;
     }
     
-    .ant-btn {
-      padding: 4px 12px;
-      height: 36px;
-      font-size: 14px;
-    }
-    
-    .ant-typography h1 {
-      font-size: 24px !important;
-    }
-    
-    .ant-typography h2 {
-      font-size: 20px !important;
-    }
-    
-    .ant-typography h3 {
-      font-size: 18px !important;
-    }
-    
-    .ant-typography h4 {
-      font-size: 16px !important;
-    }
-    
-    .ant-typography p {
-      font-size: 14px !important;
-    }
-  }
-  
-  /* Improved touch targets for mobile */
-  @media (max-width: 640px) {
-    .ant-btn, 
-    .ant-input, 
-    .ant-select-selector, 
-    .ant-checkbox + span,
-    .ant-radio + span {
-      min-height: 44px;
-    }
-    
-    .ant-tabs-tab {
-      padding: 8px 12px !important;
-    }
-    
-    .ant-form-item {
-      margin-bottom: 16px;
-    }
-  }
-  
-  /* Fix horizontal scroll issues */
-  .horizontal-scroll-container {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding-bottom: 8px;
-  }
-  
-  .horizontal-scroll-container::-webkit-scrollbar {
-    height: 4px;
-  }
-  
-  .horizontal-scroll-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-  }
-  
-  /* Stack buttons on mobile */
-  @media (max-width: 640px) {
-    .stack-on-mobile {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-    
-    .stack-on-mobile > * {
-      width: 100%;
-      margin-right: 0 !important;
-      margin-bottom: 8px;
-    }
-    
-    .stack-on-mobile > *:last-child {
-      margin-bottom: 0;
-    }
-  }
-  
-  /* Gemstone modal improvements for mobile */
-  @media (max-width: 640px) {
-    .gemstone-tabs {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-    }
-    
-    .gemstone-tabs .tab {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-    
-    .gemstone-properties {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: 8px;
-    }
-    
-    .bid-inputs {
-      flex-direction: column;
-    }
-    
-    .bid-inputs > * {
-      width: 100%;
+    .responsive-table th,
+    .responsive-table td {
+      padding: 0.625rem 0.75rem;
+      font-size: 0.875rem;
     }
   }
 }
