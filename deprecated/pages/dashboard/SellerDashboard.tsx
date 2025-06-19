@@ -1,0 +1,929 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Card, Row, Col, Statistic, Table, Button, Tag, Modal, Form, 
+  Input, Select, Upload, InputNumber, 
+  message, Tabs, Progress, Alert, Divider, Badge, 
+  DatePicker, TimePicker, Space, Descriptions, Switch
+} from 'antd';
+import { 
+  PlusOutlined, DollarOutlined, EyeOutlined, EditOutlined, 
+  DeleteOutlined, ShopOutlined, CalendarOutlined, UploadOutlined,
+  RobotOutlined, TrophyOutlined, LineChartOutlined, CheckOutlined,
+  CloseOutlined, FileTextOutlined, FilePdfOutlined, ShopFilled,
+  SearchOutlined
+} from '@ant-design/icons';
+import type { ColumnsType } from 'antd/es/table';
+import type { UploadFile, RcFile } from 'antd/es/upload/interface';
+import { DetailedGemstone, PricePrediction } from '@/types';
+import { api } from '@/services/api';
+import { useAuth } from '@/hooks';
+import dayjs from 'dayjs';
+
+const { TabPane } = Tabs;
+const { Option } = Select;
+const { TextArea } = Input;
+
+interface SellerStats {
+  totalListings: number;
+  activeBids: number;
+  totalSales: number;
+  revenue: number;
+  upcomingMeetings: number;
+}
+
+const SellerDashboard: React.FC = () => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [listings, setListings] = useState<DetailedGemstone[]>([]);
+  const [stats, setStats] = useState<SellerStats>({
+    totalListings: 0,
+    activeBids: 0,
+    totalSales: 0,
+    revenue: 0,
+    upcomingMeetings: 0
+  });
+  
+  // Add Listing Modal
+  const [addListingVisible, setAddListingVisible] = useState(false);
+  const [listingForm] = Form.useForm();
+  const [uploadedImages, setUploadedImages] = useState<UploadFile[]>([]);
+  const [certificateFile, setCertificateFile] = useState<UploadFile | null>(null);
+  
+  // ML Price Prediction
+  const [priceLoading, setPriceLoading] = useState(false);
+  const [pricePrediction, setPricePrediction] = useState<PricePrediction | null>(null);
+  const [showPrediction, setShowPrediction] = useState(false);
+  
+  // Store Management
+  const [storeModalVisible, setStoreModalVisible] = useState(false);
+  const [storeForm] = Form.useForm();
+  const [storeLogoFile, setStoreLogoFile] = useState<UploadFile | null>(null);
+  
+  // Buyer confirmation
+  const [buyerConfirmationModalVisible, setBuyerConfirmationModalVisible] = useState(false);
+  const [selectedBuyer, setSelectedBuyer] = useState<any>(null);
+  const [pendingConfirmations, setPendingConfirmations] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+  
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    try {
+      // Mock data
+      const mockListings: DetailedGemstone[] = [
+        {
+          id: '1',
+          name: 'Blue Sapphire',
+          variety: 'Sapphire',
+          color: 'Blue',
+          shape: 'Oval',
+          weight: 3.5,
+          clarity: 'VS',
+          price: 2500,
+          description: 'A beautiful blue sapphire from Sri Lanka',
+          image: 'https://images.unsplash.com/photo-1575457180622-9028b098cc15?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+          certificate: 'GIA-12345',
+          origin: 'Sri Lanka',
+          treatment: 'Heat Treated',
+          dimensions: '10mm x 8mm x 5mm',
+          sellerId: 'seller123',
+          createdAt: '2025-05-15T10:30:00Z',
+          updatedAt: '2025-06-01T15:20:00Z'
+        },
+        {
+          id: '2',
+          name: 'Vivid Red Ruby',
+          variety: 'Ruby',
+          color: 'Red',
+          shape: 'Cushion',
+          weight: 2.1,
+          clarity: 'VVS',
+          price: 3200,
+          description: 'Premium quality ruby with excellent color',
+          image: 'https://images.unsplash.com/photo-1609941232788-34e5f9e2e3e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+          certificate: 'GIL-45678',
+          origin: 'Myanmar',
+          treatment: 'None',
+          dimensions: '8mm x 8mm x 5mm',
+          sellerId: 'seller123',
+          createdAt: '2025-05-20T11:15:00Z',
+          updatedAt: '2025-06-05T09:45:00Z'
+        },
+        {
+          id: '3',
+          name: 'Colombian Emerald',
+          variety: 'Emerald',
+          color: 'Green',
+          shape: 'Emerald',
+          weight: 1.8,
+          clarity: 'SI',
+          price: 1800,
+          description: 'Classic emerald with rich green color',
+          image: 'https://images.unsplash.com/photo-1568386322135-425981590268?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+          certificate: 'GIC-98765',
+          origin: 'Colombia',
+          treatment: 'Oil',
+          dimensions: '7mm x 5mm x 4mm',
+          sellerId: 'seller123',
+          createdAt: '2025-06-01T14:20:00Z',
+          updatedAt: '2025-06-10T16:30:00Z'
+        }
+      ];
+      
+      const mockStats: SellerStats = {
+        totalListings: 3,
+        activeBids: 5,
+        totalSales: 7,
+        revenue: 15800,
+        upcomingMeetings: 2
+      };
+      
+      const mockPendingConfirmations = [
+        {
+          id: 'conf1',
+          buyerId: 'buyer123',
+          buyerName: 'John Doe',
+          gemstoneId: '1',
+          gemstoneName: 'Blue Sapphire',
+          date: '2025-06-20',
+          time: '10:00 AM',
+          status: 'pending'
+        },
+        {
+          id: 'conf2',
+          buyerId: 'buyer456',
+          buyerName: 'Alice Smith',
+          gemstoneId: '2',
+          gemstoneName: 'Vivid Red Ruby',
+          date: '2025-06-22',
+          time: '2:30 PM',
+          status: 'pending'
+        }
+      ];
+
+      setListings(mockListings);
+      setStats(mockStats);
+      setPendingConfirmations(mockPendingConfirmations);
+
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error('Error fetching seller dashboard data:', error);
+      message.error('Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handler for ML price prediction
+  const handleGetPricePrediction = async (gemstoneData: any) => {
+    setPriceLoading(true);
+    try {
+      // Mock prediction response
+      setTimeout(() => {
+        setPricePrediction({
+          predictedPrice: 2850,
+          confidenceScore: 0.87,
+          similarGems: [
+            { name: 'Blue Sapphire', carat: 3.2, price: 2700 },
+            { name: 'Blue Sapphire', carat: 3.7, price: 3100 },
+            { name: 'Blue Sapphire', carat: 3.4, price: 2900 }
+          ],
+          marketTrend: 'upward'
+        });
+        setShowPrediction(true);
+        setPriceLoading(false);
+      }, 1500);
+    } catch (error) {
+      message.error('Failed to get price prediction');
+      setPriceLoading(false);
+    }
+  };
+
+  // Handle certificate file upload
+  const handleCertificateUpload = (info: any) => {
+    if (info.file.status === 'done') {
+      setCertificateFile(info.file);
+      message.success(`${info.file.name} certificate uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} certificate upload failed`);
+    }
+  };
+
+  // Handle store logo upload
+  const handleStoreLogoUpload = (info: any) => {
+    if (info.file.status === 'done') {
+      setStoreLogoFile(info.file);
+      message.success(`${info.file.name} logo uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} logo upload failed`);
+    }
+  };
+
+  // Handle form submissions
+  const handleSubmitListing = async (values: any) => {
+    try {
+      message.success('Listing created successfully!');
+      setAddListingVisible(false);
+      listingForm.resetFields();
+      setUploadedImages([]);
+      setCertificateFile(null);
+      setPricePrediction(null);
+      setShowPrediction(false);
+      fetchDashboardData();
+    } catch (error) {
+      console.error('Error creating listing:', error);
+      message.error('Failed to create listing');
+    }
+  };
+
+  const handleUpdateStore = async (values: any) => {
+    try {
+      message.success('Store information updated successfully');
+      setStoreModalVisible(false);
+      storeForm.resetFields();
+    } catch (error) {
+      console.error('Error updating store:', error);
+      message.error('Failed to update store information');
+    }
+  };
+
+  const handleDeleteListing = async (listingId: string) => {
+    try {
+      message.success('Listing deleted successfully');
+      // Filter out the deleted listing
+      setListings(listings.filter(listing => listing.id !== listingId));
+    } catch (error) {
+      message.error('Failed to delete listing');
+    }
+  };
+
+  const listingColumns: ColumnsType<DetailedGemstone> = [
+    {
+      title: 'Gemstone',
+      key: 'gemstone',
+      render: (_, record) => (
+        <div className="flex items-center space-x-3">
+          <img 
+            src={record.image} 
+            alt={record.name}
+            className="w-16 h-16 object-cover rounded-lg"
+          />
+          <div>
+            <div className="font-semibold">{record.name}</div>
+            <div className="text-gray-500 text-sm">{record.variety} • {record.weight}ct</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: 'Details',
+      key: 'details',
+      render: (_, record) => (
+        <div>
+          <div><span className="font-medium">Color:</span> {record.color}</div>
+          <div><span className="font-medium">Shape:</span> {record.shape}</div>
+          <div><span className="font-medium">Clarity:</span> {record.clarity}</div>
+        </div>
+      ),
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (price) => `$${price.toLocaleString()}`,
+      sorter: (a, b) => a.price - b.price,
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      render: () => (
+        <Tag color="green">Listed</Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <div className="space-x-2">
+          <Button 
+            size="small" 
+            type="primary" 
+            icon={<EditOutlined />}
+          >
+            Edit
+          </Button>
+          <Button 
+            size="small" 
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeleteListing(record.id)}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const dashboardStats = [
+    {
+      title: 'Total Listings',
+      value: stats.totalListings,
+      icon: <ShopOutlined className="text-blue-500" />,
+      color: 'blue'
+    },
+    {
+      title: 'Active Bids',
+      value: stats.activeBids,
+      icon: <TrophyOutlined className="text-green-500" />,
+      color: 'green'
+    },
+    {
+      title: 'Total Sales',
+      value: stats.totalSales,
+      icon: <DollarOutlined className="text-purple-500" />,
+      color: 'purple'
+    },
+    {
+      title: 'Revenue',
+      value: `$${stats.revenue.toLocaleString()}`,
+      icon: <LineChartOutlined className="text-red-500" />,
+      color: 'red'
+    }
+  ];
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Welcome Header */}
+      <div className="mb-8 bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl shadow-sm">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome back, {user?.firstName || 'Seller'}!
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Manage your gemstone listings, sales, and appointments
+            </p>
+          </div>
+          <div className="hidden md:block">
+            <Button 
+              type="primary" 
+              size="large" 
+              icon={<PlusOutlined />}
+              onClick={() => setAddListingVisible(true)}
+            >
+              Add New Listing
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Statistics Cards */}
+      <Row gutter={[16, 16]}>
+        {dashboardStats.map((stat, index) => (
+          <Col xs={24} sm={12} lg={6} key={index}>
+            <Card 
+              hoverable 
+              className="transition-all duration-300 hover:shadow-lg border-t-4"
+              style={{ borderTopColor: `var(--ant-${stat.color}-6)` }}
+            >
+              <div className="flex items-center justify-between">
+                <Statistic
+                  title={<span className="text-base font-medium">{stat.title}</span>}
+                  value={stat.value}
+                  valueStyle={{ 
+                    color: `var(--ant-${stat.color}-6)`,
+                    fontSize: '2rem',
+                    fontWeight: 'bold' 
+                  }}
+                />
+                <div className={`flex items-center justify-center w-12 h-12 rounded-full bg-${stat.color}-50`}>
+                  {React.cloneElement(stat.icon, { 
+                    style: { fontSize: '1.5rem' } 
+                  })}
+                </div>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      {/* System Alerts */}
+      {pendingConfirmations.length > 0 && (
+        <Alert
+          message="Pending Buyer Confirmations"
+          description={`You have ${pendingConfirmations.length} pending meeting confirmations from buyers.`}
+          type="info"
+          showIcon
+          action={
+            <Button 
+              size="small" 
+              type="primary"
+              onClick={() => setBuyerConfirmationModalVisible(true)}
+            >
+              View Details
+            </Button>
+          }
+          className="mb-4"
+        />
+      )}
+
+      {/* Main Content Tabs */}
+      <Card className="shadow-sm rounded-xl overflow-hidden">
+        <Tabs 
+          defaultActiveKey="listings"
+          type="card"
+          className="dashboard-tabs"
+        >
+          <TabPane 
+            tab={
+              <span className="flex items-center gap-2">
+                <ShopOutlined />
+                My Listings
+              </span>
+            } 
+            key="listings"
+          >
+            <div className="bg-white rounded-md overflow-hidden">
+              <div className="flex justify-between items-center mb-4 px-1">
+                <h3 className="text-lg font-medium">Your Active Listings</h3>
+                <Button 
+                  type="primary" 
+                  ghost 
+                  icon={<PlusOutlined />}
+                  onClick={() => setAddListingVisible(true)}
+                >
+                  Add New Listing
+                </Button>
+              </div>
+              <Table
+                columns={listingColumns}
+                dataSource={listings}
+                rowKey="id"
+                loading={loading}
+                pagination={{ 
+                  pageSize: 10,
+                  showSizeChanger: false,
+                  className: "pagination-modern"
+                }}
+                className="custom-table"
+                scroll={{ x: 800 }}
+                rowClassName="hover:bg-blue-50 transition-colors"
+              />
+            </div>
+          </TabPane>
+
+          <TabPane 
+            tab={
+              <span className="flex items-center gap-2">
+                <TrophyOutlined />
+                Bids Received
+              </span>
+            }
+            key="bids"
+          >
+            <div className="bg-white rounded-md overflow-hidden p-1">
+              <div className="text-center py-8">
+                <TrophyOutlined style={{ fontSize: '3rem' }} className="text-blue-500" />
+                <h3 className="mt-4 text-xl font-medium">No Active Bids</h3>
+                <p className="text-gray-500 mb-4">You don't have any active bids on your listings right now.</p>
+                <Button type="primary">View All Listings</Button>
+              </div>
+            </div>
+          </TabPane>
+
+          <TabPane 
+            tab={
+              <span className="flex items-center gap-2">
+                <CalendarOutlined />
+                Meetings
+              </span>
+            }
+            key="meetings"
+          >
+            <div className="bg-white rounded-md overflow-hidden p-1">
+              <div className="text-center py-8">
+                <CalendarOutlined style={{ fontSize: '3rem' }} className="text-green-500" />
+                <h3 className="mt-4 text-xl font-medium">Upcoming Meetings</h3>
+                <p className="text-gray-500 mb-4">You have {stats.upcomingMeetings} upcoming meetings with buyers.</p>
+                <Button type="primary">View Schedule</Button>
+              </div>
+            </div>
+          </TabPane>
+
+          <TabPane 
+            tab={
+              <span className="flex items-center gap-2">
+                <RobotOutlined />
+                Price Prediction
+              </span>
+            }
+            key="prediction"
+          >
+            <div className="bg-white rounded-md overflow-hidden p-4">
+              <h3 className="text-lg font-medium mb-4">AI Gemstone Price Prediction</h3>
+              <p className="mb-4">
+                Use our advanced ML algorithm to predict the optimal price for your gemstone
+                based on market data and similar listings.
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <div className="flex-1 min-w-[300px]">
+                  <Form layout="vertical">
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Form.Item label="Gemstone Type">
+                          <Select defaultValue="sapphire">
+                            <Option value="sapphire">Sapphire</Option>
+                            <Option value="ruby">Ruby</Option>
+                            <Option value="emerald">Emerald</Option>
+                            <Option value="diamond">Diamond</Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item label="Color">
+                          <Select defaultValue="blue">
+                            <Option value="blue">Blue</Option>
+                            <Option value="red">Red</Option>
+                            <Option value="green">Green</Option>
+                            <Option value="yellow">Yellow</Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Form.Item label="Weight (carats)">
+                          <InputNumber min={0.1} step={0.1} defaultValue={3.5} style={{ width: '100%' }} />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item label="Clarity">
+                          <Select defaultValue="vs">
+                            <Option value="vvs">VVS</Option>
+                            <Option value="vs">VS</Option>
+                            <Option value="si">SI</Option>
+                            <Option value="i">I</Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                    
+                    <Form.Item>
+                      <Button 
+                        type="primary" 
+                        icon={<RobotOutlined />} 
+                        loading={priceLoading}
+                        onClick={() => handleGetPricePrediction({})}
+                      >
+                        Get Price Prediction
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+                
+                {showPrediction && pricePrediction && (
+                  <div className="flex-1 min-w-[300px] bg-blue-50 p-4 rounded-lg">
+                    <h4 className="text-lg font-medium mb-3">Prediction Results</h4>
+                    <div className="mb-4">
+                      <div className="text-sm text-gray-500">Predicted Price</div>
+                      <div className="text-3xl font-bold text-blue-600">
+                        ${pricePrediction.predictedPrice.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Confidence Score: {(pricePrediction.confidenceScore * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h5 className="font-medium">Similar Gemstones in Market</h5>
+                      <div className="space-y-2 mt-2">
+                        {pricePrediction.similarGems.map((gem, idx) => (
+                          <div key={idx} className="flex justify-between text-sm">
+                            <div>{gem.name} ({gem.carat}ct)</div>
+                            <div className="font-medium">${gem.price.toLocaleString()}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h5 className="font-medium">Market Trend</h5>
+                      <div className="flex items-center mt-1">
+                        <Tag color={pricePrediction.marketTrend === 'upward' ? 'green' : 'red'}>
+                          {pricePrediction.marketTrend === 'upward' ? 'Upward' : 'Downward'}
+                        </Tag>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabPane>
+        </Tabs>
+      </Card>
+
+      {/* Add New Listing Modal */}
+      <Modal
+        title="Add New Gemstone Listing"
+        open={addListingVisible}
+        onCancel={() => setAddListingVisible(false)}
+        footer={null}
+        width={700}
+      >
+        <Form
+          form={listingForm}
+          layout="vertical"
+          onFinish={handleSubmitListing}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item
+              name="name"
+              label="Gemstone Name"
+              rules={[{ required: true, message: 'Please enter gemstone name' }]}
+            >
+              <Input placeholder="e.g. Blue Star Sapphire" />
+            </Form.Item>
+            
+            <Form.Item
+              name="variety"
+              label="Gemstone Variety"
+              rules={[{ required: true, message: 'Please select gemstone variety' }]}
+            >
+              <Select placeholder="Select gemstone variety">
+                <Option value="Sapphire">Sapphire</Option>
+                <Option value="Ruby">Ruby</Option>
+                <Option value="Emerald">Emerald</Option>
+                <Option value="Diamond">Diamond</Option>
+                <Option value="Topaz">Topaz</Option>
+              </Select>
+            </Form.Item>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Form.Item
+              name="color"
+              label="Color"
+              rules={[{ required: true, message: 'Please select color' }]}
+            >
+              <Select placeholder="Select color">
+                <Option value="Blue">Blue</Option>
+                <Option value="Red">Red</Option>
+                <Option value="Green">Green</Option>
+                <Option value="Yellow">Yellow</Option>
+                <Option value="Purple">Purple</Option>
+              </Select>
+            </Form.Item>
+            
+            <Form.Item
+              name="shape"
+              label="Shape"
+              rules={[{ required: true, message: 'Please select shape' }]}
+            >
+              <Select placeholder="Select shape">
+                <Option value="Round">Round</Option>
+                <Option value="Oval">Oval</Option>
+                <Option value="Cushion">Cushion</Option>
+                <Option value="Emerald">Emerald</Option>
+                <Option value="Pear">Pear</Option>
+              </Select>
+            </Form.Item>
+            
+            <Form.Item
+              name="clarity"
+              label="Clarity"
+              rules={[{ required: true, message: 'Please select clarity' }]}
+            >
+              <Select placeholder="Select clarity">
+                <Option value="VVS">VVS</Option>
+                <Option value="VS">VS</Option>
+                <Option value="SI">SI</Option>
+                <Option value="I">I</Option>
+              </Select>
+            </Form.Item>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item
+              name="weight"
+              label="Weight (carats)"
+              rules={[{ required: true, message: 'Please enter weight' }]}
+            >
+              <InputNumber min={0.1} step={0.1} style={{ width: '100%' }} />
+            </Form.Item>
+            
+            <Form.Item
+              name="price"
+              label="Price (USD)"
+              rules={[{ required: true, message: 'Please enter price' }]}
+            >
+              <InputNumber 
+                min={1}
+                formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+          </div>
+          
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please enter description' }]}
+          >
+            <TextArea 
+              rows={4} 
+              placeholder="Provide a detailed description of your gemstone..."
+            />
+          </Form.Item>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item
+              name="origin"
+              label="Origin"
+            >
+              <Input placeholder="e.g. Sri Lanka" />
+            </Form.Item>
+            
+            <Form.Item
+              name="treatment"
+              label="Treatment"
+            >
+              <Input placeholder="e.g. Heat treated" />
+            </Form.Item>
+          </div>
+          
+          <Form.Item
+            name="images"
+            label="Gemstone Images"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => {
+              if (Array.isArray(e)) {
+                return e;
+              }
+              return e && e.fileList;
+            }}
+            rules={[{ required: true, message: 'Please upload at least one image' }]}
+          >
+            <Upload
+              listType="picture-card"
+              maxCount={5}
+              beforeUpload={() => false}
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          </Form.Item>
+          
+          <Form.Item
+            name="certificate"
+            label="Certificate (Optional)"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => {
+              if (Array.isArray(e)) {
+                return e;
+              }
+              return e && e.fileList;
+            }}
+          >
+            <Upload
+              listType="text"
+              maxCount={1}
+              beforeUpload={() => false}
+            >
+              <Button icon={<UploadOutlined />}>Upload Certificate</Button>
+            </Upload>
+          </Form.Item>
+          
+          <Form.Item className="mb-0">
+            <div className="flex justify-end space-x-3">
+              <Button onClick={() => setAddListingVisible(false)}>
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit">
+                Add Listing
+              </Button>
+            </div>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Buyer Confirmation Modal */}
+      <Modal
+        title="Pending Buyer Confirmations"
+        open={buyerConfirmationModalVisible}
+        onCancel={() => setBuyerConfirmationModalVisible(false)}
+        footer={null}
+      >
+        <div className="space-y-4">
+          {pendingConfirmations.map((confirmation) => (
+            <Card key={confirmation.id} className="shadow-sm">
+              <div className="mb-3">
+                <h4 className="font-medium">{confirmation.buyerName}</h4>
+                <p className="text-gray-500">Interested in: {confirmation.gemstoneName}</p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+                <div>
+                  <p className="mb-0">
+                    <CalendarOutlined className="mr-2" />
+                    {confirmation.date} at {confirmation.time}
+                  </p>
+                </div>
+                
+                <div className="flex space-x-2">
+                  <Button type="primary" size="small" icon={<CheckOutlined />}>
+                    Confirm
+                  </Button>
+                  <Button danger size="small" icon={<CloseOutlined />}>
+                    Decline
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </Modal>
+
+      {/* Store Management Modal */}
+      <Modal
+        title="Manage Your Store"
+        open={storeModalVisible}
+        onCancel={() => setStoreModalVisible(false)}
+        footer={null}
+      >
+        <Form
+          form={storeForm}
+          layout="vertical"
+          onFinish={handleUpdateStore}
+        >
+          <Form.Item
+            name="storeName"
+            label="Store Name"
+            rules={[{ required: true, message: 'Please enter store name' }]}
+          >
+            <Input placeholder="Your store name" />
+          </Form.Item>
+          <Form.Item
+            name="storeDescription"
+            label="Store Description"
+            rules={[{ required: true, message: 'Please enter store description' }]}
+          >
+            <TextArea rows={4} placeholder="Describe your store and expertise..." />
+          </Form.Item>
+          <Form.Item
+            name="storeLocation"
+            label="Store Location"
+          >
+            <Input placeholder="Physical location (if applicable)" />
+          </Form.Item>
+          <Form.Item
+            name="storeLogo"
+            label="Store Logo"
+          >
+            <Upload
+              listType="picture-card"
+              maxCount={1}
+              beforeUpload={() => false}
+              onChange={handleStoreLogoUpload}
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          </Form.Item>
+          <Form.Item
+            name="contactEmail"
+            label="Contact Email"
+          >
+            <Input placeholder="Your business email" />
+          </Form.Item>
+          <Form.Item
+            name="contactPhone"
+            label="Contact Phone"
+          >
+            <Input placeholder="Your business phone number" />
+          </Form.Item>
+          <div className="flex justify-end space-x-3">
+            <Button onClick={() => setStoreModalVisible(false)}>
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Update Store
+            </Button>
+          </div>
+        </Form>
+      </Modal>
+    </div>
+  );
+};
+
+export default SellerDashboard;
