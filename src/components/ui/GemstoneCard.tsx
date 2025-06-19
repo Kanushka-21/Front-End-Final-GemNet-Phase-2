@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Gem, Shield, TrendingUp } from 'lucide-react';
+import { Gem, Shield } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { GemstoneCardProps } from '@/types';
 
@@ -56,24 +56,22 @@ const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) 
           <h3 className="font-semibold text-primary-800">{gemstone.name}</h3>
         </div>
         
-        <div className="mt-2">
-          <p className="text-lg font-bold text-secondary-800">
+        <div className="mt-2 space-y-2">
+          <p className="text-2xl font-bold text-secondary-800">
             {formatLKR(gemstone.price)}
           </p>
           
           {gemstone.predictedPriceRange && (
-            <div className="mt-1 flex items-center text-xs text-secondary-600">
-              <TrendingUp className="w-3 h-3 mr-1" />
-              <span>Estimated Range: </span>
-              <span className="font-medium ml-1">
+            <div className="flex flex-col text-secondary-600">
+              <span className="text-base font-semibold">Estimated Range:</span>
+              <span className="text-lg font-medium">
                 {formatLKR(gemstone.predictedPriceRange.min)} - {formatLKR(gemstone.predictedPriceRange.max)}
               </span>
             </div>
           )}
           
-          <p className="text-sm text-secondary-600 mt-1">
+          <p className="text-sm text-secondary-600">
             {gemstone.weight} carats · {gemstone.color}
-            {gemstone.clarity && ` · ${gemstone.clarity}`}
           </p>
         </div>
         
