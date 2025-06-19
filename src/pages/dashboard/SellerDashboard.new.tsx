@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
+import GemListingForm from '../../components/forms/GemListingForm';
 import { 
-  Card, Row, Col, Statistic, Table, Button, Tag, 
-  Tabs, List, Avatar, Badge, Progress, Divider, Space,
-  Modal, Form, Input, InputNumber, Select, Upload, message,
-  DatePicker
+  Card, Row, Col, Table, Button, Tag, 
+  Tabs, Space, Modal, Form, Input, InputNumber, message
 } from 'antd';
 import { 
-  ShopOutlined, DollarOutlined, FileTextOutlined,
+  ShopOutlined, DollarOutlined,
   CalendarOutlined, TrophyOutlined, PlusOutlined,
-  EditOutlined, EyeOutlined, DeleteOutlined,
-  UploadOutlined, InboxOutlined
+  EditOutlined, EyeOutlined, DeleteOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -118,9 +116,7 @@ const SellerDashboard: React.FC = () => {
   const [isEditListingModalVisible, setIsEditListingModalVisible] = useState(false);
   const [isAcceptBidModalVisible, setIsAcceptBidModalVisible] = useState(false);
   const [selectedListing, setSelectedListing] = useState<any>(null);
-  const [selectedBid, setSelectedBid] = useState<any>(null);
-  const [addListingForm] = Form.useForm();
-  const [editListingForm] = Form.useForm();
+  const [selectedBid, setSelectedBid] = useState<any>(null);  const [editListingForm] = Form.useForm();
 
   // Statistics
   const stats = {
@@ -131,10 +127,8 @@ const SellerDashboard: React.FC = () => {
     totalRevenue: 12500,
     averageRating: 4.7
   };
-  
-  // Function to handle opening add listing modal
+    // Function to handle opening add listing modal
   const handleOpenAddListingModal = () => {
-    addListingForm.resetFields();
     setIsAddListingModalVisible(true);
   };
   
@@ -149,11 +143,16 @@ const SellerDashboard: React.FC = () => {
   };
   
   // Function to handle submitting a new listing
-  const handleAddListing = (values: any) => {
-    console.log('New listing values:', values);
-    message.success('Listing submitted for approval');
-    setIsAddListingModalVisible(false);
-    addListingForm.resetFields();
+  const handleAddListing = async (values: any) => {
+    try {
+      console.log('New listing values:', values);
+      // Here you would typically send the data to your backend
+      
+      message.success('Listing submitted for approval');
+      setIsAddListingModalVisible(false);
+    } catch (error) {
+      message.error('Failed to create listing');
+    }
   };
   
   // Function to handle editing a listing
@@ -582,91 +581,19 @@ const SellerDashboard: React.FC = () => {
             />
           </TabPane>
         </Tabs>
-      </Card>
-
-      {/* Add Listing Modal */}
+      </Card>      {/* Add Listing Modal */}
       <Modal
-        visible={isAddListingModalVisible}
+        open={isAddListingModalVisible}
         title="Add New Gemstone Listing"
         onCancel={() => setIsAddListingModalVisible(false)}
         footer={null}
-        width={600}
+        width={720}
+        style={{ top: 20 }}
+        destroyOnClose
       >
-        <Form
-          form={addListingForm}
-          layout="vertical"
-          onFinish={handleAddListing}
-        >
-          <Form.Item
-            label="Gemstone Name"
-            name="name"
-            rules={[{ required: true, message: 'Please enter gemstone name' }]}
-          >
-            <Input placeholder="e.g. Blue Sapphire" />
-          </Form.Item>
-          
-          <Form.Item
-            label="Price (USD)"
-            name="price"
-            rules={[{ required: true, message: 'Please enter price' }]}
-          >
-            <InputNumber
-              placeholder="Enter price"
-              style={{ width: '100%' }}
-              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3}))/g, ',')}
-              parser={(value: string | undefined) => value ? value.replace(/\$\s?|(,*)/g, '') : ''}
-            />
-          </Form.Item>
-          
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: 'Please enter description' }]}
-          >
-            <Input.TextArea rows={4} placeholder="Enter gemstone description..." />
-          </Form.Item>
-          
-          <Form.Item
-            label="Category"
-            name="category"
-            rules={[{ required: true, message: 'Please select category' }]}
-          >
-            <Select placeholder="Select category">
-              <Select.Option value="sapphire">Sapphire</Select.Option>
-              <Select.Option value="ruby">Ruby</Select.Option>
-              <Select.Option value="emerald">Emerald</Select.Option>
-              <Select.Option value="diamond">Diamond</Select.Option>
-              <Select.Option value="other">Other</Select.Option>
-            </Select>
-          </Form.Item>
-          
-          <Form.Item
-            label="Upload Images"
-            name="images"
-            rules={[{ required: true, message: 'Please upload at least one image' }]}
-          >
-            <Upload.Dragger multiple listType="picture-card" maxCount={5} beforeUpload={() => false}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">Click or drag files to this area to upload</p>
-              <p className="ant-upload-hint">
-                Support for multiple images. Max 5 images.
-              </p>
-            </Upload.Dragger>
-          </Form.Item>
-          
-          <Form.Item>
-            <div className="flex justify-end space-x-2">
-              <Button onClick={() => setIsAddListingModalVisible(false)}>
-                Cancel
-              </Button>
-              <Button type="primary" htmlType="submit">
-                Submit Listing
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
+        <div className="-mx-6 -mt-6">
+          <GemListingForm onSubmit={handleAddListing} onCancel={() => setIsAddListingModalVisible(false)} />
+        </div>
       </Modal>
 
       {/* Edit Listing Modal */}
