@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { 
-  Card, Row, Col, Statistic, Table, Button, Tag, 
+  Card, Row, Col, Table, Button, Tag, 
   Tabs, Progress, Divider, Space,
-  Modal, Tooltip, Badge, Alert, Input
+  Modal, Tooltip, Badge, Alert, Input,
+  Switch, message
 } from 'antd';
 import { 
   UserOutlined, CheckCircleOutlined, ClockCircleOutlined,
   FileTextOutlined, DollarOutlined, EyeOutlined,
-  CheckOutlined, CloseOutlined, ExclamationCircleOutlined
+  CheckOutlined, CloseOutlined, ExclamationCircleOutlined,
+  LockOutlined, UnlockOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -92,6 +94,40 @@ const recentTransactions = [
   }
 ];
 
+// Mock data for users
+const mockUsers = [
+  { 
+    id: '1', 
+    name: 'John Smith', 
+    email: 'john.smith@example.com', 
+    role: 'seller',
+    lastActive: '2025-06-19',
+    status: 'active',
+    listings: 12,
+    transactions: 8
+  },
+  { 
+    id: '2', 
+    name: 'Emily Wilson', 
+    email: 'emily.wilson@example.com', 
+    role: 'buyer',
+    lastActive: '2025-06-18',
+    status: 'blocked',
+    listings: 0,
+    transactions: 3
+  },
+  { 
+    id: '3', 
+    name: 'Michael Brown', 
+    email: 'michael.brown@example.com', 
+    role: 'seller',
+    lastActive: '2025-06-20',
+    status: 'active',
+    listings: 5,
+    transactions: 2
+  }
+];
+
 const AdminDashboard: React.FC = () => {
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
   const [isListingModalVisible, setIsListingModalVisible] = useState(false);
@@ -109,7 +145,25 @@ const AdminDashboard: React.FC = () => {
     commissionRate: 10,
     totalCommission: 4875
   };
-  
+    // Function to toggle user status (block/unblock)
+  const handleToggleUserStatus = (user: any, active: boolean) => {
+    const newStatus = active ? 'active' : 'blocked';
+    const action = active ? 'unblock' : 'block';
+    
+    confirm({
+      title: `Confirm ${action} user`,
+      icon: active ? <UnlockOutlined className="text-green-500" /> : <LockOutlined className="text-red-500" />,
+      content: `Are you sure you want to ${action} ${user.name}?`,
+      okText: 'Yes',
+      okType: active ? 'primary' : 'danger',
+      cancelText: 'No',
+      onOk() {
+        // Here you would typically call your API to update the user's status
+        message.success(`User has been ${action}ed successfully`);
+      },
+    });
+  };
+
   // Function to view user details
   const handleViewUser = (user: any) => {
     setSelectedUser(user);
@@ -303,17 +357,22 @@ const AdminDashboard: React.FC = () => {
           size="large"
           animated={{ inkBar: true, tabPane: true }}
           tabBarStyle={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb', padding: '0 16px' }}
-        >
-          <TabPane 
-            tab={<span className="flex items-center px-1"><ClockCircleOutlined className="mr-2" /> Pending Approvals</span>} 
-            key="approvals"
+        >          <TabPane 
+            tab={<span className="flex items-center px-1"><UserOutlined className="mr-2" /> User Management</span>} 
+            key="users"
           >
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-4">User Verification Requests</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-medium">User Accounts</h3>
+                  <Input.Search
+                    placeholder="Search users..."
+                    style={{ width: 250 }}
+                    allowClear
+                  />
+                </div>
                 <Table 
-                  dataSource={pendingUsers}
-                  responsive
+                  dataSource={mockUsers}
                   scroll={{ x: 'max-content' }}
                   columns={[
                     {
@@ -333,9 +392,19 @@ const AdminDashboard: React.FC = () => {
                       render: (role: string) => <Tag color={role === 'seller' ? 'purple' : 'blue'}>{role.toUpperCase()}</Tag>
                     },
                     {
-                      title: 'Registered On',
-                      dataIndex: 'registeredAt',
-                      key: 'registeredAt',
+                      title: 'Status',
+                      dataIndex: 'status',
+                      key: 'status',
+                      render: (status: string) => (
+                        <Tag color={status === 'active' ? 'success' : 'error'}>
+                          {status.toUpperCase()}
+                        </Tag>
+                      )
+                    },
+                    {
+                      title: 'Last Active',
+                      dataIndex: 'lastActive',
+                      key: 'lastActive',
                       render: date => dayjs(date).format('MMM DD, YYYY')
                     },
                     {
@@ -347,31 +416,20 @@ const AdminDashboard: React.FC = () => {
                             size="small" 
                             icon={<EyeOutlined />}
                             onClick={() => handleViewUser(record)}
-                            type="default"
                           >
                             View
                           </Button>
-                          <Button 
-                            size="small" 
-                            icon={<CheckOutlined />}
-                            onClick={() => handleApproveUser(record)}
-                            type="primary"
-                          >
-                            Approve
-                          </Button>
-                          <Button 
-                            size="small" 
-                            icon={<CloseOutlined />}
-                            onClick={() => handleRejectUser(record)}
-                            danger
-                          >
-                            Reject
-                          </Button>
+                          <Switch
+                            checkedChildren={<UnlockOutlined />}
+                            unCheckedChildren={<LockOutlined />}
+                            checked={record.status === 'active'}
+                            onChange={(checked) => handleToggleUserStatus(record, checked)}
+                          />
                         </Space>
                       )
                     }
                   ]}
-                  pagination={false}
+                  pagination={{ pageSize: 10 }}
                 />
               </div>
               
@@ -603,64 +661,81 @@ const AdminDashboard: React.FC = () => {
             />
           </TabPane>
         </Tabs>
-      </Card>
-
-      {/* User Details Modal */}
+      </Card>      {/* User Details Modal */}
       <Modal
         visible={isUserModalVisible}
-        title="User Verification Details"
+        title="User Details"
         onCancel={() => setIsUserModalVisible(false)}
         footer={[
-          <Button key="reject" danger onClick={() => handleRejectUser(selectedUser)}>
-            Reject
-          </Button>,
-          <Button key="approve" type="primary" onClick={() => handleApproveUser(selectedUser)}>
-            Approve
-          </Button>
+          selectedUser?.status === 'active' ? (
+            <Button 
+              key="block" 
+              danger 
+              icon={<LockOutlined />}
+              onClick={() => handleToggleUserStatus(selectedUser, false)}
+            >
+              Block User
+            </Button>
+          ) : (
+            <Button 
+              key="unblock" 
+              type="primary" 
+              icon={<UnlockOutlined />}
+              onClick={() => handleToggleUserStatus(selectedUser, true)}
+            >
+              Unblock User
+            </Button>
+          )
         ]}
         width={600}
       >
         {selectedUser && (
           <div className="space-y-4">
             <div className="p-4 bg-gray-50 rounded-lg">
-              <p><strong>Name:</strong> {selectedUser.name}</p>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
-              <p><strong>Applied Role:</strong> {selectedUser.role}</p>
-              <p><strong>Registration Date:</strong> {dayjs(selectedUser.registeredAt).format('MMMM D, YYYY')}</p>
-            </div>
-            
-            <div>
-              <h4 className="font-medium mb-2">Identity Verification:</h4>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-semibold">{selectedUser.name}</h3>
+                  <p className="text-gray-500">{selectedUser.email}</p>
+                </div>
+                <Tag color={selectedUser.status === 'active' ? 'success' : 'error'}>
+                  {selectedUser.status.toUpperCase()}
+                </Tag>
+              </div>
+              
+              <Divider />
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border rounded-lg p-2">
-                  <p className="text-sm font-medium mb-1">NIC Front</p>
-                  <img 
-                    src="https://via.placeholder.com/300x200?text=NIC+Front" 
-                    alt="NIC Front"
-                    className="w-full h-auto rounded"
-                  />
+                <div>
+                  <p className="text-sm text-gray-500">Role</p>
+                  <p className="font-medium">
+                    <Tag color={selectedUser.role === 'seller' ? 'purple' : 'blue'}>
+                      {selectedUser.role.toUpperCase()}
+                    </Tag>
+                  </p>
                 </div>
-                <div className="border rounded-lg p-2">
-                  <p className="text-sm font-medium mb-1">NIC Back</p>
-                  <img 
-                    src="https://via.placeholder.com/300x200?text=NIC+Back" 
-                    alt="NIC Back"
-                    className="w-full h-auto rounded"
-                  />
+                <div>
+                  <p className="text-sm text-gray-500">Last Active</p>
+                  <p className="font-medium">{dayjs(selectedUser.lastActive).format('MMMM D, YYYY')}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Listings</p>
+                  <p className="font-medium">{selectedUser.listings}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Transactions</p>
+                  <p className="font-medium">{selectedUser.transactions}</p>
                 </div>
               </div>
             </div>
             
-            <div>
-              <h4 className="font-medium mb-2">Face Verification:</h4>
-              <div className="border rounded-lg p-2">
-                <img 
-                  src="https://via.placeholder.com/300x300?text=Face+Verification" 
-                  alt="Face Verification"
-                  className="w-40 h-40 object-cover rounded mx-auto"
-                />
-              </div>
-            </div>
+            {selectedUser.status === 'blocked' && (
+              <Alert
+                message="User Account Blocked"
+                description="This user's account is currently blocked and they cannot access the platform."
+                type="error"
+                showIcon
+              />
+            )}
           </div>
         )}
       </Modal>
