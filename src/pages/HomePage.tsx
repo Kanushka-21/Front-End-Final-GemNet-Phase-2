@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Layout, Row, Col, Card, Button, Badge, Rate, Tag, Typography, 
+  Layout as AntLayout, Row, Col, Card, Button, Badge, Rate, Tag, Typography, 
   Space, Modal, Input, InputNumber, Statistic, Avatar, Carousel, Drawer
 } from 'antd';
 import { 
@@ -13,8 +13,9 @@ import {
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { DetailedGemstone } from '@/types';
+import Header from '@/components/layout/Header';
 
-const { Header, Content } = Layout;
+const { Content } = AntLayout;
 const { Title, Text, Paragraph } = Typography;
 const { Meta } = Card;
 
@@ -149,107 +150,10 @@ const HomePage: React.FC = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
-
   return (
-    <Layout className="min-h-screen bg-gray-50">
+    <AntLayout className="min-h-screen bg-gray-50">
       {/* Modern Header */}
-      <Header className="bg-white shadow-sm border-b border-gray-100 px-4 lg:px-12 h-auto py-2 md:py-0">
-        <div className="flex justify-between items-center h-full max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-3"
-          >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <ShopOutlined className="text-white text-xl" />
-            </div>
-            <Title level={3} className="!mb-0 !text-gray-800 font-bold text-lg md:text-xl">
-              GemNet
-            </Title>
-          </motion.div>
-
-          <Space size="large" className="hidden md:flex">
-            <Button type="text" className="text-gray-600 hover:text-blue-500 font-medium">
-              Browse Gems
-            </Button>
-            <Button type="text" className="text-gray-600 hover:text-blue-500 font-medium">
-              How It Works
-            </Button>
-            <Button type="text" className="text-gray-600 hover:text-blue-500 font-medium">
-              About
-            </Button>
-          </Space>
-
-          <div className="flex items-center">
-            <div className="hidden md:flex items-center space-x-3">
-              <Button 
-                icon={<LoginOutlined />} 
-                className="border-blue-500 text-blue-500 hover:bg-blue-50"
-                onClick={() => navigate('/login')}
-              >
-                Sign In
-              </Button>
-              <Button 
-                type="primary" 
-                icon={<UserAddOutlined />}
-                className="bg-blue-500 hover:bg-blue-600 border-none shadow-lg"
-                onClick={() => navigate('/register')}
-              >
-                Get Started
-              </Button>
-            </div>
-            <Button 
-              icon={<MenuOutlined />} 
-              className="flex md:hidden ml-4 border-blue-500 text-blue-500"
-              onClick={() => setMobileMenuOpen(true)}
-            />
-          </div>
-        </div>
-      </Header>
-
-      {/* Mobile Menu Drawer */}
-      <Drawer
-        title="Menu"
-        placement="right"
-        closable={true}
-        onClose={() => setMobileMenuOpen(false)}
-        open={mobileMenuOpen}
-        width={280}
-      >
-        <div className="flex flex-col space-y-6">
-          <Button type="text" block className="text-left h-auto py-3 text-gray-600 hover:text-blue-500 font-medium text-lg">
-            Browse Gems
-          </Button>
-          <Button type="text" block className="text-left h-auto py-3 text-gray-600 hover:text-blue-500 font-medium text-lg">
-            How It Works
-          </Button>
-          <Button type="text" block className="text-left h-auto py-3 text-gray-600 hover:text-blue-500 font-medium text-lg">
-            About
-          </Button>
-          <div className="border-t border-gray-200 pt-6 flex flex-col space-y-4">
-            <Button 
-              icon={<LoginOutlined />} 
-              size="large"
-              block
-              className="border-blue-500 text-blue-500 hover:bg-blue-50"
-              onClick={() => navigate('/login')}
-            >
-              Sign In
-            </Button>
-            <Button 
-              type="primary" 
-              icon={<UserAddOutlined />}
-              size="large"
-              block
-              className="bg-blue-500 hover:bg-blue-600 border-none"
-              onClick={() => navigate('/register')}
-            >
-              Get Started
-            </Button>
-          </div>
-        </div>
-      </Drawer>
-
+      <Header transparent={false} />
       <Content>
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
@@ -872,14 +776,13 @@ const HomePage: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  </Space>
-                </div>
+                  </Space>                </div>
               </Col>
             </Row>
           </div>
         )}
       </Modal>
-    </Layout>
+    </AntLayout>
   );
 };
 

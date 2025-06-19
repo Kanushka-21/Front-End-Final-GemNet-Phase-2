@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Layout, 
+  Layout as AntLayout, 
   Row, 
   Col, 
   Card, 
@@ -29,10 +29,11 @@ import {
   CloseOutlined
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
+import Header from '@/components/layout/Header';
 
 import { DetailedGemstone } from '@/types';
 
-const { Content } = Layout;
+const { Content } = AntLayout;
 const { Title, Text, Paragraph } = Typography;
 const { Meta } = Card;
 const { Option } = Select;
@@ -334,11 +335,10 @@ const MarketplacePage: React.FC = () => {
         />
       </Card>
     </motion.div>
-  );
-
-  return (
-    <Layout style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      {/* Header */}      <Affix offsetTop={0}>
+  );  return (
+    <AntLayout style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      {/* Header */}
+      <Header transparent={false} /><Affix offsetTop={0}>
         <div style={{ 
           background: '#fff', 
           padding: '16px 24px',
@@ -398,7 +398,7 @@ const MarketplacePage: React.FC = () => {
             </Col>
           </Row>
         </div>
-      </Affix>      <Layout style={{ width: '100%' }}>
+      </Affix>      <AntLayout style={{ width: '100%' }}>
         <Content style={{ padding: '24px', width: '100%' }} className="marketplace-content">
           {/* Results Summary */}
           <div style={{ marginBottom: 24 }}>
@@ -468,12 +468,11 @@ const MarketplacePage: React.FC = () => {
               <Paragraph type="secondary">
                 Try adjusting your search criteria or filters
               </Paragraph>
-            </div>
-          )}
+            </div>          )}
         </Content>
-      </Layout>
+      </AntLayout>
 
-      {/* Mobile Filter Drawer */}      <Drawer
+      {/* Mobile Filter Drawer */}<Drawer
         title="Filters"
         placement="left"
         onClose={() => setIsFilterDrawerOpen(false)}
@@ -661,11 +660,10 @@ const MarketplacePage: React.FC = () => {
           }
           
           .gemstone-card .ant-space {
-            flex-wrap: wrap;
-          }
+            flex-wrap: wrap;          }
         }
       `}</style>
-    </Layout>
+    </AntLayout>
   );
 };
 
