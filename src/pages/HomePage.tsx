@@ -209,14 +209,13 @@ const HomePage: React.FC = () => {
               autoplaySpeed={6000}
             >
               {/* Slide 1: Main intro */}
-              <div>
-                <Row gutter={[24, 32]} align="middle" className="min-h-[480px]">
-                  <Col xs={24} lg={12}>
+              <div>                <Row gutter={[24, 32]} align="middle" className="min-h-[480px]">
+                  <Col xs={24}>
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.8 }}
-                      className="space-y-6 md:space-y-8 text-center md:text-left"
+                      className="space-y-6 md:space-y-8 text-center"
                     >
                       <div className="inline-block px-3 py-1 bg-blue-500/30 backdrop-blur-sm rounded-full mb-2">
                         <Text className="text-yellow-300 text-xs md:text-sm font-medium">Sri Lanka's Premier Gemstone Marketplace</Text>
@@ -225,11 +224,11 @@ const HomePage: React.FC = () => {
                         Discover Authentic
                         <span className="block text-yellow-400">Sri Lankan Gems</span>
                       </Title>
-                      <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed max-w-xl">
+                      <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed max-w-xl mx-auto">
                         Join the most trusted digital marketplace for authentic gemstones. 
                         Connect with verified sellers and discover rare gems with confidence.
                       </Paragraph>
-                      <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center md:justify-start pt-4">
+                      <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center pt-4">
                         <Button 
                           size="large" 
                           className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12 w-full sm:w-auto"
@@ -246,26 +245,6 @@ const HomePage: React.FC = () => {
                           Join GemNet
                         </Button>
                       </Space>
-                    </motion.div>
-                  </Col>
-                  <Col xs={24} lg={12}>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.8, delay: 0.2 }}
-                      className="relative mx-auto max-w-sm md:max-w-none"
-                    >
-                      <div className="relative z-10 rounded-2xl overflow-hidden shadow-[0_15px_50px_-15px_rgba(0,0,0,0.3)]">
-                        <img 
-                          src="https://images.unsplash.com/photo-1612098662204-e95c76707dec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                          alt="Premium Gemstones"
-                          className="w-full h-auto rounded-2xl object-cover transform transition hover:scale-105 duration-700"
-                        />                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                          <Badge status="success" className="gem-badge" text={<span className="text-white">Certified Authentic</span>} />
-                        </div>
-                      </div>
-                      <div className="absolute -top-4 -right-4 w-24 md:w-32 h-24 md:h-32 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
-                      <div className="absolute -bottom-6 -left-6 w-16 md:w-24 h-16 md:h-24 bg-white rounded-full opacity-20 animate-pulse delay-1000"></div>
                     </motion.div>
                   </Col>
                 </Row>
@@ -327,19 +306,18 @@ const HomePage: React.FC = () => {
                           </div>
                         </div>
                         <div className="bg-blue-950/40 rounded-lg p-4 mb-4">
-                          <Title level={5} className="!text-blue-200 !text-sm !mb-3">Price Prediction</Title>
-                          <Row gutter={16}>
+                          <Title level={5} className="!text-blue-200 !text-sm !mb-3">Price Prediction</Title>                          <Row gutter={16}>
                             <Col span={12}>
                               <Statistic 
                                 title={<span className="text-blue-300 text-xs">Minimum</span>}
-                                value="$14,500"
+                                value="LKR 4,785,000"
                                 valueStyle={{ color: '#7dd3fc', fontSize: '1rem' }}
                               />
                             </Col>
                             <Col span={12}>
                               <Statistic 
                                 title={<span className="text-blue-300 text-xs">Maximum</span>}
-                                value="$16,800"
+                                value="LKR 5,544,000"
                                 valueStyle={{ color: '#7dd3fc', fontSize: '1rem' }}
                               />
                             </Col>
