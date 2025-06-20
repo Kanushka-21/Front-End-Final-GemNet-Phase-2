@@ -178,64 +178,260 @@ const HomePage: React.FC = () => {
     <AntLayout className="min-h-screen bg-gray-50">
       {/* Modern Header */}
       <Header transparent={false} />
-      <Content>
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 md:py-20 lg:py-32">
-            <Row gutter={[24, 32]} align="middle">
-              <Col xs={24} lg={12}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="space-y-4 md:space-y-6 text-center md:text-left"
-                >
-                  <Title level={1} className="!text-white !text-3xl sm:!text-4xl lg:!text-6xl !font-bold !leading-tight">
-                    Discover Authentic
-                    <span className="block text-yellow-400">Sri Lankan Gems</span>
-                  </Title>
-                  <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed">
-                    Join the most trusted digital marketplace for authentic gemstones. 
-                    Connect with verified sellers and discover rare gems with confidence.
-                  </Paragraph>
-                  <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center md:justify-start">
-                    <Button 
-                      size="large" 
-                      className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12 w-full sm:w-auto"
-                      onClick={() => navigate('/marketplace')}
+      <Content>        {/* Enhanced Hero Section with Carousel */}
+        <section className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 text-white overflow-hidden min-h-[600px] lg:min-h-[700px]">
+          <div className="absolute inset-0 bg-black/20"></div>
+          {/* Animated background patterns */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-yellow-400 rounded-full opacity-10 animate-pulse"></div>
+            <div className="absolute top-1/3 -left-20 w-48 h-48 bg-blue-300 rounded-full opacity-10 animate-pulse delay-1000"></div>
+            <div className="absolute -bottom-20 right-1/3 w-56 h-56 bg-white rounded-full opacity-10 animate-pulse delay-500"></div>
+            <div className="absolute hidden md:block top-1/4 right-1/4 w-32 h-32 bg-blue-400 rounded-full opacity-10 animate-pulse delay-1500"></div>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 15,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+              className="absolute -left-10 -bottom-10 w-64 h-64 bg-gradient-to-br from-yellow-400/20 to-yellow-500/5 rounded-full blur-xl"
+            />
+          </div>
+
+          {/* Hero Content */}
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-16 md:py-24 lg:py-36">
+            <Carousel 
+              autoplay 
+              effect="fade"
+              dots={{ className: "custom-dots" }}
+              className="hero-carousel"
+              autoplaySpeed={6000}
+            >
+              {/* Slide 1: Main intro */}
+              <div>
+                <Row gutter={[24, 32]} align="middle" className="min-h-[480px]">
+                  <Col xs={24} lg={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8 }}
+                      className="space-y-6 md:space-y-8 text-center md:text-left"
                     >
-                      Explore Marketplace
-                    </Button>
-                    <Button 
-                      size="large" 
-                      ghost 
-                      className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 h-12 w-full sm:w-auto"
+                      <div className="inline-block px-3 py-1 bg-blue-500/30 backdrop-blur-sm rounded-full mb-2">
+                        <Text className="text-yellow-300 text-xs md:text-sm font-medium">Sri Lanka's Premier Gemstone Marketplace</Text>
+                      </div>
+                      <Title level={1} className="!text-white !text-3xl sm:!text-4xl lg:!text-6xl !font-bold !leading-tight">
+                        Discover Authentic
+                        <span className="block text-yellow-400">Sri Lankan Gems</span>
+                      </Title>
+                      <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed max-w-xl">
+                        Join the most trusted digital marketplace for authentic gemstones. 
+                        Connect with verified sellers and discover rare gems with confidence.
+                      </Paragraph>
+                      <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center md:justify-start pt-4">
+                        <Button 
+                          size="large" 
+                          className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12 w-full sm:w-auto"
+                          onClick={() => navigate('/marketplace')}
+                        >
+                          Explore Marketplace
+                        </Button>
+                        <Button 
+                          size="large" 
+                          ghost 
+                          className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 h-12 w-full sm:w-auto"
+                          onClick={() => navigate('/register')}
+                        >
+                          Join GemNet
+                        </Button>
+                      </Space>
+                    </motion.div>
+                  </Col>
+                  <Col xs={24} lg={12}>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="relative mx-auto max-w-sm md:max-w-none"
                     >
-                      Learn More
-                    </Button>
-                  </Space>
-                </motion.div>
-              </Col>
-              <Col xs={24} lg={12}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="relative mx-auto max-w-sm md:max-w-none"
-                >
-                  <div className="relative z-10">
-                    <img 
-                      src="https://images.unsplash.com/photo-1612098662204-e95c76707dec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                      alt="Premium Gemstones"
-                      className="w-full h-auto rounded-2xl shadow-2xl"
-                    />
-                  </div>
-                  <div className="absolute -top-4 -right-4 w-24 md:w-32 h-24 md:h-32 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
-                  <div className="absolute -bottom-6 -left-6 w-16 md:w-24 h-16 md:h-24 bg-white rounded-full opacity-20 animate-pulse delay-1000"></div>
-                </motion.div>
-              </Col>
-            </Row>
+                      <div className="relative z-10 rounded-2xl overflow-hidden shadow-[0_15px_50px_-15px_rgba(0,0,0,0.3)]">
+                        <img 
+                          src="https://images.unsplash.com/photo-1612098662204-e95c76707dec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                          alt="Premium Gemstones"
+                          className="w-full h-auto rounded-2xl object-cover transform transition hover:scale-105 duration-700"
+                        />                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                          <Badge status="success" className="gem-badge" text={<span className="text-white">Certified Authentic</span>} />
+                        </div>
+                      </div>
+                      <div className="absolute -top-4 -right-4 w-24 md:w-32 h-24 md:h-32 bg-yellow-400 rounded-full opacity-20 animate-pulse"></div>
+                      <div className="absolute -bottom-6 -left-6 w-16 md:w-24 h-16 md:h-24 bg-white rounded-full opacity-20 animate-pulse delay-1000"></div>
+                    </motion.div>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Slide 2: Price Prediction */}
+              <div>
+                <Row gutter={[24, 32]} align="middle" className="min-h-[480px]">
+                  <Col xs={24} lg={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8 }}
+                      className="space-y-6 md:space-y-8 text-center md:text-left"
+                    >
+                      <div className="inline-block px-3 py-1 bg-blue-500/30 backdrop-blur-sm rounded-full mb-2">
+                        <Text className="text-yellow-300 text-xs md:text-sm font-medium">AI-Powered Price Estimation</Text>
+                      </div>
+                      <Title level={1} className="!text-white !text-3xl sm:!text-4xl lg:!text-6xl !font-bold !leading-tight">
+                        Smart Pricing
+                        <span className="block text-yellow-400">For Fair Trading</span>
+                      </Title>
+                      <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed max-w-xl">
+                        Our machine learning technology analyzes gem attributes to provide estimated price ranges, 
+                        helping both buyers and sellers make informed decisions.
+                      </Paragraph>
+                      <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center md:justify-start pt-4">
+                        <Button 
+                          size="large" 
+                          className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12 w-full sm:w-auto"
+                          onClick={() => navigate('/marketplace')}
+                        >
+                          Explore Marketplace
+                        </Button>
+                      </Space>
+                    </motion.div>
+                  </Col>
+                  <Col xs={24} lg={12}>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="relative mx-auto max-w-sm md:max-w-none"
+                    >
+                      <div className="relative z-10 bg-gradient-to-br from-blue-900/80 to-blue-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-[0_15px_50px_-15px_rgba(0,0,0,0.3)]">
+                        <div className="flex items-start mb-6">
+                          <div className="w-1/3 pr-2">
+                            <img 
+                              src="https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                              alt="Sapphire"
+                              className="w-full h-auto rounded-lg"
+                            />
+                          </div>
+                          <div className="w-2/3 pl-2">
+                            <Title level={4} className="!text-white !text-base md:!text-lg !mb-1">Blue Sapphire</Title>
+                            <Text className="text-blue-200 text-xs md:text-sm block mb-2">5.2 Carats, Ceylon Origin</Text>
+                            <Tag color="blue">Corundum</Tag>
+                            <Tag color="green">Certified</Tag>
+                          </div>
+                        </div>
+                        <div className="bg-blue-950/40 rounded-lg p-4 mb-4">
+                          <Title level={5} className="!text-blue-200 !text-sm !mb-3">Price Prediction</Title>
+                          <Row gutter={16}>
+                            <Col span={12}>
+                              <Statistic 
+                                title={<span className="text-blue-300 text-xs">Minimum</span>}
+                                value="$14,500"
+                                valueStyle={{ color: '#7dd3fc', fontSize: '1rem' }}
+                              />
+                            </Col>
+                            <Col span={12}>
+                              <Statistic 
+                                title={<span className="text-blue-300 text-xs">Maximum</span>}
+                                value="$16,800"
+                                valueStyle={{ color: '#7dd3fc', fontSize: '1rem' }}
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <Badge status="processing" text={<span className="text-yellow-300">AI Generated Estimate</span>} />
+                          <Text className="text-blue-200 text-xs md:text-sm">Confidence: High</Text>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* Slide 3: Verification Process */}
+              <div>
+                <Row gutter={[24, 32]} align="middle" className="min-h-[480px]">
+                  <Col xs={24} lg={12}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8 }}
+                      className="space-y-6 md:space-y-8 text-center md:text-left"
+                    >
+                      <div className="inline-block px-3 py-1 bg-blue-500/30 backdrop-blur-sm rounded-full mb-2">
+                        <Text className="text-yellow-300 text-xs md:text-sm font-medium">Trust & Verification</Text>
+                      </div>
+                      <Title level={1} className="!text-white !text-3xl sm:!text-4xl lg:!text-6xl !font-bold !leading-tight">
+                        Safety First
+                        <span className="block text-yellow-400">Verified Users Only</span>
+                      </Title>
+                      <Paragraph className="!text-blue-100 !text-base sm:!text-lg lg:!text-xl !leading-relaxed max-w-xl">
+                        GemNet verifies all buyers and sellers through identity verification, 
+                        creating a secure environment for gemstone trading.
+                      </Paragraph>
+                      <Space size="middle" className="flex flex-col sm:flex-row w-full sm:w-auto justify-center md:justify-start pt-4">
+                        <Button 
+                          size="large" 
+                          className="bg-yellow-500 border-yellow-500 text-gray-900 hover:bg-yellow-400 font-semibold px-8 h-12 w-full sm:w-auto"
+                          onClick={() => navigate('/register')}
+                        >
+                          Get Verified Today
+                        </Button>
+                      </Space>
+                    </motion.div>
+                  </Col>
+                  <Col xs={24} lg={12}>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="relative mx-auto max-w-sm md:max-w-none"
+                    >
+                      <div className="relative z-10 rounded-2xl overflow-hidden shadow-[0_15px_50px_-15px_rgba(0,0,0,0.3)]">
+                        <div className="bg-gradient-to-br from-blue-900/90 to-blue-800/90 backdrop-blur-sm p-6">
+                          <div className="flex flex-col space-y-4">
+                            <div className="bg-blue-950/50 rounded-lg p-4 flex items-center">
+                              <div className="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center mr-4">
+                                <CheckCircleOutlined className="text-white text-lg" />
+                              </div>
+                              <div>
+                                <Text className="text-white font-medium block">Identity Verification</Text>
+                                <Text className="text-blue-200 text-xs">Government ID validation & facial recognition</Text>
+                              </div>
+                            </div>
+                            <div className="bg-blue-950/50 rounded-lg p-4 flex items-center">
+                              <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center mr-4">
+                                <SafetyOutlined className="text-white text-lg" />
+                              </div>
+                              <div>
+                                <Text className="text-white font-medium block">Secure Transactions</Text>
+                                <Text className="text-blue-200 text-xs">Escrow service & buyer protection</Text>
+                              </div>
+                            </div>
+                            <div className="bg-blue-950/50 rounded-lg p-4 flex items-center">
+                              <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+                                <StarFilled className="text-white text-lg" />
+                              </div>
+                              <div>
+                                <Text className="text-white font-medium block">Seller Ratings</Text>
+                                <Text className="text-blue-200 text-xs">Transparent feedback system</Text>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </Col>
+                </Row>
+              </div>
+            </Carousel>
           </div>
         </section>
 
