@@ -13,6 +13,16 @@ import dayjs from 'dayjs';
 
 const { TabPane } = Tabs;
 
+// Helper function to format price in LKR
+const formatLKR = (price: number) => {
+  return new Intl.NumberFormat('si-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
 // Simple mock data
 const mockListings = [
   { 
@@ -275,7 +285,7 @@ const SellerDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Revenue</p>
-                <h3 className="text-2xl font-bold text-gray-800">${stats.totalRevenue}</h3>
+                <h3 className="text-2xl font-bold text-gray-800">{formatLKR(stats.totalRevenue)}</h3>
               </div>
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100">
                 <DollarOutlined style={{ fontSize: '24px', color: '#10b981' }} />
@@ -359,7 +369,7 @@ const SellerDashboard: React.FC = () => {
                   title: 'Price',
                   dataIndex: 'price',
                   key: 'price',
-                  render: price => `$${price.toLocaleString()}`
+                  render: price => formatLKR(price)
                 },
                 {
                   title: 'Status',
@@ -463,7 +473,7 @@ const SellerDashboard: React.FC = () => {
                   title: 'Bid Amount',
                   dataIndex: 'amount',
                   key: 'amount',
-                  render: amount => `$${amount.toLocaleString()}`
+                  render: amount => formatLKR(amount)
                 },
                 {
                   title: 'Date',

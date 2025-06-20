@@ -1,130 +1,193 @@
 import React, { useState } from 'react';
 import { 
-  Card, Row, Col, Table, Button, Tag, 
-  Tabs, Progress, Divider, Space,
-  Modal, Tooltip, Badge, Alert, Input,
-  Switch, message
+  Layout, Menu, Card, Row, Col, Statistic, Table, 
+  Button, Tag, Tabs, List, Rate, Modal,
+  Form, Input, Timeline, message, Alert, Space, Badge, Avatar,
+  Switch, Progress, Divider
 } from 'antd';
-import { 
-  UserOutlined, CheckCircleOutlined, ClockCircleOutlined,
-  FileTextOutlined, DollarOutlined, EyeOutlined,
-  CheckOutlined, CloseOutlined, ExclamationCircleOutlined,
-  LockOutlined, UnlockOutlined
+import {
+  UserOutlined, AppstoreOutlined, ShopOutlined, DollarOutlined,
+  BellOutlined, MenuOutlined, CloseOutlined, CheckOutlined, 
+  StarOutlined, ExclamationCircleOutlined, EyeOutlined,
+  FileTextOutlined, LockOutlined, UnlockOutlined, CheckCircleOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { Line, Bar, Pie } from '@ant-design/charts';
 
+const { Header, Content, Sider } = Layout;
+const { SubMenu } = Menu;
 const { TabPane } = Tabs;
 const { confirm } = Modal;
+const { TextArea } = Input;
 
-// Mock data
-const pendingUsers = [
-  { id: '1', name: 'John Smith', email: 'john.smith@example.com', role: 'seller', registeredAt: '2025-05-15', status: 'pending' },
-  { id: '2', name: 'Emily Wilson', email: 'emily.wilson@example.com', role: 'seller', registeredAt: '2025-05-28', status: 'pending' },
-  { id: '3', name: 'Michael Brown', email: 'michael.brown@example.com', role: 'seller', registeredAt: '2025-06-10', status: 'pending' },
+// Helper function to format price in LKR
+const formatLKR = (price: number) => {
+  return new Intl.NumberFormat('si-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
+// Mock data for admin dashboard
+const mockUsers = [
+  { 
+    id: '1', 
+    name: 'John Smith', 
+    email: 'john@example.com', 
+    role: 'buyer', 
+    status: 'active', 
+    joinDate: '2025-01-15',
+    lastActive: '2025-06-10',
+    listings: 0,
+    transactions: 8
+  },
+  { 
+    id: '2', 
+    name: 'Mary Johnson', 
+    email: 'mary@example.com', 
+    role: 'seller', 
+    status: 'active', 
+    joinDate: '2025-02-20',
+    lastActive: '2025-06-12',
+    listings: 12,
+    transactions: 10
+  },
+  { 
+    id: '3', 
+    name: 'Robert Brown', 
+    email: 'robert@example.com', 
+    role: 'buyer', 
+    status: 'blocked', 
+    joinDate: '2025-03-10',
+    lastActive: '2025-05-28',
+    listings: 0,
+    transactions: 3
+  }
 ];
 
-const pendingListings = [
+const pendingUsers = [
+  { 
+    id: '4', 
+    name: 'Alice Williams', 
+    email: 'alice@example.com', 
+    role: 'seller', 
+    status: 'pending', 
+    joinDate: '2025-06-05',
+    lastActive: '2025-06-05',
+    listings: 1,
+    transactions: 0
+  },
+  { 
+    id: '5', 
+    name: 'David Miller', 
+    email: 'david@example.com', 
+    role: 'buyer', 
+    status: 'pending', 
+    joinDate: '2025-06-10',
+    lastActive: '2025-06-10',
+    listings: 0,
+    transactions: 0
+  }
+];
+
+const mockListings = [
   { 
     id: '1', 
     name: 'Blue Sapphire', 
     image: 'https://via.placeholder.com/100', 
     price: 2500, 
-    seller: 'James Wilson', 
-    submittedAt: '2025-06-12', 
-    status: 'pending' 
+    seller: 'Mary Johnson',
+    status: 'active', 
+    date: '2025-05-12',
+    submittedAt: '2025-05-12'
   },
   { 
     id: '2', 
-    name: 'Ruby Ring', 
+    name: 'Ruby Gemstone', 
     image: 'https://via.placeholder.com/100', 
     price: 4200, 
-    seller: 'Sarah Johnson', 
-    submittedAt: '2025-06-14', 
-    status: 'pending' 
+    seller: 'James Wilson',
+    status: 'active', 
+    date: '2025-05-20',
+    submittedAt: '2025-05-20'
+  }
+];
+
+const pendingListings = [
+  { 
+    id: '3', 
+    name: 'Emerald Crystal', 
+    image: 'https://via.placeholder.com/100', 
+    price: 3150, 
+    seller: 'Alice Williams',
+    status: 'pending', 
+    date: '2025-06-08'
+  }
+];
+
+const mockTransactions = [
+  { 
+    id: '1',
+    gemstone: 'Blue Sapphire',
+    image: 'https://via.placeholder.com/100',
+    seller: 'Mary Johnson',
+    buyer: 'John Smith',
+    amount: 3200,
+    date: '2025-05-25',
+    status: 'completed'
+  },
+  { 
+    id: '2',
+    gemstone: 'Ruby Gemstone',
+    image: 'https://via.placeholder.com/100',
+    seller: 'James Wilson',
+    buyer: 'Sarah Davis',
+    amount: 2800,
+    date: '2025-06-02',
+    status: 'completed'
   }
 ];
 
 const pendingMeetings = [
   { 
-    id: '1', 
-    gemstone: 'Blue Sapphire', 
+    id: '1',
+    gemstone: 'Emerald Crystal',
     image: 'https://via.placeholder.com/100',
-    buyer: 'Robert Lee',
-    seller: 'James Wilson',
-    requestedDate: '2025-06-25',
+    buyer: 'David Miller',
+    seller: 'Alice Williams',
+    date: '2025-06-15',
+    time: '10:00 AM',
+    requestedDate: '2025-06-15',
     requestedTime: '10:00 AM',
-    location: 'GemNet Office, New York',
-    status: 'pending'
-  },
-  { 
-    id: '2', 
-    gemstone: 'Diamond Necklace', 
-    image: 'https://via.placeholder.com/100',
-    buyer: 'Jennifer Smith',
-    seller: 'Michael Brown',
-    requestedDate: '2025-06-28',
-    requestedTime: '2:30 PM',
-    location: 'GemNet Office, New York',
+    location: 'GemNet Office',
     status: 'pending'
   }
 ];
 
 const recentTransactions = [
   { 
-    id: '1', 
-    gemstone: 'Ruby', 
+    id: '1',
+    gemstone: 'Blue Sapphire',
     image: 'https://via.placeholder.com/100',
-    buyer: 'Alice Smith',
-    seller: 'James Wilson',
+    seller: 'Mary Johnson',
+    buyer: 'John Smith',
     amount: 3200,
-    date: '2025-06-10',
-    status: 'completed',
-    commission: 320
+    commission: 320,
+    date: '2025-05-25',
+    status: 'completed'
   },
   { 
-    id: '2', 
-    gemstone: 'Emerald', 
+    id: '2',
+    gemstone: 'Ruby Gemstone',
     image: 'https://via.placeholder.com/100',
-    buyer: 'Robert Johnson',
-    seller: 'Sarah Johnson',
+    seller: 'James Wilson',
+    buyer: 'Sarah Davis',
     amount: 2800,
-    date: '2025-06-05',
-    status: 'completed',
-    commission: 280
-  }
-];
-
-// Mock data for users
-const mockUsers = [
-  { 
-    id: '1', 
-    name: 'John Smith', 
-    email: 'john.smith@example.com', 
-    role: 'seller',
-    lastActive: '2025-06-19',
-    status: 'active',
-    listings: 12,
-    transactions: 8
-  },
-  { 
-    id: '2', 
-    name: 'Emily Wilson', 
-    email: 'emily.wilson@example.com', 
-    role: 'buyer',
-    lastActive: '2025-06-18',
-    status: 'blocked',
-    listings: 0,
-    transactions: 3
-  },
-  { 
-    id: '3', 
-    name: 'Michael Brown', 
-    email: 'michael.brown@example.com', 
-    role: 'seller',
-    lastActive: '2025-06-20',
-    status: 'active',
-    listings: 5,
-    transactions: 2
+    commission: 280,
+    date: '2025-06-02',
+    status: 'completed'
   }
 ];
 
@@ -144,10 +207,8 @@ const AdminDashboard: React.FC = () => {
     totalRevenue: 48750,
     commissionRate: 10,
     totalCommission: 4875
-  };
-    // Function to toggle user status (block/unblock)
+  };    // Function to toggle user status (block/unblock)
   const handleToggleUserStatus = (user: any, active: boolean) => {
-    const newStatus = active ? 'active' : 'blocked';
     const action = active ? 'unblock' : 'block';
     
     confirm({
@@ -259,8 +320,7 @@ const AdminDashboard: React.FC = () => {
               message={`${stats.pendingApprovals} pending approvals require your attention`}
               type="warning"
               showIcon
-              action={
-                <Button size="small" type="ghost">
+              action={                <Button size="small" type="default">
                   View All
                 </Button>
               }
@@ -304,7 +364,7 @@ const AdminDashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Total Revenue</p>
-                <h3 className="text-2xl font-bold text-gray-800">${stats.totalRevenue.toLocaleString()}</h3>
+                <h3 className="text-2xl font-bold text-gray-800">{formatLKR(stats.totalRevenue)}</h3>
               </div>
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100">
                 <DollarOutlined style={{ fontSize: '24px', color: '#10b981' }} />
@@ -316,7 +376,7 @@ const AdminDashboard: React.FC = () => {
                   System Commission ({stats.commissionRate}%)
                 </span>
                 <span className="text-xs font-medium text-green-600">
-                  ${stats.totalCommission.toLocaleString()}
+                  {formatLKR(stats.totalCommission)}
                 </span>
               </div>
             </div>
@@ -436,10 +496,8 @@ const AdminDashboard: React.FC = () => {
               <Divider />
               
               <div>
-                <h3 className="text-lg font-medium mb-4">Pending Gemstone Listings</h3>
-                <Table 
+                <h3 className="text-lg font-medium mb-4">Pending Gemstone Listings</h3>                <Table 
                   dataSource={pendingListings}
-                  responsive
                   scroll={{ x: 'max-content' }}
                   columns={[
                     {
@@ -460,7 +518,7 @@ const AdminDashboard: React.FC = () => {
                       title: 'Price',
                       dataIndex: 'price',
                       key: 'price',
-                      render: price => `$${price.toLocaleString()}`
+                      render: price => formatLKR(price)
                     },
                     {
                       title: 'Seller',
@@ -511,10 +569,8 @@ const AdminDashboard: React.FC = () => {
               <Divider />
               
               <div>
-                <h3 className="text-lg font-medium mb-4">Meeting Requests</h3>
-                <Table 
+                <h3 className="text-lg font-medium mb-4">Meeting Requests</h3>                <Table 
                   dataSource={pendingMeetings}
-                  responsive
                   scroll={{ x: 'max-content' }}
                   columns={[
                     {
@@ -586,10 +642,8 @@ const AdminDashboard: React.FC = () => {
           <TabPane 
             tab={<span className="flex items-center px-1"><DollarOutlined className="mr-2" /> Recent Transactions</span>} 
             key="transactions"
-          >
-            <Table 
+          >            <Table 
               dataSource={recentTransactions}
-              responsive
               scroll={{ x: 'max-content' }}
               columns={[
                 {
@@ -620,13 +674,12 @@ const AdminDashboard: React.FC = () => {
                   title: 'Amount',
                   dataIndex: 'amount',
                   key: 'amount',
-                  render: amount => `$${amount.toLocaleString()}`
+                  render: amount => formatLKR(amount)
                 },
-                {
-                  title: 'Commission',
+                {                  title: 'Commission',
                   dataIndex: 'commission',
                   key: 'commission',
-                  render: commission => `$${commission.toLocaleString()}`
+                  render: commission => formatLKR(commission)
                 },
                 {
                   title: 'Date',
@@ -769,9 +822,8 @@ const AdminDashboard: React.FC = () => {
                 <img src="https://via.placeholder.com/100" alt="thumbnail" className="rounded" />
               </div>
             </div>
-            <div>
-              <h2 className="text-2xl font-bold mb-2">{selectedListing.name}</h2>
-              <p className="text-xl text-green-600 font-medium mb-4">${selectedListing.price.toLocaleString()}</p>
+            <div>              <h2 className="text-2xl font-bold mb-2">{selectedListing.name}</h2>
+              <p className="text-xl text-green-600 font-medium mb-4">{formatLKR(selectedListing.price)}</p>
               
               <div className="space-y-3">
                 <div>
