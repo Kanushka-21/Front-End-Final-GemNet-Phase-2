@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Layout as AntLayout, Row, Col, Card, Button, Badge, Rate, Tag, Typography, 
-  Space, Modal, Input, InputNumber, Statistic, Avatar, Carousel, Drawer
+  Space, Input, InputNumber, Statistic, Avatar, Carousel, Drawer
 } from 'antd';
 import { 
   EyeOutlined, HeartOutlined, CheckCircleOutlined, UserOutlined, 
@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { DetailedGemstone } from '@/types';
 import Header from '@/components/layout/Header';
 import GemstoneCard from '@/components/ui/GemstoneCard';
+import GemstoneDetailModal from '@/components/home/GemstoneDetailModal';
 
 const { Content } = AntLayout;
 const { Title, Text, Paragraph } = Typography;
@@ -154,18 +155,21 @@ const HomePage: React.FC = () => {
       comment: 'Finding quality gemstones for my designs used to be challenging. With GemNet, I can source verified gems with confidence.',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     }
-  ];
-  const handleViewDetails = (gemstoneId: string) => {
+  ];  const handleViewDetails = (gemstoneId: string) => {
+    console.log('View details clicked for gemstone:', gemstoneId);
     const gemstone = featuredGemstones.find(g => g.id === gemstoneId);
     if (gemstone) {
-      setSelectedGemstone(gemstone as any);
+      console.log('Setting selected gemstone:', gemstone);
+      setSelectedGemstone(gemstone as DetailedGemstone);
       setIsModalOpen(true);
+      setBidAmount(gemstone.price);
     }
   };
-
-  const handlePlaceBid = () => {
+  const handlePlaceBid = (amount: number) => {
     // Handle bid placement logic
+    console.log(`Bid placed for ${amount}`);
     setIsModalOpen(false);
+    setSelectedGemstone(null);
     setBidAmount(0);
   };
 
@@ -299,10 +303,9 @@ const HomePage: React.FC = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     className="gemstone-card-motion-wrapper"
-                  >
-                    <GemstoneCard 
+                  >                    <GemstoneCard 
                       gemstone={gemstone}
-                      onViewDetails={() => handleViewDetails(gemstone)}
+                      onViewDetails={() => handleViewDetails(gemstone.id)}
                     />
                   </motion.div>
                 </Col>
@@ -598,137 +601,20 @@ const HomePage: React.FC = () => {
               </Space>
             </motion.div>
           </div>
-        </section>
-      </Content>      {/* Gemstone Detail Modal */}
-      <Modal
-        title={null}
-        open={isModalOpen}
-        onCancel={() => {
-          setIsModalOpen(false);
-          setSelectedGemstone(null);
-          setBidAmount(0);
-        }}
-        footer={null}
-        width="95%"
-        style={{ maxWidth: 900 }}
-        className="gemstone-detail-modal"
-        closeIcon={<CloseOutlined style={{ color: '#333' }} />}
-      >
-        {selectedGemstone && (
-          <div className="gemstone-modal-content">
-            <Row gutter={[16, 24]}>
-              <Col xs={24} md={10} className="gemstone-image-col">
-                <div className="gemstone-image-container">
-                  <img 
-                    src={selectedGemstone.image} 
-                    alt={selectedGemstone.name}
-                    className="gemstone-detail-image w-full h-auto rounded-lg"
-                  />
-                </div>
-                <div className="gemstone-stats flex justify-between text-sm text-gray-500 mt-2">
-                  <span><EyeOutlined /> 86 views</span>
-                  <span>4 bids</span> 
-                  <span>9 watchlists</span>
-                </div>
-              </Col>
-
-              <Col xs={24} md={14} className="gemstone-details-col">
-                <div className="details-content">
-                  <Space direction="vertical" size={16} md-size={24} style={{ width: '100%', padding: '4px' }}>
-                    <div className="gemstone-tabs flex overflow-x-auto pb-2">
-                      <div className="tab active whitespace-nowrap px-3 py-2 mr-2 text-sm">Details</div>
-                      <div className="tab whitespace-nowrap px-3 py-2 mr-2 text-sm">Certificate</div>
-                      <div className="tab whitespace-nowrap px-3 py-2 mr-2 text-sm">Bid History</div>
-                      <div className="tab whitespace-nowrap px-3 py-2 text-sm">Similar Gems</div>
-                    </div>
-                    
-                    <div className="gemstone-main-details">
-                      <Title level={2} className="gemstone-title !text-xl md:!text-2xl !mb-3">{selectedGemstone.name}</Title>
-                      
-                      <div className="gemstone-properties grid grid-cols-2 gap-2 text-sm md:text-base">
-                        <div className="detail-row">
-                          <div className="detail-label font-medium">Type</div>
-                          <div className="detail-value">{selectedGemstone.species}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label font-medium">Color</div>
-                          <div className="detail-value">{selectedGemstone.color}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label font-medium">Carat</div>
-                          <div className="detail-value">{selectedGemstone.weight}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label font-medium">Cut</div>
-                          <div className="detail-value">{selectedGemstone.cut}</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label font-medium">Origin</div>
-                          <div className="detail-value">Balangoda, Sri Lanka</div>
-                        </div>
-                        <div className="detail-row">
-                          <div className="detail-label font-medium">Certified</div>
-                          <div className="detail-value">{selectedGemstone.certified ? 'Yes' : 'No'}</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="description-section">
-                      <div className="section-title font-medium text-sm md:text-base">Description</div>
-                      <p className="text-sm md:text-base">Golden {selectedGemstone.color.toLowerCase()} {selectedGemstone.species.toLowerCase()} with exceptional brilliance and excellent clarity. A rare find in this size.</p>
-                    </div>
-                    
-                    <div className="bid-section">
-                      <div className="current-auction-info flex justify-between mb-4">
-                        <div>
-                          <div className="info-label text-xs md:text-sm text-gray-500">Current Bid</div>
-                          <div className="current-price text-lg md:text-xl font-bold text-blue-600">${selectedGemstone.price.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="info-label text-xs md:text-sm text-gray-500">Auction Ends In</div>
-                          <div className="auction-time text-sm md:text-base font-medium">1 day</div>
-                        </div>
-                      </div>
-                      
-                      <div className="place-bid">
-                        <div className="section-title text-sm md:text-base font-medium mb-2">Place Your Bid</div>
-                        <div className="bid-inputs flex flex-col sm:flex-row gap-2">
-                          <InputNumber
-                            value={bidAmount}
-                            onChange={(value) => setBidAmount(value || 0)}
-                            min={selectedGemstone.price + 100}
-                            style={{ width: '100%', height: '40px' }}
-                            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
-                          />
-                          <Button 
-                            type="primary" 
-                            className="place-bid-button h-10"
-                            onClick={handlePlaceBid}
-                            disabled={bidAmount <= selectedGemstone.price}
-                          >
-                            Place Bid
-                          </Button>
-                        </div>
-                        <div className="min-bid text-xs md:text-sm text-gray-500 mt-2">Minimum bid: ${(selectedGemstone.price + 100).toLocaleString()}</div>
-                      </div>
-                      
-                      <div className="bid-notice mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                        <div className="notice-title text-sm font-medium mb-1">
-                          <span>⚠️</span> Important Notice
-                        </div>
-                        <div className="notice-text text-xs md:text-sm text-gray-700">
-                          By placing a bid, you agree to our terms and conditions. If you win the bid but 
-                          fail to complete the purchase, your account may be restricted from future bidding.
-                        </div>
-                      </div>
-                    </div>
-                  </Space>                </div>
-              </Col>
-            </Row>
-          </div>
-        )}
-      </Modal>
+        </section>      </Content>      
+      {/* Gemstone Detail Modal */}
+      {selectedGemstone && (
+        <GemstoneDetailModal
+          isOpen={isModalOpen}
+          gemstone={selectedGemstone}
+          onClose={() => {
+            console.log('Closing detail modal');
+            setIsModalOpen(false);
+            setSelectedGemstone(null);
+          }}
+          onPlaceBid={handlePlaceBid}
+        />
+      )}
     </AntLayout>
   );
 };
