@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { DetailedGemstone } from '@/types';
 import Header from '@/components/layout/Header';
+import GemstoneCard from '@/components/ui/GemstoneCard';
 
 const { Content } = AntLayout;
 const { Title, Text, Paragraph } = Typography;
@@ -24,83 +25,102 @@ const HomePage: React.FC = () => {
   const [selectedGemstone, setSelectedGemstone] = useState<DetailedGemstone | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bidAmount, setBidAmount] = useState<number>(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Mock featured gemstones data
-  const featuredGemstones: DetailedGemstone[] = [
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);  // Featured gemstones (top 4 most engaging items from the marketplace)
+  const featuredGemstones = [
     {
       id: '1',
-      name: 'Blue Ceylon Sapphire 1',
-      price: 1917,
-      image: 'https://images.unsplash.com/photo-1612098662204-e95c76707dec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      name: 'Star Sapphire of Ceylon',
+      price: 12500,
+      image: 'https://images.unsplash.com/photo-1615654771169-65fde4070ade?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       certified: true,
-      weight: 2.41,
+      weight: 5.2,
       color: 'Blue',
       species: 'Corundum',
-      variety: 'Sapphire',
-      shape: 'Oval',
-      cut: 'Brilliant',
-      dimensions: { length: 9.5, width: 7.3, height: 4.8 },
-      transparency: 'transparent',
+      variety: 'Star Sapphire',
+      shape: 'Oval Cabochon',
+      cut: 'Cabochon',
+      dimensions: { length: 11.5, width: 9.3, height: 5.8 },
+      transparency: 'translucent',
       certificate: {
-        issuingAuthority: 'Ceylon Gem Lab',
-        reportNumber: 'CGL2024001',
-        date: '2024-01-15'
+        issuingAuthority: 'GIA',
+        reportNumber: 'GIA2024102',
+        date: '2024-05-15'
+      },
+      predictedPriceRange: {
+        min: 11000,
+        max: 14000
       }
     },
     {
       id: '2',
-      name: 'Ruby Star of Ceylon',
-      price: 3250,
-      image: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      name: 'Padparadscha Sapphire',
+      price: 18950,
+      image: 'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       certified: true,
-      weight: 4.2,
-      color: 'Red',
+      weight: 3.8,
+      color: 'Pinkish Orange',
       species: 'Corundum',
-      variety: 'Ruby',
-      shape: 'Round',
-      cut: 'Brilliant',
-      dimensions: { length: 8.2, width: 8.2, height: 5.1 },
+      variety: 'Padparadscha',
+      shape: 'Cushion',
+      cut: 'Mixed',
+      dimensions: { length: 8.9, width: 8.2, height: 5.1 },
       transparency: 'transparent',
       certificate: {
-        issuingAuthority: 'GemLab International',
-        reportNumber: 'GLI2024055',
-        date: '2024-02-10'
+        issuingAuthority: 'SSEF',
+        reportNumber: 'SSEF202456',
+        date: '2024-06-01'
+      },
+      predictedPriceRange: {
+        min: 16500,
+        max: 21000
       }
     },
     {
       id: '3',
-      name: 'Emerald Green Paradise',
-      price: 2800,
-      image: 'https://images.unsplash.com/photo-1611955167811-4711904bb9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      certified: false,
-      weight: 3.8,
-      color: 'Green',
-      species: 'Beryl',
-      variety: 'Emerald',
-      shape: 'Emerald',
-      cut: 'Step',
-      dimensions: { length: 10.1, width: 8.5, height: 6.2 },
-      transparency: 'transparent'
+      name: 'Royal Blue Sapphire',
+      price: 15800,
+      image: 'https://images.unsplash.com/photo-1612098662204-e95c76707dec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      certified: true,
+      weight: 4.5,
+      color: 'Royal Blue',
+      species: 'Corundum',
+      variety: 'Sapphire',
+      shape: 'Oval',
+      cut: 'Brilliant',
+      dimensions: { length: 10.2, width: 8.1, height: 5.3 },
+      transparency: 'transparent',
+      certificate: {
+        issuingAuthority: 'GRS',
+        reportNumber: 'GRS2024158',
+        date: '2024-05-28'
+      },
+      predictedPriceRange: {
+        min: 14200,
+        max: 17500
+      }
     },
     {
       id: '4',
-      name: 'Yellow Sapphire Sunshine',
-      price: 1650,
-      image: 'https://images.unsplash.com/photo-1631982999834-bc0e0c14c916?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      name: 'Pigeon Blood Ruby',
+      price: 22500,
+      image: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       certified: true,
-      weight: 2.9,
-      color: 'Yellow',
+      weight: 3.2,
+      color: 'Pigeon Blood Red',
       species: 'Corundum',
-      variety: 'Sapphire',
-      shape: 'Cushion',
-      cut: 'Mixed',
-      dimensions: { length: 8.8, width: 7.6, height: 4.9 },
+      variety: 'Ruby',
+      shape: 'Octagon',
+      cut: 'Step',
+      dimensions: { length: 8.5, width: 8.5, height: 4.9 },
       transparency: 'transparent',
       certificate: {
-        issuingAuthority: 'Asian Gemological Institute',
-        reportNumber: 'AGI2024089',
-        date: '2024-03-05'
+        issuingAuthority: 'Gubelin',
+        reportNumber: 'GUB2024079',
+        date: '2024-06-10'
+      },
+      predictedPriceRange: {
+        min: 19800,
+        max: 25200
       }
     }
   ];
@@ -135,10 +155,12 @@ const HomePage: React.FC = () => {
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     }
   ];
-
-  const handleViewDetails = (gemstone: DetailedGemstone) => {
-    setSelectedGemstone(gemstone);
-    setIsModalOpen(true);
+  const handleViewDetails = (gemstoneId: string) => {
+    const gemstone = featuredGemstones.find(g => g.id === gemstoneId);
+    if (gemstone) {
+      setSelectedGemstone(gemstone as any);
+      setIsModalOpen(true);
+    }
   };
 
   const handlePlaceBid = () => {
@@ -268,9 +290,7 @@ const HomePage: React.FC = () => {
               <Paragraph className="!text-base md:!text-lg !text-gray-600 max-w-2xl mx-auto">
                 Discover our handpicked collection of premium gemstones from verified sellers
               </Paragraph>
-            </motion.div>
-
-            <Row gutter={[16, 24]}>
+            </motion.div>            <Row gutter={[16, 24]}>
               {featuredGemstones.map((gemstone, index) => (
                 <Col xs={24} sm={12} lg={6} key={gemstone.id}>
                   <motion.div
@@ -278,85 +298,12 @@ const HomePage: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    whileHover={{ y: -8 }}
+                    className="gemstone-card-motion-wrapper"
                   >
-                    <Card
-                      className="gemstone-card overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 group h-full"
-                      cover={
-                        <div className="relative overflow-hidden">
-                          <img
-                            alt={gemstone.name}
-                            src={gemstone.image}
-                            className="h-48 w-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          {gemstone.certified && (
-                            <Badge.Ribbon 
-                              text="Certified" 
-                              color="blue"
-                              className="absolute top-2 right-2"
-                            />
-                          )}
-                          <div className="absolute top-3 left-3">
-                            <Button
-                              shape="circle"
-                              icon={<HeartOutlined />}
-                              className="bg-white/90 border-0 shadow-md hover:bg-red-500 hover:text-white transition-colors"
-                            />
-                          </div>
-                        </div>
-                      }
-                      actions={[
-                        <div style={{ padding: '0 16px 16px 16px' }}>
-                          <Button 
-                            type="primary" 
-                            block
-                            icon={<EyeOutlined />}
-                            className="view-details-btn"
-                            onClick={() => handleViewDetails(gemstone)}
-                          >
-                            View Details
-                          </Button>
-                        </div>
-                      ]}
-                    >
-                      <div className="space-y-3">
-                        <Title level={4} className="!mb-2 !text-gray-800 !text-base md:!text-lg">
-                          {gemstone.name}
-                        </Title>
-                        
-                        <Text className="text-gray-600 block text-sm md:text-base">
-                          Exquisite {gemstone.color} {gemstone.variety} with exceptional clarity and vibrant color.
-                        </Text>
-
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <Text className="text-gray-500 text-xs md:text-sm block">Current Bid</Text>
-                            <Title level={3} className="!mb-0 !text-blue-600 !font-bold !text-lg md:!text-xl">
-                              ${gemstone.price.toLocaleString()}
-                            </Title>
-                          </div>
-                          <div className="text-right">
-                            <div className="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs font-medium">
-                              <ClockCircleOutlined className="mr-1" />
-                              Ends 2025-06-20
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap justify-between items-center pt-2 border-t border-gray-100">
-                          <Space wrap size={[4, 8]}>
-                            <Tag color="blue">{gemstone.weight} Carat</Tag>
-                            <Tag color="purple">{gemstone.variety}</Tag>
-                            {gemstone.certified && <Tag color="green">Certified</Tag>}
-                          </Space>
-                        </div>
-
-                        <div className="flex justify-between items-center text-xs md:text-sm text-gray-500">
-                          <span><EyeOutlined className="mr-1" />193 views</span>
-                          <span><HeartOutlined className="mr-1" />20 | Bids: 0</span>
-                        </div>
-                      </div>
-                    </Card>
+                    <GemstoneCard 
+                      gemstone={gemstone}
+                      onViewDetails={() => handleViewDetails(gemstone)}
+                    />
                   </motion.div>
                 </Col>
               ))}
