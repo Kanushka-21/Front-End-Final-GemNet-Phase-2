@@ -1,4 +1,6 @@
 @import 'antd/dist/reset.css';
+/* Import Noto Sans Sinhala font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,6 +15,13 @@
     @apply bg-secondary-50 text-secondary-900 font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-tap-highlight-color: transparent;
+  }
+  
+  .font-sinhala {
+    font-family: 'Noto Sans Sinhala', sans-serif;
+    font-size: 1.05em;
+    letter-spacing: 0.01em;
+    line-height: 1.6;
   }
 }
 

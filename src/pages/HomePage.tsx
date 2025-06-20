@@ -129,31 +129,29 @@ const HomePage: React.FC = () => {
     { title: 'Verified Gems', value: 2847, icon: <CheckCircleOutlined className="text-blue-500" /> },
     { title: 'Active Traders', value: 1230, icon: <UserOutlined className="text-green-500" /> },
     { title: 'Successful Sales', value: 892, icon: <TrophyOutlined className="text-orange-500" /> }
-  ];
-
-  const testimonials = [
+  ];  const testimonials = [
     {
-      name: 'Anil Perera',
-      role: 'Gem Seller',
+      name: 'Sunil Jayasinghe',
+      role: 'Gemstone Dealer',
       rating: 5,
       comment: 'GemNet has transformed my business. The secure platform and verification system brings trust to online gem sales.',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
+      avatar: ''
     },
     {
-      name: 'Priya Mendis',
-      role: 'Collector',
+      name: 'Kumari Wijeratne',
+      role: 'Gem Collector',
       rating: 5,
       comment: 'As a gem collector, I appreciate the detailed listings and certification information. GemNet makes it easy to find authentic stones.',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
+      avatar: ''
     },
     {
-      name: 'Roshan Silva',
+      name: 'Anura Perera',
       role: 'Jewelry Designer',
       rating: 5,
       comment: 'Finding quality gemstones for my designs used to be challenging. With GemNet, I can source verified gems with confidence.',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
+      avatar: ''
     }
-  ];  const handleViewDetails = (gemstoneId: string) => {
+  ];const handleViewDetails = (gemstoneId: string) => {
     console.log('View details clicked for gemstone:', gemstoneId);
     const gemstone = featuredGemstones.find(g => g.id === gemstoneId);
     if (gemstone) {
@@ -698,8 +696,7 @@ const HomePage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
               className="text-center mb-8 md:mb-16"
-            >
-              <Title level={2} className="!text-2xl sm:!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-3 md:!mb-4">
+            >              <Title level={2} className="!text-2xl sm:!text-3xl lg:!text-4xl !font-bold !text-gray-800 !mb-3 md:!mb-4">
                 What Our Members Say
               </Title>
               <Paragraph className="!text-base md:!text-lg !text-gray-600 max-w-2xl mx-auto">
@@ -715,18 +712,19 @@ const HomePage: React.FC = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                  >
-                    <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <div className="flex flex-col items-center text-center space-y-3 md:space-y-4">
-                        <Avatar size={48} md-size={64} src={testimonial.avatar} />
-                        <div>
-                          <Title level={4} className="!mb-0 md:!mb-1 !text-base md:!text-lg">{testimonial.name}</Title>
-                          <Text className="text-gray-500 text-sm">{testimonial.role}</Text>
+                  >                    <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-transparent">
+                      <div className="flex flex-col items-center text-center space-y-3 md:space-y-4 pt-2">
+                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                          <UserOutlined className="text-blue-600 text-lg" />
+                        </div>                        <div>
+                          <Title level={4} className="!mb-0 md:!mb-1 !text-lg md:!text-xl">{testimonial.name}</Title>
+                          <Text className="text-gray-600 text-sm md:text-base">{testimonial.role}</Text>
                         </div>
-                        <Rate disabled defaultValue={testimonial.rating} className="text-yellow-500 text-sm md:text-base" />
-                        <Paragraph className="!text-gray-600 italic text-sm md:text-base">
-                          "{testimonial.comment}"
-                        </Paragraph>
+                        <Rate disabled defaultValue={testimonial.rating} className="text-yellow-500 text-sm md:text-base" />                        <div className="bg-white p-4 rounded-lg border border-blue-100 mt-2">
+                          <Paragraph className="!text-gray-700 italic text-sm md:text-base leading-relaxed mb-0">
+                            "{testimonial.comment}"
+                          </Paragraph>
+                        </div>
                       </div>
                     </Card>
                   </motion.div>
