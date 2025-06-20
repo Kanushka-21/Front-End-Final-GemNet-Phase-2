@@ -1,4 +1,6 @@
 @import 'antd/dist/reset.css';
+/* Import Noto Sans Sinhala font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,6 +15,13 @@
     @apply bg-secondary-50 text-secondary-900 font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-tap-highlight-color: transparent;
+  }
+  
+  .font-sinhala {
+    font-family: 'Noto Sans Sinhala', sans-serif;
+    font-size: 1.05em;
+    letter-spacing: 0.01em;
+    line-height: 1.6;
   }
 }
 
@@ -579,6 +588,47 @@
       padding: 0.625rem 0.75rem;
       font-size: 0.875rem;
     }
+  }
+
+  /* Hero Carousel Styles */
+  .hero-carousel .ant-carousel .slick-dots {
+    @apply bottom-6;
+  }
+
+  .hero-carousel .ant-carousel .slick-dots li {
+    @apply w-8 md:w-12;
+  }
+
+  .hero-carousel .ant-carousel .slick-dots li button {
+    @apply h-[3px] md:h-1 bg-white/30;
+  }
+
+  .hero-carousel .ant-carousel .slick-dots li.slick-active button {
+    @apply bg-yellow-400;
+  }
+
+  .hero-carousel .ant-carousel .slick-dots-bottom {
+    @apply bottom-4;
+  }
+
+  .hero-carousel .ant-carousel .custom-dots {
+    @apply mb-0;
+  }
+
+  .hero-carousel .ant-carousel .slick-slide {
+    @apply pointer-events-auto;
+  }
+
+  /* Badge glow effect for verified items */
+  .ant-badge-status-success::before {
+    content: '';
+    @apply absolute inset-0 rounded-full animate-ping bg-green-500/30;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Hero section additional styles */
+  .hero-stats-card {
+    @apply bg-blue-800/50 backdrop-blur-sm border border-blue-700/50 transition-all duration-300 hover:border-yellow-400/50;
   }
 }
 

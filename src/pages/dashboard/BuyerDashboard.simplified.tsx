@@ -14,6 +14,16 @@ import dayjs from 'dayjs';
 const { TabPane } = Tabs;
 const { confirm } = Modal;
 
+// Helper function to format price in LKR
+const formatLKR = (price: number) => {
+  return new Intl.NumberFormat('si-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
 // Simple mock data
 const mockBids = [
   { id: '1', gemstone: 'Blue Sapphire', image: 'https://via.placeholder.com/100', amount: 2500, status: 'active', date: '2025-06-01' },
@@ -345,11 +355,10 @@ const BuyerDashboard: React.FC = (): React.ReactNode => {
                     </div>
                   ),
                 },
-                {
-                  title: 'Bid Amount',
+                {                  title: 'Bid Amount',
                   dataIndex: 'amount',
                   key: 'amount',
-                  render: amount => `$${amount.toLocaleString()}`
+                  render: amount => formatLKR(amount)
                 },
                 {
                   title: 'Status',
@@ -475,7 +484,7 @@ const BuyerDashboard: React.FC = (): React.ReactNode => {
                       title={item.name}
                       description={
                         <div className="space-y-2">
-                          <div className="font-medium text-lg text-primary-600">${item.price}</div>
+                          <div className="font-medium text-lg text-primary-600">{formatLKR(item.price)}</div>
                           <div>Seller: {item.seller}</div>
                           <div className="flex items-center">
                             <Rate value={item.rating} disabled allowHalf className="text-sm" />
@@ -510,11 +519,10 @@ const BuyerDashboard: React.FC = (): React.ReactNode => {
                     </div>
                   ),
                 },
-                {
-                  title: 'Amount',
+                {                  title: 'Amount',
                   dataIndex: 'amount',
                   key: 'amount',
-                  render: amount => `$${amount.toLocaleString()}`
+                  render: amount => formatLKR(amount)
                 },
                 {
                   title: 'Seller',
@@ -577,7 +585,7 @@ const BuyerDashboard: React.FC = (): React.ReactNode => {
               <h2 className="text-2xl font-bold mb-4">{selectedGemstone.gemstone || selectedGemstone.name}</h2>
               <div className="flex items-center space-x-4 mb-4">
                 <div className="text-lg font-medium text-primary-600">
-                  ${selectedGemstone.amount?.toLocaleString() || selectedGemstone.price?.toLocaleString()}
+                  {formatLKR(selectedGemstone.amount || selectedGemstone.price || 0)}
                 </div>
                 <Button type="primary" icon={<TrophyOutlined />} size="large"
                   onClick={() => handleOpenPlaceBidModal(selectedGemstone)}
@@ -624,13 +632,13 @@ const BuyerDashboard: React.FC = (): React.ReactNode => {
             name="bidAmount"
             rules={[
               { required: true, message: 'Please enter your bid amount' },
-              { type: 'number', min: 1, message: 'Bid amount must be at least $1' }
+              { type: 'number', min: 1, message: 'Bid amount must be at least LKR 1' }
             ]}
           >
             <InputNumber
               placeholder="Enter bid amount"
-              style={{ width: '100%' }}              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3}))/g, ',')}
-              parser={(value: string | undefined) => value ? value.replace(/\$\s?|(,*)/g, '') : ''}
+              style={{ width: '100%' }}              formatter={value => `LKR ${value}`.replace(/\B(?=(\d{3}))/g, ',')}
+              parser={(value: string | undefined) => value ? value.replace(/LKR\s?|(,*)/g, '') : ''}
             />
           </Form.Item>
           <Form.Item>
