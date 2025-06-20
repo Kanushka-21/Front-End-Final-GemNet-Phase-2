@@ -67,12 +67,19 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       {/* Header */}
       <header className="bg-white shadow-md border-b border-secondary-200 sticky top-0 z-30">
         <div className="container mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="flex items-center space-x-2">              <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
-                <Shield className="w-7 h-7 text-white" />
-              </div><div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>
-              </div>
+          <div className="flex items-center">            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => navigate('/')} 
+                className="flex items-center space-x-2 focus:outline-none hover:opacity-80 transition-opacity"
+                aria-label="Go to homepage"
+              >
+                <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
+                  <Shield className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>
+                </div>
+              </button>
             </div>
           </div>
 
