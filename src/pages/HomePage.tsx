@@ -125,12 +125,10 @@ const HomePage: React.FC = () => {
       }
     }
   ];
-
   const statistics = [
     { title: 'Verified Gems', value: 2847, icon: <CheckCircleOutlined className="text-blue-500" /> },
     { title: 'Active Traders', value: 1230, icon: <UserOutlined className="text-green-500" /> },
-    { title: 'Successful Sales', value: 892, icon: <TrophyOutlined className="text-orange-500" /> },
-    { title: 'Countries Served', value: 45, icon: <GlobalOutlined className="text-purple-500" /> }
+    { title: 'Successful Sales', value: 892, icon: <TrophyOutlined className="text-orange-500" /> }
   ];
 
   const testimonials = [
@@ -246,29 +244,28 @@ const HomePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <Row gutter={[16, 16]} align="middle" justify="center">
               {statistics.map((stat, index) => (
-                <Col xs={12} sm={6} key={index}>
+                <Col xs={24} sm={8} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                    <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full py-3 px-2 md:py-5 md:px-4">
                       <div className="flex flex-col items-center space-y-2 md:space-y-3">
-                        <div className="text-2xl md:text-3xl">{stat.icon}</div>
+                        <div className="text-3xl md:text-4xl">{stat.icon}</div>
                         <Statistic 
                           value={stat.value} 
                           className="!mb-0"
-                          valueStyle={{ 
-                            fontSize: '1.25rem', 
+                          valueStyle={{                            fontSize: '1.5rem', 
                             fontWeight: 'bold',
                             color: '#1f2937',
                             '@media (min-width: 768px)': {
-                              fontSize: '2rem',
+                              fontSize: '2.5rem',
                             }
                           }}
                         />
-                        <Text className="text-gray-600 font-medium text-xs md:text-sm">{stat.title}</Text>
+                        <Text className="text-gray-600 font-medium text-sm md:text-base">{stat.title}</Text>
                       </div>
                     </Card>
                   </motion.div>
