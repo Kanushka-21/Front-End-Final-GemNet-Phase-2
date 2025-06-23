@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/utils';
 import { ProgressBarProps } from '@/types';
 import { Check, Home, Camera, FileText, CheckCircle, X } from 'lucide-react';
+import logoImage from '@/logo-new.gif';
 
 interface SidebarProgressProps extends ProgressBarProps {
   onCancel?: () => void;
@@ -29,11 +30,8 @@ const SidebarProgress: React.FC<SidebarProgressProps> = ({
       {/* Header with Logo - Compact */}
       <div className="mb-6">
         <div className="flex items-center space-x-3 mb-3">
-          {/* GemNet Logo */}
-          <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2.5 rounded-xl shadow-sm">
-            <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
+          {/* GemNet Logo */}          <div className="rounded-lg overflow-hidden w-28 h-28">
+            <img src={logoImage} alt="GemNet Logo" className="w-full h-full object-contain" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900">

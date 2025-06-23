@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut,
   Menu,
-  Shield,
   User,
   Bell,
   Home,
@@ -14,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks';
 import Button from '@/components/ui/Button';
+import logoImage from '@/logo-new.gif';
 
 interface HeaderProps {
   transparent?: boolean;
@@ -53,17 +53,19 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
       label: 'Dashboard', 
       icon: <ShoppingBag className="w-5 h-5" />, 
       onClick: () => navigate('/dashboard') 
-    }
-  ];
-    return (
-    <header className={`${transparent ? 'bg-transparent' : 'bg-white'} shadow-md border-b border-secondary-200 sticky top-0 z-30`}>
-      <div className="container-fluid px-4 sm:px-6 py-3 flex items-center justify-between">
+    }  ];
+
+  return (
+    <header className={`${transparent ? 'bg-transparent' : 'bg-white'} shadow-md border-b border-secondary-200 sticky top-0 z-30 h-20`}>
+      <div className="container-fluid px-4 sm:px-6 py-0 flex items-center justify-between h-full">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>                <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
-              <Shield className="w-7 h-7 text-white" />
-            </div><div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>
+          <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="rounded-lg overflow-hidden w-20 h-20 sm:w-28 sm:h-28 -my-1 sm:-my-2">
+              <img src={logoImage} alt="GemNet Logo" className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-primary-800">GemNet</h1>
             </div>
           </div>
         </div>

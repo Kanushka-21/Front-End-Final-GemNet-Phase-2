@@ -3,33 +3,26 @@ import {
   Layout as AntLayout, 
   Row, 
   Col, 
-  Card, 
   Input, 
   Select, 
   Button, 
-  Tag, 
   Typography, 
-  Space, 
   Slider, 
   Checkbox, 
   Pagination,
   Drawer,
-  Modal,
-  InputNumber,
-  Affix
+  Modal
 } from 'antd';
 import { 
   SearchOutlined, 
   FilterOutlined, 
-  EyeOutlined, 
-  HeartOutlined,
   SortAscendingOutlined,
   AppstoreOutlined,
   BarsOutlined,
   CloseOutlined
 } from '@ant-design/icons';
-import { motion } from 'framer-motion';
 import { DetailedGemstone } from '@/types';
+import Header from '@/components/layout/Header';
 import GemstoneCard from '@/components/ui/GemstoneCard';
 import GemstoneDetailModal from '@/components/home/GemstoneDetailModal';
 
@@ -233,8 +226,7 @@ const MarketplacePage: React.FC = () => {
         </Checkbox>
       </div>
 
-      <Button 
-        block 
+      <Button        block 
         onClick={() => {
           setPriceRange([0, 50000]);
           setSelectedTypes([]);
@@ -246,24 +238,19 @@ const MarketplacePage: React.FC = () => {
       </Button>
     </div>
   );
-  
+
   return (
     <AntLayout className="min-h-screen bg-gray-50">
-      <Content>        {/* Search & Filters Bar */}
-        <Affix offsetTop={0}>
-          <div style={{ 
-            background: '#fff', 
-            padding: '12px 0',
-            borderBottom: '1px solid #f0f0f0',
-            boxShadow: '0 1px 6px rgba(0,0,0,0.08)',
-            width: '100%'
-          }}>
-            <div className="container-fluid">
+      {/* Header */}
+      <Header transparent={false} />      <Content>
+        {/* Search & Filters Bar */}
+        <div className="bg-white border-b border-gray-200 py-4">
+          <div className="container-fluid px-2 sm:px-4">
               <div className="marketplace-search-container">
-                <Row gutter={[16, 16]} align="middle" className="marketplace-header">
-                  <Col xs={24} sm={24} md={12} lg={10} xl={8} xxl={6}>
+                <Row gutter={[8, 8]} align="middle" className="marketplace-header">
+                  <Col xs={24} sm={24} md={14} lg={12} xl={10} xxl={8}>
                     <Input
-                      size="large"
+                      size="middle"
                       placeholder="Search gemstones..."
                       prefix={<SearchOutlined style={{ color: '#2871FA' }} />}
                       value={searchTerm}
@@ -272,9 +259,9 @@ const MarketplacePage: React.FC = () => {
                       className="search-input"
                     />
                   </Col>
-                  <Col xs={14} sm={16} md={8} lg={6} xl={4}>
+                  <Col xs={12} sm={12} md={6} lg={6} xl={5} xxl={4}>
                     <Select
-                      size="large"
+                      size="middle"
                       value={sortBy}
                       onChange={setSortBy}
                       style={{ width: '100%' }}
@@ -282,47 +269,51 @@ const MarketplacePage: React.FC = () => {
                       className="sort-select"
                       dropdownMatchSelectWidth={false}
                     >
-                      <Option value="price_asc">Price: Low to High</Option>
-                      <Option value="price_desc">Price: High to Low</Option>
-                      <Option value="weight_asc">Weight: Low to High</Option>
-                      <Option value="weight_desc">Weight: High to Low</Option>
-                      <Option value="name_asc">Name: A to Z</Option>
-                      <Option value="name_desc">Name: Z to A</Option>
+                      <Option value="price_asc">Price ↑</Option>
+                      <Option value="price_desc">Price ↓</Option>
+                      <Option value="weight_asc">Weight ↑</Option>
+                      <Option value="weight_desc">Weight ↓</Option>
+                      <Option value="name_asc">Name A-Z</Option>
+                      <Option value="name_desc">Name Z-A</Option>
                     </Select>
                   </Col>
-                  <Col xs={10} sm={8} md={4} lg={4} xl={3}>
-                    <div className="marketplace-controls">
+                  <Col xs={12} sm={12} md={4} lg={6} xl={5} xxl={4}>
+                    <div className="marketplace-controls flex gap-1">
                       <Button
+                        size="middle"
                         icon={<FilterOutlined />}
                         onClick={() => setIsFilterDrawerOpen(true)}
-                        className="filter-button"
+                        className="filter-button flex-1 sm:flex-none"
                       >
-                        Filters
+                        <span className="hidden sm:inline">Filters</span>
                       </Button>
-                      <Button.Group className="view-mode-buttons">
+                      <Button.Group className="view-mode-buttons hidden sm:flex">
                       <Button 
+                        size="middle"
                         icon={<AppstoreOutlined />}
                         type={viewMode === 'grid' ? 'primary' : 'default'}
                         onClick={() => setViewMode('grid')}
-                      />                      <Button 
+                      />
+                      <Button 
+                        size="middle"
                         icon={<BarsOutlined />}
                         type={viewMode === 'list' ? 'primary' : 'default'}
                         onClick={() => setViewMode('list')}
-                      />                    </Button.Group>
+                      />
+                    </Button.Group>
                     </div>
-                </Col>
-              </Row>
+                </Col>              </Row>
               </div>
             </div>
-          </div>
-        </Affix>
+        </div>
 
-        {/* Main Content */}        <section className="py-8">
-          <div className="container-fluid px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-16">
+        {/* Main Content */}
+        <section className="py-4 sm:py-6 lg:py-8">
+          <div className="container-fluid px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-16">
             {/* Results Summary */}
-            <div className="mb-6">
-              <Title level={3} className="!mb-1">Gemstone Marketplace</Title>
-              <Text type="secondary">
+            <div className="mb-4 sm:mb-6">
+              <Title level={3} className="!mb-1 !text-lg sm:!text-xl lg:!text-2xl">Gemstone Marketplace</Title>
+              <Text type="secondary" className="text-sm sm:text-base">
                 Showing {Math.min(filteredGemstones.length, startIndex + 1)}-{Math.min(startIndex + itemsPerPage, filteredGemstones.length)} of {filteredGemstones.length} results
               </Text>
             </div>
@@ -330,7 +321,7 @@ const MarketplacePage: React.FC = () => {
             {/* Gemstones Grid */}
             {paginatedGemstones.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                   {paginatedGemstones.map((gemstone) => (
                     <GemstoneCard
                       key={gemstone.id}
@@ -365,13 +356,12 @@ const MarketplacePage: React.FC = () => {
               <div style={{ textAlign: 'center', padding: '60px 0' }}>
                 <Title level={3} type="secondary">No gemstones found</Title>
                 <Paragraph type="secondary">
-                  Try adjusting your search criteria or filters
-                </Paragraph>
+                  Try adjusting your search criteria or filters                </Paragraph>
               </div>
             )}
           </div>
         </section>
-      </Content>
+
         {/* Mobile Filter Drawer */}
       <Drawer
         title={
@@ -566,10 +556,10 @@ const MarketplacePage: React.FC = () => {
             }
             
             .gemstone-card .ant-space {
-              flex-wrap: wrap;
-            }
+              flex-wrap: wrap;            }
           }
         `}</style>
+      </Content>
     </AntLayout>
   );
 };

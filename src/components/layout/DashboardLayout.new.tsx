@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut,
   Menu,
-  Shield,
   ChevronDown,
   User,
   Bell,
@@ -15,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks';
 import Button from '@/components/ui/Button';
+import logoImage from '@/logo-new.gif';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -63,18 +63,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   ];
   
   return (
-    <div className="min-h-screen bg-secondary-50 flex flex-col overflow-hidden">
-      {/* Header */}
-      <header className="bg-white shadow-md border-b border-secondary-200 sticky top-0 z-30">
-        <div className="container mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-secondary-50 flex flex-col overflow-hidden">      {/* Header */}
+      <header className="bg-white shadow-md border-b border-secondary-200 sticky top-0 z-30 h-20">
+        <div className="container mx-auto px-4 sm:px-6 py-0 flex items-center justify-between h-full">
           <div className="flex items-center">            <div className="flex items-center space-x-2">
               <button 
                 onClick={() => navigate('/')} 
                 className="flex items-center space-x-2 focus:outline-none hover:opacity-80 transition-opacity"
                 aria-label="Go to homepage"
-              >
-                <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
-                  <Shield className="w-7 h-7 text-white" />
+              >                <div className="rounded-lg overflow-hidden w-28 h-28 -my-4">
+                  <img src={logoImage} alt="GemNet Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>

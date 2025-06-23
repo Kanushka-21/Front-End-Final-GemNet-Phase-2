@@ -177,7 +177,7 @@ const HomePage: React.FC = () => {
       {/* Modern Header */}
       <Header transparent={false} />
       <Content>        {/* Enhanced Hero Section with Carousel */}
-        <section className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 text-white overflow-hidden min-h-[600px] lg:min-h-[700px]">
+        <section className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 text-white overflow-hidden min-h-[500px] sm:min-h-[600px] lg:min-h-[700px]">
           <div className="absolute inset-0 bg-black/20"></div>
           {/* Animated background patterns */}
           <div className="absolute inset-0 overflow-hidden">
@@ -195,10 +195,8 @@ const HomePage: React.FC = () => {
               }}
               className="absolute -left-10 -bottom-10 w-64 h-64 bg-gradient-to-br from-yellow-400/20 to-yellow-500/5 rounded-full blur-xl"
             />
-          </div>
-
-          {/* Hero Content */}
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-16 md:py-24 lg:py-36">
+          </div>          {/* Hero Content */}
+          <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-12 py-12 sm:py-16 md:py-24 lg:py-36">
             <Carousel 
               autoplay 
               effect="fade"

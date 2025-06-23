@@ -33,8 +33,7 @@ const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) 
         borderColor: '#93c5fd'
       }}
       className="bg-white rounded-lg overflow-hidden border border-secondary-200 transition-all duration-300"
-    >
-      <div className="relative overflow-hidden h-48">
+    >      <div className="relative overflow-hidden h-40 sm:h-48">
         <motion.img
           src={gemstone.image}
           alt={gemstone.name}
@@ -45,43 +44,43 @@ const GemstoneCard: React.FC<GemstoneCardProps> = ({ gemstone, onViewDetails }) 
         {gemstone.certified && (
           <div className="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1">
             <Shield className="w-3 h-3" />
-            <span>Certified</span>
+            <span className="hidden sm:inline">Certified</span>
+            <span className="sm:hidden">✓</span>
           </div>
         )}
       </div>
-      
-      <div className="p-4">
+        <div className="p-3 sm:p-4">
         <div className="flex items-center space-x-2">
           <Gem className="w-4 h-4 text-primary-600" />
-          <h3 className="font-semibold text-primary-800">{gemstone.name}</h3>
+          <h3 className="font-semibold text-primary-800 text-sm sm:text-base line-clamp-1">{gemstone.name}</h3>
         </div>
         
-        <div className="mt-2 space-y-2">
-          <p className="text-2xl font-bold text-secondary-800">
+        <div className="mt-2 space-y-1 sm:space-y-2">
+          <p className="text-lg sm:text-xl lg:text-2xl font-bold text-secondary-800">
             {formatLKR(gemstone.price)}
           </p>
           
           {gemstone.predictedPriceRange && (
             <div className="flex flex-col text-secondary-600">
-              <span className="text-base font-semibold">Estimated Range:</span>
-              <span className="text-lg font-medium">
+              <span className="text-sm sm:text-base font-semibold">Estimated Range:</span>
+              <span className="text-sm sm:text-base lg:text-lg font-medium">
                 {formatLKR(gemstone.predictedPriceRange.min)} - {formatLKR(gemstone.predictedPriceRange.max)}
               </span>
             </div>
           )}
           
-          <p className="text-sm text-secondary-600">
+          <p className="text-xs sm:text-sm text-secondary-600">
             {gemstone.weight} carats · {gemstone.color}
           </p>
         </div>
         
-        <div className="mt-4">
+        <div className="mt-3 sm:mt-4">
           <Button 
             variant="primary"
             size="sm"
             onClick={handleViewClick}
             type="button"
-            className="w-full"
+            className="w-full text-sm sm:text-base"
           >
             View Details
           </Button>
