@@ -242,12 +242,11 @@ const MarketplacePage: React.FC = () => {
   return (
     <AntLayout className="min-h-screen bg-gray-50">
       {/* Header */}
-      <Header transparent={false} />      <Content>
-        {/* Search & Filters Bar */}
-        <div className="bg-white border-b border-gray-200 py-4">
-          <div className="container-fluid px-2 sm:px-4">
+      <Header transparent={false} />      <Content>        {/* Search & Filters Bar */}
+        <div className="bg-white border-b border-gray-200 py-3 sm:py-4">
+          <div className="container-fluid px-3 sm:px-4">
               <div className="marketplace-search-container">
-                <Row gutter={[8, 8]} align="middle" className="marketplace-header">
+                <Row gutter={[8, 12]} align="middle" className="marketplace-header">
                   <Col xs={24} sm={24} md={14} lg={12} xl={10} xxl={8}>
                     <Input
                       size="middle"
@@ -259,7 +258,7 @@ const MarketplacePage: React.FC = () => {
                       className="search-input"
                     />
                   </Col>
-                  <Col xs={12} sm={12} md={6} lg={6} xl={5} xxl={4}>
+                  <Col xs={24} sm={12} md={6} lg={6} xl={5} xxl={4}>
                     <Select
                       size="middle"
                       value={sortBy}
@@ -277,8 +276,8 @@ const MarketplacePage: React.FC = () => {
                       <Option value="name_desc">Name Z-A</Option>
                     </Select>
                   </Col>
-                  <Col xs={12} sm={12} md={4} lg={6} xl={5} xxl={4}>
-                    <div className="marketplace-controls flex gap-1">
+                  <Col xs={24} sm={12} md={4} lg={6} xl={5} xxl={4}>
+                    <div className="marketplace-controls flex gap-2 justify-between sm:justify-end">
                       <Button
                         size="middle"
                         icon={<FilterOutlined />}
@@ -286,6 +285,7 @@ const MarketplacePage: React.FC = () => {
                         className="filter-button flex-1 sm:flex-none"
                       >
                         <span className="hidden sm:inline">Filters</span>
+                        <span className="sm:hidden">Filter</span>
                       </Button>
                       <Button.Group className="view-mode-buttons hidden sm:flex">
                       <Button 
@@ -305,15 +305,13 @@ const MarketplacePage: React.FC = () => {
                 </Col>              </Row>
               </div>
             </div>
-        </div>
-
-        {/* Main Content */}
-        <section className="py-4 sm:py-6 lg:py-8">
-          <div className="container-fluid px-2 sm:px-4 lg:px-6 xl:px-8 2xl:px-16">
+        </div>        {/* Main Content */}
+        <section className="py-3 sm:py-4 lg:py-6">
+          <div className="container-fluid px-3 sm:px-4 lg:px-6 xl:px-8 2xl:px-16">
             {/* Results Summary */}
-            <div className="mb-4 sm:mb-6">
-              <Title level={3} className="!mb-1 !text-lg sm:!text-xl lg:!text-2xl">Gemstone Marketplace</Title>
-              <Text type="secondary" className="text-sm sm:text-base">
+            <div className="mb-3 sm:mb-4 lg:mb-6">
+              <Title level={3} className="!mb-1 !text-base sm:!text-lg lg:!text-xl xl:!text-2xl">Gemstone Marketplace</Title>
+              <Text type="secondary" className="text-xs sm:text-sm lg:text-base">
                 Showing {Math.min(filteredGemstones.length, startIndex + 1)}-{Math.min(startIndex + itemsPerPage, filteredGemstones.length)} of {filteredGemstones.length} results
               </Text>
             </div>
@@ -321,7 +319,7 @@ const MarketplacePage: React.FC = () => {
             {/* Gemstones Grid */}
             {paginatedGemstones.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 xl:gap-6">
                   {paginatedGemstones.map((gemstone) => (
                     <GemstoneCard
                       key={gemstone.id}
@@ -338,24 +336,26 @@ const MarketplacePage: React.FC = () => {
                 </div>
                 
                 {/* Pagination */}
-                <div className="flex justify-center mt-10">
+                <div className="flex justify-center mt-6 sm:mt-8 lg:mt-10">
                   <Pagination
                     current={currentPage}
                     total={filteredGemstones.length}
                     pageSize={itemsPerPage}
                     onChange={setCurrentPage}
-                    showSizeChanger
-                    showQuickJumper
+                    showSizeChanger={false}
+                    showQuickJumper={false}
                     showTotal={(total, range) => 
                       `${range[0]}-${range[1]} of ${total} items`
                     }
+                    size="small"
+                    className="mobile-pagination"
                   />
                 </div>
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '60px 0' }}>
-                <Title level={3} type="secondary">No gemstones found</Title>
-                <Paragraph type="secondary">
+              <div style={{ textAlign: 'center', padding: '40px 0 60px' }}>
+                <Title level={3} type="secondary" className="!text-lg sm:!text-xl lg:!text-2xl">No gemstones found</Title>
+                <Paragraph type="secondary" className="!text-sm sm:!text-base">
                   Try adjusting your search criteria or filters                </Paragraph>
               </div>
             )}
@@ -435,17 +435,17 @@ const MarketplacePage: React.FC = () => {
           </p>
         </div>
       </Modal>
-      
         <style>
         {`
           /* Search bar and filters styling */
           .marketplace-search-container {
-            padding: 8px 0;
+            padding: 4px 0;
           }
           
           .search-input .ant-input {
             border-radius: 8px;
             border-color: #e6e8eb;
+            height: 40px;
           }
           
           .search-input .ant-input:hover,
@@ -457,6 +457,7 @@ const MarketplacePage: React.FC = () => {
           .sort-select .ant-select-selector {
             border-radius: 8px !important;
             border-color: #e6e8eb !important;
+            height: 40px !important;
           }
           
           .sort-select .ant-select-selector:hover,
@@ -467,10 +468,11 @@ const MarketplacePage: React.FC = () => {
           
           .filter-button {
             border-radius: 8px;
-            margin-right: 8px;
             border-color: #e6e8eb;
             display: flex;
             align-items: center;
+            height: 40px;
+            min-width: 80px;
           }
           
           .filter-button:hover {
@@ -487,10 +489,31 @@ const MarketplacePage: React.FC = () => {
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
           }
-            .marketplace-controls {
+          
+          .marketplace-controls {
             display: flex;
             align-items: center;
             justify-content: flex-end;
+            width: 100%;
+          }
+          
+          /* Mobile pagination */
+          .mobile-pagination .ant-pagination-item {
+            margin: 0 3px !important;
+            min-width: 32px !important;
+            height: 32px !important;
+            line-height: 30px !important;
+          }
+          
+          .mobile-pagination .ant-pagination-prev,
+          .mobile-pagination .ant-pagination-next {
+            min-width: 32px !important;
+            height: 32px !important;
+            line-height: 30px !important;
+          }
+          
+          .mobile-pagination .ant-pagination-total-text {
+            font-size: 12px !important;
           }
           
           /* Drawer styling */
@@ -513,6 +536,96 @@ const MarketplacePage: React.FC = () => {
             padding-top: 0;
           }
 
+          /* Mobile responsive breakpoints */
+          @media (max-width: 576px) {
+            .marketplace-search-container {
+              padding: 6px 0;
+            }
+            
+            .marketplace-header .ant-col {
+              margin-bottom: 8px;
+            }
+            
+            .marketplace-header .ant-col:last-child {
+              margin-bottom: 0;
+            }
+            
+            .filter-button {
+              font-size: 14px;
+              padding: 0 12px;
+              height: 36px;
+            }
+            
+            .search-input .ant-input,
+            .sort-select .ant-select-selector {
+              height: 36px !important;
+              font-size: 14px;
+            }
+            
+            .marketplace-controls {
+              justify-content: space-between;
+            }
+            
+            .filter-button {
+              flex: 1;
+              max-width: calc(50% - 4px);
+            }
+            
+            .mobile-pagination {
+              transform: scale(0.9);
+              margin: 0 -5%;
+            }
+            
+            .mobile-pagination .ant-pagination-total-text {
+              display: none;
+            }
+            
+            /* Hide some pagination items on very small screens */
+            .mobile-pagination .ant-pagination-item:nth-child(n+6) {
+              display: none;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            .marketplace-controls {
+              flex-direction: column;
+              gap: 8px;
+            }
+            
+            .filter-button {
+              max-width: 100%;
+            }
+            
+            .mobile-pagination .ant-pagination-item:nth-child(n+4) {
+              display: none;
+            }
+          }
+          
+          @media (max-width: 412px) {
+            .container-fluid {
+              padding-left: 12px !important;
+              padding-right: 12px !important;
+            }
+            
+            .marketplace-search-container {
+              padding: 4px 0;
+            }
+            
+            .search-input .ant-input::placeholder {
+              font-size: 13px;
+            }
+            
+            .sort-select .ant-select-selection-item {
+              font-size: 13px;
+            }
+            
+            .filter-button {
+              font-size: 13px;
+              height: 34px;
+              padding: 0 10px;
+            }
+          }
+          
           @media (max-width: 992px) {
             .marketplace-header .ant-row {
               margin-bottom: 0 !important;
@@ -520,43 +633,9 @@ const MarketplacePage: React.FC = () => {
           }
           
           @media (max-width: 768px) {
-            .filter-button {
-              margin-right: 8px;
-            }
-            
             .marketplace-controls {
               justify-content: flex-start;
             }
-          }
-          
-          @media (max-width: 576px) {
-            .gemstone-card-container {
-              padding: 0 4px !important;
-              margin-bottom: 16px;
-            }
-            
-            .gemstone-card .ant-card-meta-title {
-              font-size: 16px !important;
-            }
-            
-            .gemstone-card .ant-card-meta-description {
-              font-size: 13px !important;
-            }
-            
-            .gemstone-card-motion-wrapper {
-              width: 100%;
-            }
-            
-            .search-input, .sort-select {
-              margin-bottom: 8px;
-            }
-            
-            .ant-pagination-item {
-              margin: 0 2px !important;
-            }
-            
-            .gemstone-card .ant-space {
-              flex-wrap: wrap;            }
           }
         `}</style>
       </Content>
