@@ -63,30 +63,14 @@ const LoginPage: React.FC = () => {
   const handleInputBlur = (field: keyof LoginRequest) => () => {
     setTouched(field);
   };
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30 h-20">
-        <div className="container-fluid px-4 sm:px-6 py-0 flex items-center justify-between h-full">
-          <div className="flex items-center">
-            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>              <div className="rounded-lg overflow-hidden w-28 h-28 -my-4">
-                <img src={logoImage} alt="GemNet Logo" className="w-full h-full object-contain" />
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">      
+      {/* Main Content */}      <div className="w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md space-y-8"
+          className="w-full space-y-8"
         >
           {/* Welcome Section */}
           <div className="text-center">
