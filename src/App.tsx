@@ -200,14 +200,9 @@ const AppRoutes: React.FC = () => {
               </ProtectedRoute>
             }
           />{/* New Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route
+          <Route path="/" element={<HomePage />} />          <Route
             path="/marketplace"
-            element={
-              <Layout>
-                <MarketplacePage />
-              </Layout>
-            }
+            element={<MarketplacePage />}
           />
           
           {/* Default Route - Changed to Home */}

@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { validators } from '@/utils';
 import { LoginRequest } from '@/types';
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import logoImage from '@/logo-new.gif';
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -65,14 +65,12 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
-        <div className="container-fluid px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div className="min-h-screen flex flex-col bg-gray-50">      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30 h-20">
+        <div className="container-fluid px-4 sm:px-6 py-0 flex items-center justify-between h-full">
           <div className="flex items-center">
-            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
-              <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-2 rounded-lg">
-                <Shield className="w-7 h-7 text-white" />
+            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>              <div className="rounded-lg overflow-hidden w-28 h-28 -my-4">
+                <img src={logoImage} alt="GemNet Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-primary-800">GemNet</h1>
@@ -95,10 +93,9 @@ const LoginPage: React.FC = () => {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-              className="mx-auto bg-gradient-to-r from-primary-600 to-primary-700 p-4 rounded-2xl w-20 h-20 flex items-center justify-center shadow-lg"
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}              className="mx-auto rounded-2xl w-48 h-48 flex items-center justify-center shadow-lg overflow-hidden"
             >
-              <Shield className="w-10 h-10 text-white" />
+              <img src={logoImage} alt="GemNet Logo" className="w-full h-full object-contain" />
             </motion.div>
             
             <motion.h2
