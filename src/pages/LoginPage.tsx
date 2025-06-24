@@ -177,10 +177,8 @@ const LoginPage: React.FC = () => {
               >
                 {isSubmitting ? 'Signing in...' : 'Sign In'}
               </Button>
-            </form>
-
-            {/* Register Link */}
-            <div className="mt-6 text-center">
+            </form>            {/* Register Link & Navigation */}
+            <div className="mt-6 text-center space-y-3">
               <p className="text-base text-gray-600">
                 Don't have an account?{' '}
                 <Link
@@ -188,6 +186,14 @@ const LoginPage: React.FC = () => {
                   className="font-medium text-primary-600 hover:text-primary-700 transition-colors"
                 >
                   Create your account
+                </Link>
+              </p>
+              <p className="text-sm text-gray-500">
+                <Link
+                  to="/"
+                  className="font-medium text-gray-600 hover:text-primary-600 transition-colors"
+                >
+                  ← Return to Home
                 </Link>
               </p>
             </div>
